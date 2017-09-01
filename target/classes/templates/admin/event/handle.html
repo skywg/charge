@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>处理告警明细</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/events/}">运维中心</a></li>
+        <li><a th:href="@{/admin/events/}">告警信息</a></li>
+        <li class="active">处理告警明细</li>
+    </ol>
+     <script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        /*]]>*/
+    </script>
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">处理告警明细</a></li>
+                </ul>
+            </div>
+		<form role="form" action="#" method="post"
+          th:action="@{/admin/events/addeventAuditLog/{id}(id=${eventAuditLog.id})}"  th:object="${eventAuditLog}">
+            <div class="panel-body" th:include="admin/event/handleform"></div>
+            <input type="hidden" name="id" th:value="${id}"/>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                    	<div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html" th:href="@{/admin/events/?flag=true}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" onclick="return zf()" id="button2" class="btn-query btn-primary repeat-btn-id">转发</button>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" onclick="return bc()" id="button1" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div> 
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+           </form> 
+        </div>
+</div>
+<div layout:fragment="javascript">
+<script src="../../static/js/contact/js/froala_editor.min.js" th:src="@{/js/contact/js/froala_editor.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/colors.min.js" th:src="@{/js/contact/js/plugins/colors.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/font_family.min.js" th:src="@{/js/contact/js/plugins/font_family.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/font_size.min.js" th:src="@{/js/contact/js/plugins/font_size.min.js}"></script>
+<script th:inline="javascript">    
+
+	function bc(){
+		var s = $("#editor .froala-element").html();
+		$("#text").val(s);
+		var sel =$("#inputType1 option:selected").val();
+		if(sel==""){
+			return true;
+		}else{
+			alert("请转发");
+			return false;
+		}
+	}
+	function zf(){
+		var s = $("#editor .froala-element").html();
+		$("#text").val(s);
+		var sel =$("#inputType1 option:selected").val();
+		if(sel==""){
+			alert("请选择转发负责人");
+			return false;
+		}else{
+			return true;
+		}
+		
+	}
+	$(function(){
+		$('#edit2').editable({inlineMode: false,alwaysBlank: true});
+		
+	})
+
+</script>
+</div>
+</body>
+</html>

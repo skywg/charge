@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>编辑充电站信息</title>
+</head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/stations/}">设备中心</a></li>
+        <li><a th:href="@{/admin/stations/}">充电站</a></li>
+        <li class="active">编辑充电站信息</li>
+    </ol>
+<script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        /*]]>*/
+    </script>
+   
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+					<li role="presentation" class="active"><a th:href="@{/admin/stations/edit/{id}(id=${station.id})}">基本信息</a></li>
+					<li role="presentation"><a th:href="@{/admin/stations/edit/images/{id}(id=${station.id})}">图片</a></li>
+                    <li role="presentation"><a th:href="@{/admin/stations/edit/chargers/{id}(id=${station.id})}">电桩</a></li>
+                </ul>
+            </div>
+ <form role="form" action="#" method="post"
+          th:action="@{/admin/stations/{id}(id=${station.id})}" th:object="${station}">
+            <div class="panel-body" th:include="admin/station/editform"></div>
+
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html" th:href="@{/admin/stations/search}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+                </form>
+        </div>
+
+
+</div>
+</body>
+</html>

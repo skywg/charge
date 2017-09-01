@@ -1,0 +1,37 @@
+  .container{padding: 1.5em 0;}
+    .custom-input {
+    position: relative;
+    padding-top: 20px;
+    margin-bottom: 10px;
+    }
+
+    .custom-input input {
+    padding-left: 15px;
+    }
+
+    .custom-input label {
+    cursor: text;
+    margin: 0;
+    padding: 0;
+    left: 25px;
+    top: 27px;
+    position: absolute;
+    font-size: 14px;
+    color: #ccc;
+    font-weight: normal;
+    transition: all .3s ease;
+    }
+
+    .custom-input label.active {
+    top: 0;
+    left: 15px;
+    font-size: 12px;
+    }
+
+    .custom-input label.active.focusIn {
+    color: #66afe9;
+    font-size: 15px;
+    font-style: oblique;
+    font-family: bold;
+    }
+    

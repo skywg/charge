@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="http://webapi.amap.com/theme/v1.3/style1.3.21.1.css"/>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main.css?v=1.0"/>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&amp;key=a746dec348d188ad0b1d9d1d466b780f">
+    </script>
+    <script type="text/javascript"  src="../../static/components/jquery/dist/jquery.min.js"
+        th:src="@{/components/jquery/dist/jquery.min.js}"></script>
+    <script src="../../static/js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>
+<style>
+    .panel{
+        padding:0px;
+        margin:0;
+    }
+    a:hover{
+    	text-decoration: none;
+    }
+    element.style {
+	    float: right;
+	    width: 80px;
+	    line-height: 20px;
+	    height: 20px;
+	    margin-right: 10px;
+	    text-align: center;
+	    color: #FFF;
+	    background-color: #40B050;
+	}
+</style>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+<div id="stationSummaryPanel" style="display:none">
+    <div style="margin-left:8px; margin-top:5px">
+		<div style="background:#F5F5F5; height:30px;">
+		   <div style="float:left;background:#F5F5F5; height:30px; line-height:30px; padding-left:8px; font-size:14px"><span id="_stationName">TT</span></div>
+		   <div style="float:right; width: 80px;height: 20px;color: #FFF;line-height: 20px; margin-right: 10px; margin-top:5px; text-align: center;background-color: #40B050;cursor: pointer" class="_stationMonitor">站内监控</div>
+		</div>
+		<div>
+			<div class="text-center" style="float:left;width:78px;height:90px;color:white;background:#F8B62C;"><h2><span id="_chargingNo"></span></h2><h4>充电</h4></div>
+			<div class="text-center" style="float:left;width:78px;height:90px;color:white;background:#BFBFBF"><h2><span id="_offlineNo"></span></h2><h4>离线</h4></div>
+			<div class="text-center" style="float:left;width:78px;height:90px;color:white;background:#DF0716"><h2><span id="_repairNo"></span></h2><h4>故障</h4></div>
+			<div class="text-center" style="float:left;width:77px;height:90px;color:white;background:#55B3AC"><h2><span id="_idleNo"></span></h2><h4>空闲</h4></div>
+		</div>
+	</div>
+</div>
+
+    <div class="modal fade" pid="pid" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:9999;width:100%;height:100%">
+        <div class="modal-dialog"  style="width:99%;height:100%;margin-top:5px;margin-bottom:0">
+            <div class="modal-content" style="background:#fefefe;width:100%;height:98%">
+                <div style="position:absolute; width:100%; height:55px; line-height:55px; padding:15px; top:0; border-bottom:1px solid #e5e5e5">
+                    <button name="adminIndex" type="button" id="buttonClose1" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title" id="myModalLabel">站内监控</h4>
+                </div>
+                <div style="position:absolute; top:55px; bottom:65px; padding:0 15px; width:100%">
+                    <div class="col-xs-3" style="/*margin-top:15px;*/padding-right:5px;padding-left:5px;">
+                        <div class="col-xs-12" style="margin:5px 0;padding:2px 2px;">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div style="float:left;width:55%"><span id="name"></span></div>
+                                    <div class="text-right" style="color:green;float:right;width:45%" id="timeShow"></div>
+                                    <br/>
+                                </div>
+                                <script language="javascript">
+                                    var t = null;
+                                    t = setTimeout(time,1000);//开始执行
+                                    function time()
+                                    {
+                                       clearTimeout(t);//清除定时器
+                                       dt = new Date();
+                                       //var year = dt.getFullYear();    //获取完整的年份(4位,1970-????)
+                                       //var month = dt.getMonth()+1;       //获取当前月份(0-11,0代表1月)
+                                       //var date = dt.getDate();        //获取当前日(1-31)
+                                       var h=dt.getHours();
+                                       var m=dt.getMinutes();
+                                       var s=dt.getSeconds();
+                                       document.getElementById("timeShow").innerHTML =  h+"时"+m+"分"+s+"秒";
+                                       t = setTimeout(time,1000); //设定定时器，循环执行             
+                                    } 
+                                  </script>
+                                <div class="panel-body" style="padding: 5px">
+                                    <div class="col-xs-12" style="padding:15px 0">
+                                        <div class="text-center" style="float:left;width:25%;height:90px;color:white;background:#F8B62C;"><h2><span id="CHARGING"></span></h2><h4>充电</h4></div>
+                                        <div class="text-center" style="float:left;width:25%;height:90px;color:white;background:#BFBFBF"><h2><span id="OFFLINE"></span></h2><h4>离线</h4></div>
+                                        <div class="text-center" style="float:left;width:25%;height:90px;color:white;background:#DF0716"><h2><span id="REPAIR"></span></h2><h4>故障</h4></div>
+                                        <div class="text-center" style="float:left;width:25%;height:90px;color:white;background:#55B3AC"><h2><span id="IDLE"></span></h2><h4>空闲</h4></div>
+                                    </div>
+                                    <div class="col-xs-12" style="padding: 5px">
+                                        <div class="col-xs-6 text-center" style="margin-top:5px;">
+                                            <img th:src="@{/images/ac-icon.png}"
+                                                        alt="交流桩(枪)" style="height: 30px; width: 30px" />
+                                            <div style="font-size:14px;">交流桩(枪) <span style="font-size:20px;font-weight:bold;color:grey" id="type01"></span> 个</div>
+                                        </div>
+                                        <div class="col-xs-6 text-center" style="margin-top:5px;">
+                                            <img th:src="@{/images/dc-icon.png}"
+                                                        alt="直流桩(枪)" style="height: 30px; width: 30px" />
+                                            <div style="font-size:14px;">直流桩(枪) <span style="font-size:20px;font-weight:bold;color:grey" id="type02"></span> 个</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12" style="padding: 5px">
+                                        <div class="text-right" style="margin-top:5px;padding-left:20px;float:left">
+                                            <div>今日充电次数：</div>
+                                            <div>今日充电电量：</div>
+                                        </div>
+                                        <div class="text-left" style="margin-top:5px;float:right">
+                                            <div><span id="num"></span></div>
+                                            <div><span id="degree"></span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-9" id="htmlCon"  style="height:100%;position:absolute;left:25%;/*margin-top:15px;*/margin-bottom:10px;overflow-y:auto;overflow-x:hidden;">
+                        <div class="col-xs-4"  style="margin:5px 0;padding:2px 2px;">
+                            <div class="panel panel-default">
+                                <!-- <div class="panel-heading">充电桩编号</div>
+                                <div class="panel-body" style="padding: 5px">
+                                    <div style="background-color:grey;color:white;padding-left:5px;float:left;width:70%">充电桩中充电枪编号</div>
+                                    <div style="background-color:grey;color:white;padding-left:5px;float:right;width:30%">空闲状态</div>
+                                    <div class="col-xs-3" style="padding-top:10px;">
+                                        <img th:src="@{/images/ac-charger.png}"
+                        alt="交流充电桩" style="height: 60px; width: 60px" />
+                                    </div>
+                                    <div class="col-xs-9" style="padding: 5px">
+                                        <div class="text-left" style="margin-top:5px;padding:0 10px;float:left">
+                                            <div>状态：</div>
+                                            <div>空闲时长：</div>
+                                            <div>空闲时间：</div>
+                                        </div>
+                                        <div class="text-left" style="margin-top:5px;padding-left:0;float:left">
+                                            <div>未插枪</div>
+                                            <div>30min</div>
+                                            <div>09-29 12:23:22</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body" style="padding: 5px" data-toggle="modal" data-target="#myModa222">
+                                    <div style="background-color:lightgreen;color:white;padding-left:5px;float:left;width:70%">充电桩中充电枪编号</div>
+                                    <div style="background-color:lightgreen;color:white;padding-left:5px;float:right;width:30%">空闲状态</div>
+                                    <div class="col-xs-3" style="padding-top:10px;">
+                                        <img th:src="@{/images/dc-charger.png}"
+                        alt="直流充电桩" style="height: 60px; width: 60px" />
+                                    </div>
+                                    <div class="col-xs-9" style="padding: 5px">
+                                        <div class="text-left" style="margin-top:5px;padding:0 10px;float:left">
+                                            <div>SOC：</div>
+                                            <div>充电电量：</div>
+                                            <div>充电时长：</div>
+                                        </div>
+                                        <div class="text-left" style="margin-top:5px;padding-left:0;float:left">
+                                            <div><i class="fa fa-shopping-cart fa-1x" style="margin-right:10px"></i>75%</div>
+                                            <div>20.21kWh</div>
+                                            <div>12小时23分</div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="position: absolute; bottom:15px; right:30px;">
+                    <button name="adminIndex" type="button" id="buttonClose" class="btn-query btn-primary cancel-btn-id" data-dismiss="modal">关闭</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade"  id="modDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 9999">
+        <div class="modal-dialog"  style="width:99%;margin-top:5px;margin-bottom:0">
+            <div class="modal-content" style="background:#fefefe;">
+                <div class="modal-body">
+                    <button name="adminIndex" type="button" id="buttonDetail1"  class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title" id="myModalLabel">充电桩监控</h4>
+                    <div class="col-xs-3" style="margin-top:15px;">
+                        <div class="col-xs-12" style="margin:5px 0;padding:2px 2px;">
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><span id="codeDetail"></span></div>
+                                <div class="panel-body" style="padding: 5px" data-toggle="modal" data-target="#myModa222222">
+                                    <div style="background-color:#F8B62C;color:white;padding-left:5px;float:left;width:70%"><span id="codeName"></span></div>
+                                    <div style="background-color:#F8B62C;color:white;padding-left:5px;float:right;width:30%"><span id="codeTitlest"></span></div>
+                                    <div class="col-xs-3" style="padding-top:10px;">
+                                        <img id="codeImg" src="/images/dc-charger.png" style="height: 60px; width: 60px" />
+                                    </div>
+                                    <div class="col-xs-9" style="padding: 5px">
+                                        <div class="text-left" style="margin-top:5px;padding:0 10px;float:left">
+                                            <div>SOC：</div>
+                                            <div>充电电量：</div>
+                                            <div>充电时长：</div>
+                                        </div>
+                                        <div class="text-left" style="margin-top:5px;padding-left:0;float:left">
+                                            <div style="color:#F8B62C"><img id="codeImg" alt="" src="/images/cddc2.gif"></img><span id="codeSocVal"></span></div>
+                                            <div style="color:#F8B62C"><span id="codeElectricity"></span></div>
+                                            <div style="color:#F8B62C"><span id="codeCk"></span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-9" style="margin-top:15px;margin-bottom:10px;height:510px;overflow-y:auto;overflow-x:hidden;">
+                        <div class="col-xs-12" style="margin:5px 0;padding:2px 2px;">
+                            <div class="panel panel-default">
+                                <div class="panel-body" style="padding: 5px">
+                                    <div id="main3" style="width:900px;height:400px;margin-top:0px;margin-bottom:-120px;padding:-20px"></div>
+                                    <div id="main4" style="width:900px;height:200px;margin-top:-15px;padding:-20px"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <script type="text/javascript">
+                var myChart1;
+                var myChart2;
+                $(function(){
+                	
+                
+                // 基于准备好的dom，初始化echarts实例
+                myChart1 = echarts.init(document.getElementById('main3'));
+                myChart2 = echarts.init(document.getElementById('main4'));
+                
+                    
+    option1 = {
+            tooltip: {
+                formatter: "{a} <br/>{c} {b}"
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    restore: {
+                        show: false
+                    },
+                    saveAsImage: {
+                        show: true
+                    }
+                }
+            },
+            series: [{
+                name: '电压',
+                type: 'gauge',
+                center: ['25%', '35%'],
+                // 默认全局居中
+                radius: '50%',
+                min: 0,
+                max: 700,
+                endAngle: 45,
+                splitNumber: 7,
+                axisLine: { // 坐标轴线
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        width: 8
+                    }
+                },
+                axisTick: { // 坐标轴小标记
+                    length: 12,
+                    // 属性length控制线长
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: { // 分隔线
+                    length: 20,
+                    // 属性length控制线长
+                    lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                pointer: {
+                    width: 5
+                },
+                title: {
+                    offsetCenter: [0, '-30%'],
+                    // x, y，单位px
+                },
+                detail: {
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                }
+            },
+            {
+                name: '功率',
+                type: 'gauge',
+                z: 3,
+                min: 0,
+                max: 150,
+                splitNumber: 6,
+                center: ['50%', '30%'],
+                radius: '60%',
+                axisLine: { // 坐标轴线
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        width: 10
+                    }
+                },
+                axisTick: { // 坐标轴小标记
+                    length: 15,
+                    // 属性length控制线长
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: { // 分隔线
+                    length: 20,
+                    // 属性length控制线长
+                    lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                title: {
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder',
+                        fontSize: 20,
+                        fontStyle: 'italic'
+                    }
+                },
+                detail: {
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                }
+            },
+            {
+                name: '电流',
+                type: 'gauge',
+                center: ['75%', '35%'],
+                // 默认全局居中
+                radius: '50%',
+                min: 0,
+                max: 200,
+                startAngle: 135,
+                splitNumber: 10,
+                axisLine: { // 坐标轴线
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        width: 8
+                    }
+                },
+                axisTick: { // 坐标轴小标记
+                    length: 12,
+                    // 属性length控制线长
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: { // 分隔线
+                    length: 20,
+                    // 属性length控制线长
+                    lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                pointer: {
+                    width: 5
+                },
+                title: {
+                    offsetCenter: [0, '-30%'],
+                    // x, y，单位px
+                },
+                detail: {
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                }
+            }]
+        };
+        
+        myChart2.title = '充电电压、电流';
+
+        var colors = ['#5793f3', '#d14a61', '#675bba'];
+
+        option2 = {
+            color: colors,
+
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: {
+            	top: 30,
+                right: '5%',
+                bottom: 10 
+            },
+            toolbox: {
+                feature: {
+                    /* dataView: {show: true, readOnly: false}, */
+                   /*  restore: {show: true}, */
+                    saveAsImage: {show: true}
+                }
+            },
+            legend: {
+                data:['电压','电流']
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    //data: ['10:00','10:10','10:20','10:30','10:40','10:50','11:00','11:10','11:20','11:30','11:40','11:50']
+                    //data:time
+                    data : []
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '电压',
+                    min: 0,
+                    max: 700,
+                    position: 'left',
+                    axisLine: {
+                        lineStyle: {
+                            color: colors[0]
+                        }
+                    },
+                    axisLabel: {
+                        formatter: '{value} V'
+                    },
+                    splitNumber: 7
+                },
+                {
+                    type: 'value',
+                    name: '电流',
+                    min: 0,
+                    max: 210,
+                    position: 'right',
+                    axisLine: {
+                        lineStyle: {
+                            color: colors[1]
+                        }
+                    },
+                    axisLabel: {    
+                        formatter: '{value} A'
+                    },
+                    splitNumber: 7
+                }
+            ],
+            series: [
+                {
+                    name:'电压',
+                    type:'line',
+                    data : []
+                },
+                {
+                    name:'电流',
+                    type:'line',
+                    yAxisIndex: 1,
+                    data : []
+                }
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart1.setOption(option1, true);
+        myChart2.setOption(option2, true);
+        });
+        function chartsData(dy,dl,gl,dylist,dllist,time){
+        	myChart1.setOption({
+        		series : [{
+        			name: "电压",
+        			data: [{
+                        value: dy,
+                        name: 'V'
+                    }]	
+        		}, {
+        			name: "功率",
+        			data: [{
+                        value: gl,
+                        name: 'kW'
+                    }]	
+        		}, {
+        			name: "电流",
+                    data: [{
+                        value: dl,
+                        name: 'A'
+                    }]  	
+        		}]	
+        	});
+        	
+        	myChart2.setOption({
+            	xAxis : [{
+            		data:time	
+            	}],
+            	series: [
+                   {
+                       name:'电压',
+                       data:dylist
+                   },
+                   {
+                       name:'电流',
+                       data:dllist
+                   }
+               ]
+            });
+        }
+</script> 
+                <div class="modal-footer">
+                    <button name="adminIndex" type="button" id="buttonDetail" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mapContainer" style="left:200px"></div>
+    <!-- <div class="button-group" style="left: 45%;top:90%">
+        <input id="setFitView" class="button" type="button" value="地图自适应显示" data-toggle="modal" data-target="#myModal11"/>
+    </div> -->
+<script th:inline="javascript">
+	var geolocation, scale;
+	//初始化加载地图时，若center及level属性缺省，地图默认显示用户当前城市范围
+	var map = new AMap.Map('mapContainer', {
+	    resizeEnable: true,
+	    zoom : 10
+	});
+
+    map.clearMap();  // 清除地图覆盖物
+   
+     var markers;
+     var infoWindow = new AMap.InfoWindow({
+    	 size : new AMap.Size(350,150)
+     });
+     
+     /*<![CDATA[*/
+        var data = [[${countAllCharger}]];
+        load(data);
+        var timerst = setInterval(function(){ 
+        	 $.ajax({
+                 type: "post",
+                 url: "/css/countAllCharger",
+                 dataType: "json",
+                 async: false,
+                 success: function(object){
+              		 console.info(object);
+              		 load(object);
+                 	}
+                 })
+        		},10000);
+    function load(data){
+    	 if(data&&data.length>0){
+             var obj = new Array(data.length);
+             for(var i=0;i<data.length;i++){
+                 //空闲
+                 var vf = "/images/kongxian.png";
+                 //IDLE("有空闲"), OFFLINE("离线"), BUSY("满载");
+                 //IDLE("空闲"), OFFLINE("离线"), REPAIR("检修"), CHARGING("充电中"), OCCUPIED("占用");
+                 var status = data[i].stationStatus;
+                 if("IDLE"==status){
+                     vf = "/images/kongxian3.png";
+                 }else if("OFFLINE"==status){
+                     vf = "/images/lixian3.png";
+                 }else if("CHARGING"==status){
+                     vf = "/images/chongdian3.gif";
+                 }else if("REPAIR"==status){
+                     vf = "/images/guzhang3.gif";
+                 }
+                 var picnum = i+1;
+                 var re = 
+                 {
+                     //icon:'http://webapi.amap.com/theme/v1.3/markers/n/mark_b'+picnum+'.png',
+                     icon:vf,
+                     position:[data[i].longitude, data[i].latitude],
+                     stationId:data[i].stationId,
+                     stationName:data[i].stationName,
+                     params:data[i].map
+                 }
+                 obj[i] = re;
+             }
+             markers = obj;
+         }
+     // 添加一些分布不均的点到地图上,地图上添加三个点标记，作为参照
+     markers.forEach(function(marker) {
+         var mak = new AMap.Marker({
+            map: map,
+            icon: marker.icon,
+             position: [marker.position[0], marker.position[1]],
+             offset: new AMap.Pixel(-12, -12),
+             clickable:true,
+             title: "站点:" + marker.stationName,
+             extData:marker.stationId
+         });
+         
+         var content = $("#stationSummaryPanel").clone();
+         $(content).find("#_stationName").text(marker.stationName);
+         $(content).find("#_chargingNo").text(marker.params.chargingCount);
+         $(content).find("#_offlineNo").text(marker.params.offlineCount);
+         $(content).find("#_repairNo").text(marker.params.fualtCount);
+         $(content).find("#_idleNo").text(marker.params.idleCount);
+         
+         $(content).find("._stationMonitor").attr("onclick", "javascript:showStationMonitor(" + marker.stationId + ")")
+         mak.content = $(content).html();
+         mak.on('click', markerClick);
+     });
+    }
+    
+    function markerClick(e) {
+     	infoWindow.setContent(e.target.content);
+    	infoWindow.open(map, e.target.getPosition()); 
+    	$(".amap-info-content").parent().css({"z-index" : 9999});
+    }
+    
+    function showStationMonitor(stationId) {
+    	ajaxdata(stationId);
+        $("div[pid]").show();
+        $("div[pid]").attr("class","modal fade in");
+        var timer = setInterval(function(){  
+            var dis = $("div[pid]").css('display');
+            console.info(dis);
+            if(dis=="none"){
+                  clearInterval(timer);    //清除定时器
+            }else{
+            	ajaxdata(stationId);
+                //开启定时器
+                //ajaxdatadetail(stationId);
+            }
+       },10000);   
+       $("#buttonClose").click(function(){
+            $("#htmlCon").html("");
+             clearInterval(timer);    //清除定时器
+           $("div[pid]").hide();
+           $("div[pid]").attr("class","modal fade")
+       });
+       $("#buttonClose1").click(function(){
+           $("#htmlCon").html("");
+             clearInterval(timer);    //清除定时器
+           $("div[pid]").hide();
+           $("div[pid]").attr("class","modal fade")
+       });	
+    }
+    /*]]>*/
+</script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+     function ajaxtimeclick(codes){
+    	 var id = "#"+codes;
+         var value =$(id).attr("value");
+        var as =value.split("-");
+        var code = as[0];
+        var name = as[1];
+        var titlest = as[2];
+        var socVal = as[3];
+        var electricity = as[4];
+        var ck = as[5];
+        var img = as[6];
+        var newcode = as[7];
+        $("#codeDetail").text(code);
+        $("#codeName").text(name);
+        $("#codeTitlest").text(titlest);
+        $("#codeSocVal").text(socVal);
+        $("#codeElectricity").text(electricity);
+        $("#codeCk").text(ck);
+        $("#modDetail").show();
+        $("#modDetail").attr("class","modal fade in");
+        $.ajax({
+            type: "post",
+            url: "/css/countChargeringDetail",
+            data: {chargeNo:newcode},
+            dataType: "json",
+            async: false,
+            success: function(object){
+            	console.info(object);
+                if(object!=null){
+                    var dl = object.dl;
+                    var gl = object.gl;
+                    var dy = object.dy;
+                    var dylist = object.dylist;
+                    var dllist = object.dllist;
+                    var time = object.time;
+                    chartsData(dy,dl,gl,dylist,dllist,time);
+                }
+                }
+            })
+    }          
+               
+    function ajaxclick(idname,codes){
+        var value =$(idname).attr("value");
+        //value +="-"+name+"-"+titlest+"-"+socVal+"-"+electricity+"-"+ck;
+        $("#hiddenspan").text(value);
+        var as =value.split("-");
+        var code = as[0];
+        var name = as[1];
+        var titlest = as[2];
+        var socVal = as[3];
+        var electricity = as[4];
+        var ck = as[5];
+        var img = as[6];
+        var newcode = as[7];
+        $("#codeImg").attr("src", img);
+        $("#codeDetail").text(code);
+        $("#codeName").text(name);
+        $("#codeTitlest").text(titlest);
+        $("#codeSocVal").text(socVal);
+        $("#codeElectricity").text(electricity);
+        $("#codeCk").text(ck);
+        $.ajax({
+            type: "post",
+            url: "/css/countChargeringDetail",
+            data: {chargeNo:newcode},
+            dataType: "json",
+            async: false,
+            success: function(object){
+                if(object!=null){
+                    var dl = object.dl;
+                    var gl = object.gl;
+                    var dy = object.dy;
+                    var dylist = object.dylist;
+                    var dllist = object.dllist;
+                    var time = object.time;
+                    chartsData(dy,dl,gl,dylist,dllist,time);
+                    var timerr = setInterval(function(){ 
+                    	console.info("ajaxtimeclick")
+	                    //开启定时器
+	                    var dis = $("#modDetail").css('display');
+	                    console.info(dis)
+	                    if(dis=="none"){
+	                          clearInterval(timerr);    //清除定时器
+	                    }else{
+	                        //var spanvalue = $("#hiddenspan").text();
+	                        ajaxtimeclick(codes);
+	                    }
+                    },5000);
+                    $("#buttonDetail").click(function(){
+                        clearInterval(timerr);    //清除定时器
+                        $("#modDetail").hide();
+                        $("#modDetail").attr("class","modal fade")
+                    });
+                    $("#buttonDetail1").click(function(){
+                        clearInterval(timerr);    //清除定时器
+                        $("#modDetail").hide();
+                        $("#modDetail").attr("class","modal fade")
+                    });
+                }
+            }    
+        });
+        $("#modDetail").show();
+        $("#modDetail").attr("class","modal fade in");
+    }
+               
+     function ajaxdatadetail(stationId){
+         $.ajax({
+                type: "post",
+                url: "/css/countChargerDetailRedis",
+                data: {stationId:stationId},
+                dataType: "json",
+                success: function(object){
+                    var data = object.coll;
+                    var html = "";
+                    if(data!=null&&data.length>0){
+                        for(var i=0;i<data.length;i++){
+                            if(data[i]!=null){
+                                var connectorList =data[i].connectorList;
+                                console.info(connectorList)
+                                if(connectorList!=null&&connectorList.length>0){
+                                    html += '<div class="col-xs-4"  style="margin:5px 0;padding:2px 2px;">';
+                                    html += '<div class="panel panel-default">';
+                                    html += '<div class="panel-heading">'+data[i].name+'('+ data[i].code +')</div> ';
+                                    for(var t=0;t<connectorList.length;t++){
+                                        var value = connectorList[t].code;
+                                        var code = connectorList[t].code;
+                                        var st = connectorList[t].status;
+                                        var socVal = connectorList[t].socVal+"%";
+                                        var electricity = connectorList[t].electricity+"kwh";
+                                        var chargingTime = connectorList[t].chargingTime;
+                                        //时间按照秒来计算
+                                        var h = parseInt(chargingTime/60/60);
+                                        var f = parseInt(chargingTime/60 - h*60);
+                                        var ck = h+"小时"+f+"分";
+                                        if(chargingTime<60){
+                                        	ck = chargingTime+"秒";
+                                        }
+                                        var name = connectorList[t].name;
+                                        var ttypete = connectorList[t].type;
+                                        //alert(ttypete);
+                                        var img="";
+                                        if(ttypete==null){
+                                            img = '<i class="fa fa-shopping-cart fa-3x"></i>';
+                                        }else{
+                                            if(ttypete=="AC"){
+                                                img = '<img src="/images/' + getImage("ac", st) + '" alt="交流充电桩" style="height: 60px; width: 60px" />'; 
+                                            }else if(ttypete=="DC"){
+                                                img = '<img src="/images/' + getImage("dc", st) + '" alt="直流充电桩" style="height: 60px; width: 60px" />';
+                                            }
+                                        }
+                                        var titlest="";
+                                        if(st=='IDLE'){
+                                            titlest = '空闲';
+                                            }else if(st=='OFFLINE'){
+                                                titlest = '离线';
+                                            }else if(st=='REPAIR'){
+                                                titlest = '检修';
+                                            }else if(st=='CHARGING'){
+                                                titlest = '充电中';
+                                            }else if(st=='OCCUPIED'){
+                                                titlest = '占用';
+                                            }else{
+                                                titlest = '检修';
+                                            }
+                                        value +="-"+name+"-"+titlest+"-"+socVal+"-"+electricity+"-"+ck+"-"+$(img).attr("src")+"-"+data[i].code;
+                                        if(st!="CHARGING"){
+                                            html +='<div class="panel-body" style="padding: 5px"> '
+                                            +'<div style="background-color:' + getColor(st) + ';color:white;padding-left:5px;float:left;width:70%">'+name+'</div> '
+                                            +'<div style="background-color:' + getColor(st) + ';color:white;padding-left:5px;float:right;width:30%">'+titlest+'</div> '
+                                            +'<div class="col-xs-3" style="padding-top:15px;"> '
+                                            +img
+                                            +'</div> '
+                                            +'<div class="col-xs-9" style="padding: 5px"> '
+                                            +'  <div class="text-left" style="margin-top:5px;padding:0 10px;float:left"> '
+                                            +'      <div>&nbsp;</div> '
+                                            +'      <div style="color:#717171">状态：</div> '
+                                            +'      <div>&nbsp;</div> '
+                                            //+'      <div>空闲时长：</div> '
+                                            //+'      <div>空闲时间：</div> '
+                                            +'  </div> '
+                                            +'  <div class="text-left" style="margin-top:5px;padding-left:0;float:left"> '
+                                            +'      <div>&nbsp;</div> '
+                                            +'      <div style="color:#717171">'+titlest+'</div> '
+                                            +'      <div>&nbsp;</div> '                  
+                                            +'  </div> '
+                                            +'  </div> '
+                                            +'</div> ';
+                                        }else{
+                                            html +='<div class="panel-body" onclick="ajaxclick(this,'+code+')" id="'+code+'" value="'+value+'" style="padding: 5px" data-toggle="modal" data-target="#myModa222"> '
+                                            +'<div style="background-color:#F8B62C;color:white;padding-left:5px;float:left;width:70%">'+name+'</div> '
+                                            +'<div style="background-color:#F8B62C;color:white;padding-left:5px;float:right;width:30%">'+titlest+'</div> '
+                                            +'<div class="col-xs-3" style="padding-top:10px;"> '
+                                            +img
+                                            +'</div> '
+                                            +'<div class="col-xs-9" style="padding: 5px"> '
+                                            +'  <div class="text-left" style="margin-top:5px;padding:0 10px;float:left"> '
+                                            +'  <div style="color:#717171">SOC：</div> '
+                                            +'  <div style="color:#717171">充电电量：</div> '
+                                            +'  <div style="color:#717171">充电时长：</div> '
+                                            +'  </div> '
+                                            +'<div class="text-left" style="margin-top:5px;padding-left:0;float:left"> '
+                                            +'  <div style="color:#717171"><img src="/images/cddc2.gif"/>'+socVal+'</div> '
+                                            +'  <div style="color:#717171">'+electricity+'</div> '
+                                            +'  <div style="color:#717171">'+ck+'</div> '
+                                            +'</div> '
+                                            +'</div> '
+                                            +'</div> ';
+                                        }
+                                    }
+                                    
+                                    html +='</div> ';
+                                    html +='</div> ';
+                                }
+                            }
+                        }
+                    }
+                    $("#htmlCon").html(html);
+                }
+            });
+        
+    }
+    function ajaxdata(stationId){
+        $.ajax({
+            type: "post",
+            url: "/css/countChargerDetail",
+            data: {stationId:stationId},
+            dataType: "json",
+            success: function(object){
+                console.info(object);
+                var data = object.coll;
+                var name = object.stationname;
+                var num = object.num;
+                var s = object.degree + "";
+                var str = s.substring(0,s.indexOf(".") + 3);
+                var degree =str+"kwh";
+                //var degree = object.degree+"kwh";
+                var CHARGING = object.CHARGING;
+                var OFFLINE = object.OFFLINE;
+                var REPAIR = object.REPAIR;
+                var IDLE = object.IDLE;
+                var type01 = object.type01;
+                var type02 = object.type02;
+                $("#name").text(name);
+                $("#num").text(num);
+                $("#degree").text(degree);
+                $("#CHARGING").text(CHARGING);
+                $("#OFFLINE").text(OFFLINE);
+                $("#REPAIR").text(REPAIR);
+                $("#IDLE").text(IDLE);
+                $("#type01").text(type01);
+                $("#type02").text(type02);
+                var html = "";
+                if(data!=null&&data.length>0){
+                        for(var i=0;i<data.length;i++){
+                            var connectorList =data[i].connectorList;
+                            if(connectorList!=null&&connectorList.length>0){
+                                html +='<div class="col-xs-4"  style="margin:5px 0;padding:2px 2px;">';
+                                html += '<div class="panel panel-default">';
+                                html += '<div class="panel-heading">'+data[i].name+'(' + data[i].code + ')</div> ';
+                                for(var t=0;t<connectorList.length;t++){
+                                    var value = data[i].name+'(' + data[i].code + ')' ;//connectorList[t].code;
+                                    var code = connectorList[t].code;
+                                    var st = connectorList[t].status;
+                                    var socVal = connectorList[t].socVal+"%";
+                                    var electricity = connectorList[t].electricity+"kwh";
+                                    var chargingTime = connectorList[t].chargingTime;
+                                    var h = parseInt(chargingTime/60/60);
+                                    var f = parseInt(chargingTime/60 - h*60);
+                                    var ck = h+"小时"+f+"分";
+                                    if(chargingTime<60){
+                                    	ck = chargingTime+"秒";
+                                    }
+                                    var name = connectorList[t].name;
+                                    var ttype = connectorList[t].type;
+                                    var img="";
+                                    if(ttype==null){
+                                        img = '<i class="fa fa-shopping-cart fa-3x"></i>';
+                                    }else{
+                                    	if(ttype=="AC"){
+                                            img = '<img src="/images/' + getImage("ac", st) + '" alt="交流充电桩" style="height: 60px; width: 60px" />'; 
+                                        }else if(ttype=="DC"){
+                                            img = '<img src="/images/' + getImage("dc", st) + '" alt="直流充电桩" style="height: 60px; width: 60px" />';
+                                        }         
+                                    }
+                                    var titlest="";
+                                    if(st=='IDLE'){
+                                        titlest = '空闲';
+                                        }else if(st=='OFFLINE'){
+                                            titlest = '离线';
+                                        }else if(st=='REPAIR'){
+                                            titlest = '检修';
+                                        }else if(st=='CHARGING'){
+                                            titlest = '充电中';
+                                        }else if(st=='OCCUPIED'){
+                                            titlest = '占用';
+                                        }else{
+                                            titlest = '检修';
+                                        }
+                                    value +="-"+name+"-"+titlest+"-"+socVal+"-"+electricity+"-"+ck+"-"+$(img).attr("src")+"-"+data[i].code;
+                                    if(st!="CHARGING"){
+                                        html +='<div class="panel-body" style="padding: 5px"> '
+                                        +'<div style="background-color:' + getColor(st) + ';color:white;padding-left:5px;float:left;width:70%">'+name+'</div> '
+                                        +'<div style="background-color:' + getColor(st) + ';color:white;padding-left:5px;float:right;width:30%">'+titlest+'</div> '
+                                        +'<div class="col-xs-3" style="padding-top:15px;"> '
+                                        +img
+                                        +'</div> '
+                                        +'<div class="col-xs-9" style="padding: 5px"> '
+                                        +'  <div class="text-left" style="margin-top:5px;padding:0 10px;float:left"> '
+                                        +'      <div>&nbsp;</div> '
+                                        +'      <div style="color:#717171">状态：</div> '
+                                        +'      <div>&nbsp;</div> '
+                                        //+'      <div>空闲时长：</div> '
+                                        //+'      <div>空闲时间：</div> '
+                                        +'  </div> '
+                                        +'  <div class="text-left" style="margin-top:5px;padding-left:0;float:left"> '
+                                        +'      <div>&nbsp;</div> '
+                                        +'      <div style="color:#717171">'+titlest+'</div> '
+                                        +'      <div>&nbsp;</div> '
+                                        +'  </div> '
+                                        +'  </div> '
+                                        +'</div> ';
+                                    }else{
+                                        html +='<div class="panel-body"  onclick="ajaxclick(this,'+code+')" id="'+code+'" value="'+value+'" style="padding: 5px" data-toggle="modal" data-target="#myModa22222"> '
+                                        +'<div style="background-color:#F8B62C;color:white;padding-left:5px;float:left;width:70%">'+name+'</div> '
+                                        +'<div style="background-color:#F8B62C;color:white;padding-left:5px;float:right;width:30%">'+titlest+'</div> '
+                                        +'<div class="col-xs-3" style="padding-top:10px;"> '
+                                        +img
+                                        +'</div> '
+                                        +'<div class="col-xs-9" style="padding: 5px"> '
+                                        +'  <div class="text-left" style="margin-top:5px;padding:0 10px;float:left"> '
+                                        +'    <div style="color:#717171">SOC：</div> '
+                                        +'    <div style="color:#717171">充电电量：</div> '
+                                        +'    <div style="color:#717171">充电时长：</div> '
+                                        +'  </div> '
+                                        +'  <div class="text-left" style="margin-top:5px;padding-left:0;float:left"> '
+                                        +'    <div style="color:#717171"><img src="/images/cddc2.gif"/>'+socVal+'</div> '
+                                        +'    <div style="color:#717171">'+electricity+'</div> '
+                                        +'    <div style="color:#717171">'+ck+'</div> '
+                                        +'  </div> '
+                                        +'  </div> '
+                                        +'</div> ';
+                                    }
+                                }
+                                
+                                html +='</div> ';
+                                html +='</div> ';
+                            }
+                        }
+                }
+                $("#htmlCon").html(html);
+            }
+        });
+    }
+     /*]]>*/
+    
+</script>
+    <div class="panel panel-default" style="position:absolute;top:61px;width:14%;right:71.1%;background:#ff5050;color:white">
+        <div class="panel-body" style="padding: 5px">
+            <div style="padding-left:5px">会员</div>
+            <!-- <span id="span_id" th:text="${test}"></span> -->
+            <div class="col-xs-3" style="padding-left:5px;padding-top:15px">
+                <a th:href="@{/admin/accounts/}" style="color:#ffffff"><img th:src="@{/images/home-account.png}"
+                        alt="会员" style="height:55px;width:55px;" /></a>
+            </div>
+            <div class="col-xs-9" style="display:inline-block;vertical-align: top;padding: 5px">
+                <div class=" text-right" style="margin-top:5px;padding-left:0;float:right">
+                    <div><span th:text="${countUser.numUser}"></span></div>
+                    <div><span th:text="${countUser.monthUser}"></span></div>
+                    <div><span th:text="${countUser.dayUser}"></span></div>
+                </div>
+                <div class="text-right" style="margin-top:5px;padding-right:0;float:right">
+                    <div>总会员：</div>
+                    <div>本月：</div>
+                    <div>今天：</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default" style="position:absolute;top:61px;width:14%;right:56.9%;background:orange;color:white">
+        <div class="panel-body" style="padding: 5px">
+            <div style="padding-left:5px">充电次数</div>
+            <div class="col-xs-3" style="padding-left:5px;padding-top:15px">
+                <a th:href="@{/admin/orders/}" style="color:#ffffff"><img th:src="@{/images/home-number.png}"
+                        alt="充电次数" style="height:55px; width: 55px;" /></a>
+            </div>
+            <div class="col-xs-9" style="display:inline-block;vertical-align: top;padding: 5px">
+                <div class=" text-right" style="margin-top:5px;padding-left:0;float:right">
+                    <div><span th:text="${countCharger.numCharger}"></span></div>
+                    <div><span th:text="${countCharger.monthCharger}"></span></div>
+                    <div><span th:text="${countCharger.dayCharger}"></span></div>
+                </div>
+                <div class="text-right" style="margin-top:5px;padding-right:0;float:right">
+                    <div>总次数：</div>
+                    <div>本月：</div>
+                    <div>今天：</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default" style="position:absolute;top:61px;width:16%;right:40.7%;background:#40b050;color:white">
+        <div class="panel-body" style="padding: 5px">
+            <div style="padding-left:5px">电量</div>
+            <div class="col-xs-3" style="padding-left:5px;padding-top:15px">
+                <a th:href="@{/admin/orders/}" style="color:#ffffff"><img th:src="@{/images/home-elect.png}"
+                        alt="电量" style="height: 55px; width: 55px;" /></a>
+            </div>
+            <div class="col-xs-9" style="display:inline-block;vertical-align:top;padding: 5px">
+                <div class=" text-right" style="margin-top:5px;padding-left:0;float:right">
+                    <div><span th:text="${countElectricity.numChargerDegree}"></span></div>
+                    <div><span th:text="${countElectricity.monthChargerDegree}"></span></div>
+                    <div><span th:text="${countElectricity.dayChargerDegree}"></span></div>
+                </div>
+                <div class="text-right" style="margin-top:5px;padding-right:0;float:right">
+                    <div>总电量：</div>
+                    <div>本月：</div>
+                    <div>今天：</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default" style="position:absolute;top:61px;width:16%;right:24.5%;background:#13aef4;color:white">
+        <div class="panel-body" style="padding: 5px">
+            <div style="padding-left:5px">金额</div>
+            <div class="col-xs-3" style="padding-left:5px;padding-top:13px">
+                <a th:href="@{/admin/orders/}" style="color:#ffffff"><img th:src="@{/images/home-money.png}"
+                        alt="充电桩" style="height: 55px; width: 55px;" /></a>
+            </div>
+            <div class="col-xs-9" style="display:inline-block;vertical-align: top;padding: 5px">
+                <div class=" text-right" style="margin-top:5px;padding-left:0;float:right">
+                    <div><span th:text="${countMoney.numChargerMoney}"></span></div>
+                    <div><span th:text="${countMoney.monthChargerMoney}"></span></div>
+                    <div><span th:text="${countMoney.dayChargerMoney}"></span></div>
+                </div>
+                <div class="text-right" style="margin-top:5px;padding-right:0;float:right">
+                    <div>总金额：</div>
+                    <div>本月：</div>
+                    <div>今天：</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default" style="position:absolute;top:61px;width:24%;right:0.3%;background:#8080b0;color:white">
+        <div class="panel-body" style="padding: 5px">
+            <div style="padding-left:5px">充电站/充电桩信息</div>
+            <div class="col-xs-3" style="padding-top:15px;padding-left:5px">
+                <!-- <i class="fa fa-plug fa-3x"></i> -->
+                <a th:href="@{/admin/stations/}" style="color:#ffffff"><img th:src="@{/images/home-charger.png}"
+                        alt="充电桩" style="height:55px; width:55px;margin-bottom:5px;" /></a>
+            </div>
+            <div class="col-xs-9" style="display:inline-block;vertical-align: top;padding: 5px;">
+                <div class="col-xs-3 text-right" style="margin-top:5px;padding-left:0;float:right">
+                    <div><span th:text="${countChargerType.charger}" id="countChargerTypecharger"></span></div>
+                    <div><span th:text="${countChargerType.chongdianzhong}" id="countChargerTypechongdianzhong"></span></div>
+                    <div><span th:text="${countChargerType.lixian}" id="countChargerTypelixian"></span></div>
+                </div>
+                <div class="col-xs-3 text-right" style="margin-top:5px;padding:0;float:right">
+                    <div>充电枪：</div>
+                    <div>在用枪：</div>
+                    <div>离线枪：</div>
+                </div>
+                <div class="col-xs-3 text-right" style="margin-top:5px;padding-left:0;float:right">
+                    <div><span th:text="${countChargerType.station}" id="countChargerTypestation"></span></div>
+                    <div><span th:text="${countChargerType.kongxian}" id="countChargerTypekongxian"></span></div>
+                    <div><span th:text="${countChargerType.jianxiu}" id="countChargerTypejianxiu"></span></div>
+                </div>
+                <div class="col-xs-3 text-right" style="margin-top:5px;padding:0;float:right">
+                    <div>充电站：</div>
+                    <div>空闲枪：</div>
+                    <div>故障枪：</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default" style="position:absolute;top:169px;width:24%;right:0.3%">
+        <div class="panel-heading">
+               <i class="fa fa-area-chart fa-1x"></i>&nbsp;今日电量
+        </div>
+        <div class="panel-body" style="padding: 5px;">
+            <div id="main1" style="width: 100%;height:190px;margin-top:-50px;margin-bottom:-40px"></div>
+        </div>
+    </div>
+    <div class="panel panel-default" style="position:absolute;top:325px;width:24%;right:0.3%">
+        <div class="panel-heading">
+            <i class="fa fa-area-chart fa-1x"></i>&nbsp;今日金额
+        </div>
+        <div class="panel-body" style="padding: 5px">
+            <div id="main2" style="width: 100%;height:190px;margin-top:-50px;margin-bottom:-40px"></div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+               var timers = setInterval(function(){  
+            	   $.ajax({
+                       type: "post",
+                       url: "/css/countChargerType",
+                       dataType: "json",
+                       async: false,
+                       success: function(object){
+                    		console.info(object);
+                    	   $("#countChargerTypecharger").text(object.charger);
+                    	   $("#countChargerTypechongdianzhong").text(object.chongdianzhong);
+                    	   $("#countChargerTypelixian").text(object.lixian);
+                    	   $("#countChargerTypestation").text(object.station);
+                    	   $("#countChargerTypekongxian").text(object.kongxian);
+                    	   $("#countChargerTypejianxiu").text(object.jianxiu);
+                       	}
+                       })
+      	 },10000);
+               
+    var hour = [[${countAllOrderItem.hour}]];
+    var setdatadl = [[${countAllOrderItem.setdatadl}]];
+    var setdatamo = [[${countAllOrderItem.setdatamo}]];
+    
+    // 基于准备好的dom，初始化echarts实例
+    var myChart1 = echarts.init(document.getElementById('main1'));
+    var myChart2 = echarts.init(document.getElementById('main2'));
+    
+    var maxElectric = 0, maxMoney = 0;
+    for(var i=0; i<setdatadl.length; i++) {
+        if(maxElectric < setdatadl[i]) {
+        	maxElectric = setdatadl[i];
+        }	
+    }
+    for(var j=0; j<setdatamo.length; j++) {
+        if(maxMoney < setdatamo[j]) {
+        	maxMoney = setdatamo[j];
+        }	
+    }
+    
+    maxElectric = parseInt(maxElectric / 100 + 1) * 100;
+    maxMoney    = parseInt(maxMoney / 100 + 1) * 100;
+    
+    option1 = {
+    	grid : {
+    	    right: '4%'	
+    	},
+        xAxis: {
+            data: hour,
+            silent: false,
+            splitLine: {
+                show: false
+            }
+        },
+        yAxis: {
+            min : 0,
+            max : maxElectric,
+            interval : maxElectric/5,
+            axisTick : {
+            	length : 3
+            }
+        },
+        series: [{
+            type:'line',
+            smooth:true,
+            symbol: 'none',
+            sampling: 'average',
+            itemStyle: {
+                normal: {
+                    color: '#40b050'
+                }
+            },
+            lineStyle : {
+                normal : {
+                    width : 1
+                }
+            },
+            areaStyle: {
+                normal: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: '#40b050'
+                    }, {
+                        offset: 1,
+                        color: '#40b050'
+                    }])
+                }
+            },
+            data: setdatadl
+            /* animationDelay: function (idx) {
+                return idx * 10 + 100;
+            } */
+        }],
+        animationEasing: 'elasticOut',
+        animationDelayUpdate: function (idx) {
+            return idx * 5;
+        }
+    };
+
+    var option2 = {
+		grid : {
+            right: '4%' 
+        },
+        xAxis: {
+            data: hour,
+            silent: false,
+            splitLine: {
+                show: false
+            }
+        },
+        yAxis: {
+        	min : 0,
+        	max : maxMoney,
+        	interval : maxMoney/5,
+        	axisTick : {
+                length : 3
+            }
+        },
+        series: [{
+            type:'line',
+            smooth:true,
+            symbol: 'none',
+            sampling: 'average',
+            itemStyle: {
+                normal: {
+                    color: '#ffa500'
+                }
+            },
+            lineStyle : {
+            	normal : {
+            		width : 1
+            	}
+            },
+            areaStyle: {
+                normal: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: '#ffa500'
+                    }, {
+                        offset: 1,
+                        color: '#ffa500'
+                    }])
+                }
+            },
+            data: setdatamo
+            /* animationDelay: function (idx) {
+                return idx+"k";
+            }  */
+        }],
+        animationEasing: 'elasticOut',
+        animationDelayUpdate: function (idx) {
+            return idx * 5;
+        }
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart1.setOption(option1);
+    myChart2.setOption(option2);
+    /*]]>*/
+</script>
+    <div class="panel panel-default" style="position:absolute;top:481px;width:24%;right:0.3%;min-height:153px">
+        <div class="panel-heading" style="padding:5px;">
+            <a th:href="@{/admin/events/}" style="color:#333"><i class="fa fa-warning fa-1x" style="margin-left:15px"></i>&nbsp;&nbsp;最新告警信息</a>
+        </div>
+         <div class="panel-body" style="padding: 0px;padding-top:5px;margin-top:-5px">
+            <div style="padding: 5px">
+                <div th:if="${countEvent.list0} != null"  class="col-xs-6 text-right" style="margin-top:0px;padding-left:0;float:right">
+                    <div><span th:each="eventLevel : ${eventLevels}" th:if="${countEvent.list0.eventCode != null and countEvent.list0.eventCode.eventLevel == eventLevel.dictValue}" th:text="${eventLevel.descr}"></span></div>
+                    <div><span th:text="${countEvent.list0.charger.code}"></span></div>
+                    <div><span th:each="eventType : ${eventTypes}" th:if="${countEvent.list0.eventCode != null and countEvent.list0.eventCode.eventType == eventType.dictValue}" th:text="${eventType.descr}"></span></div>
+                </div>
+                <div th:if="${countEvent.list0} != null" class="col-xs-6 text-left" style="margin-top:0px;padding-right:0;float:left">
+                    <div><span th:text="${#dates.format(countEvent.list0.createdAt,'yyyy-MM-dd HH:mm:ss')}"></span></div>
+                    <div><span th:text="${countEvent.list0.station}"></span></div>
+                    <div><span th:text="${countEvent.list0.eventCode.decription}" th:if="${countEvent.list0.eventCode != null}"></span></div>
+                </div>
+                <hr th:if="${countEvent.list1} != null" class="col-xs-12" style="padding: 0;margin-bottom: 0;margin-top: 1px"/>
+                <div th:if="${countEvent.list1} != null" class="col-xs-6 text-right" style="margin-top:0px;padding-left:0;float:right">
+                    <div><span th:each="eventLevel : ${eventLevels}" th:if="${countEvent.list1.eventCode != null and countEvent.list1.eventCode.eventLevel == eventLevel.dictValue}" th:text="${eventLevel.descr}"></span></div>
+                    <div><span th:text="${countEvent.list1.charger.code}"></span></div>
+                	<div><span th:each="eventType : ${eventTypes}" th:if="${countEvent.list1.eventCode != null and countEvent.list1.eventCode.eventType == eventType.dictValue}" th:text="${eventType.descr}"></span></div>
+                </div>
+                <div th:if="${countEvent.list1} != null" class="col-xs-6 text-left" style="margin-top:0px;padding-right:0;float:left">
+                    <div><span th:text="${#dates.format(countEvent.list1.createdAt,'yyyy-MM-dd HH:mm:ss')}"></span></div>
+                    <div><span th:text="${countEvent.list1.station}"></span></div>
+                    <div><span th:text="${countEvent.list1.eventCode.decription}" th:if="${countEvent.list1.eventCode != null}"></span></div>
+                </div>
+            </div>
+        </div> 
+    </div>
+    
+    <div class="panel panel-default" style="position:absolute;bottom:20px;margin-left:0px;width:18%">
+        <div class="panel-body" style="padding: 0px">
+            <div class="col-xs-12" style="padding:0px">
+                <div class="text-center" style="float:left;width:25%;height:24px;color:white;background:#F8B62C"><h4 style="margin-top:2px">充电</h4></div>
+                <div class="text-center" style="float:left;width:25%;height:24px;color:white;background:#BFBFBF"><h4 style="margin-top:2px">离线</h4></div>
+                <div class="text-center" style="float:left;width:25%;height:24px;color:white;background:#DF0716"><h4 style="margin-top:2px">故障</h4></div>
+                <div class="text-center" style="float:left;width:25%;height:24px;color:white;background:#55B3AC"><h4 style="margin-top:2px">空闲</h4></div>
+            </div>
+        </div>
+    </div>
+    <span style="display: none" id="hiddenspan"></span>
+    
+    <script type="text/javascript"> 
+        function getColor(status) {
+        	//默认状态，离线（灰色）
+        	var color = "#BFBFBF";
+        	if(status == 'IDLE') {
+        		color = "#55B3AC";
+        	} else if(status == 'CHARGING') {
+        		color = "#F8B62C";	   	
+        	} else if(status == 'REPAIR') {
+        		color = "#DF0716";	
+        	}
+        	return color;
+        }
+        
+        function getImage(chargerType, status) {
+        	var _image = chargerType;
+        	if(status == 'IDLE') {
+        		_image += "_idle.png"
+            } else if(status == 'CHARGING') {
+            	_image += "_charging.png"
+            } else if(status == 'OFFLINE') {
+            	_image += "_offline.png"           	
+            } else {
+            	_image += "_fault.png"
+            }
+        	return _image;
+        }
+    </script>
+</div>
+</body>
+</html>

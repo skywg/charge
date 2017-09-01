@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>充电桩运营管理平台</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<link rel='icon' th:href='@{/images/favicon.ico}' type='image/x-ico' /> 
+    <link href="../../static/components/bootstrap/dist/css/bootstrap.min.css"
+          th:href="@{/components/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet"/>
+
+    <link href="../../static/components/login/main.css"
+          th:href="@{/components/login/main.css}" rel="stylesheet"/>
+    <!-- Important. For Theming change primary-color variable in main.css  -->
+
+    <link href="../../static/components/font-awesome/css/font-awesome.min.css"
+          th:href="@{/components/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
+
+	<script src="../../static/components/jquery/dist/jquery.min.js"
+        th:src="@{/components/jquery/dist/jquery.min.js}"></script>
+    <!-- HTML5 shiv and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+    	html{
+    		width:100%;
+            height:100%;margin: 0;padding: 0;
+    	}
+        body {
+            font-family: "微软雅黑";
+            width:100%;margin: 0;padding: 0;
+            height:100%;
+           	background:url("/components/login/bg1.png") no-repeat;
+            background-size:100% auto;
+        }
+        .logo-wenzi{
+        	font-size:24px;
+        	letter-spacing:2px;
+        	font-family: "黑体";
+        	color:#000000;
+        	font-weight:bold;
+        	display:inline-block;
+        	position:absolute;
+        	top:54%;
+        } 
+        fieldset {
+            width: 300px;
+            margin: 200px auto 10px;
+        }
+        input, button {
+        	width: 100%;
+            padding: 3px
+        }
+        .use{
+        	padding-left:35px;
+        	background-color: #FFFFFF;
+        }
+        .pass{
+       		padding-left:35px;
+       		background-color:#FFFFFF;
+        }
+        @media only screen and (min-width: 960px){
+    		form{
+    			width:430px;
+    			margin:0 auto;
+    		}
+    	}
+    </style>
+</head>
+<script type="text/javascript">
+      //刷新验证码
+      function changeImg(_this){  
+    	  $(_this).attr("src", "/admin/draw?t="+new Date().getTime());
+      }
+     </script>
+<body onload="document.form.username.focus();" style="overflow:hidden;">
+
+
+<!-- Main Container start -->
+<div class="dashboard-container">
+    <div style="background:url(/components/login/logo13.png) no-repeat;background-size:30% auto;height:100px;background-position-x:90px;"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-sm-4 col-sm-offset-6 denglu">
+                <div class="sign-in-container">
+                    <form name="form" th:action="@{/auth}" action="/auth" method="POST" class="login-wrapper" style="background:#e3f0ff;border:1px solid #d1e7ff;width:322px;height:350px;">
+                        <div style="height:70px;background:url(/components/login/denglu.png) no-repeat;background-size:100% auto;background-position-y:20px;"></div>
+                        <div class="content">
+                            <div class="form-group controls" style="position: relative;margin-bottom:30px">
+                                <img th:src="@{/components/login/account1.png}" style="position: absolute;left:0px;top:0px;width:34px;height:34px"/>
+                                <input type="text" class="form-control use" name="username" id="userName" placeholder="请输入用户名"  autocomplete="off" style="border-radius:0px"/>
+                            </div>
+                            <div class="form-group" style="position: relative;margin-bottom:30px">
+                                <img th:src="@{/components/login/password1.png}" style="position: absolute;left:0px;top:0px;width:34px;height:34px"/>
+                                <input type="password" class="form-control pass" name="password" id="Password" placeholder="请输入密码" autocomplete="off" style="border-radius:0px"/>
+                            </div>
+                            <div class="form-group" style="margin-bottom:25px">
+                                <div class="row col-md-7">
+                                	<input type="text" class="form-control" name="yzm" placeholder="请输入验证码" style="border-radius:0px"/>
+                                </div>
+                                <div class="row col-md-5" style="margin-left:10px">
+                                	<img alt="看不清，换一张" id="validateCodeImg" th:src="@{/admin/draw}" onclick="changeImg(this)"/>
+                            	</div>                           	
+                            </div>
+                            <div th:text="${message}" class="text-center" style="clear:both;color:#ff0000;height:25px;line-height:25px;padding-top:10px"></div>    
+                        </div>
+                        <div class="actions" style="background:none">
+                            <input class="btn btn-primary" name="Login" type="submit" style="background-color:#0075c1;" value="登 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录"/>
+                            <!--<a class="link" href="#">忘记密码？详询请点击</a>-->
+                            <div class="clearfix"></div>
+                            <br/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Row End -->
+    </div>
+</div>
+<!-- Main Container end -->
+
+
+<!--<form name="form" th:action="@{/login}" action="/login" method="POST">-->
+    <!--<fieldset>-->
+        <!--<legend>Sign in</legend>-->
+
+        <!--<p th:if="${param.logout}" class="alert">You have been logged out</p>-->
+        <!--<p th:if="${param.error}" class="alert alert-error">There was an error, please try again</p>-->
+
+        <!--<p><input type="text" name="username" value="" placeholder="Username"/></p>-->
+        <!--<p><input type="password" name="password" placeholder="Password"/></p>-->
+
+        <!--<button type="submit">Login</button>-->
+    <!--</fieldset>-->
+<!--</form>-->
+<script th:inline="javascript">
+        /*<![CDATA[*/
+        var username = [[${username}]];
+        var us = document.getElementById("userName");
+        us.value=username;
+        /*]]>*/
+    </script>
+</body>
+</html>

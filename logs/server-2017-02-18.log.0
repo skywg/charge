@@ -1,0 +1,14 @@
+2017-02-18 20:42:45.086 [main] INFO  com.iycharge.server.Application -Starting Application on AFODC-609182138 with PID 620 (D:\eclipseSpeace\charge-server\target\classes started by Administrator in D:\eclipseSpeace\charge-server)
+2017-02-18 20:42:45.232 [main] INFO  com.iycharge.server.Application -The following profiles are active: prod
+2017-02-18 20:44:50.196 [main] INFO  com.iycharge.server.Application -Started Application in 128.283 seconds (JVM running for 133.056)
+2017-02-18 20:46:22.835 [main] INFO  c.iycharge.server.ccu.core.CCUServer -CCU Server has started success!
+2017-02-18 20:54:44.337 [main] INFO  com.iycharge.server.Application -Starting Application on AFODC-609182138 with PID 20552 (D:\eclipseSpeace\charge-server\target\classes started by Administrator in D:\eclipseSpeace\charge-server)
+2017-02-18 20:54:44.343 [main] INFO  com.iycharge.server.Application -The following profiles are active: prod
+2017-02-18 20:56:47.168 [main] INFO  com.iycharge.server.Application -Starting Application on AFODC-609182138 with PID 7480 (D:\eclipseSpeace\charge-server\target\classes started by Administrator in D:\eclipseSpeace\charge-server)
+2017-02-18 20:56:47.174 [main] INFO  com.iycharge.server.Application -The following profiles are active: prod
+2017-02-18 20:57:40.450 [main] INFO  com.iycharge.server.Application -Started Application in 54.985 seconds (JVM running for 57.292)
+2017-02-18 20:57:57.293 [main] INFO  c.iycharge.server.ccu.core.CCUServer -CCU Server has started success!
+2017-02-18 21:07:41.773 [main] INFO  com.iycharge.server.Application -Starting Application on AFODC-609182138 with PID 13040 (D:\eclipseSpeace\charge-server\target\classes started by Administrator in D:\eclipseSpeace\charge-server)
+2017-02-18 21:07:41.779 [main] INFO  com.iycharge.server.Application -The following profiles are active: prod
+2017-02-18 21:11:22.969 [main] INFO  com.iycharge.server.Application -Started Application in 223.251 seconds (JVM running for 226.668)
+2017-02-18 21:12:55.854 [main] INFO  c.iycharge.server.ccu.core.CCUServer -CCU Server has started success!

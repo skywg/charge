@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>基本信息</h3>
+				<hr style="border: solid 1px #cccccc; margin:0px;padding:0px"/>
+			</div>
+
+	            <div class="form-group col-md-7">
+	                <label for="inputTitle">模板名称</label>
+	                <input type="text" th:field="*{name}" required="required" maxlength="20" class="form-control" id="inputTitle"
+	                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+	            </div>
+	            <div class="form-group col-md-5">
+	                <label for="inputTitle">状态</label>
+	                <input type="text" th:field="*{status.title}" required="required" maxlength="20" class="form-control" id="inputTitle"
+	                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+	            </div>
+	            <div class="form-group col-md-12">
+	                <label for="inputTitle">模板说明</label>
+                        <textarea class="form-control" id="inputDescription" maxlength="500"
+                                  style="cursor:auto;" disabled="disabled" th:field="*{description}"  placeholder=""></textarea>
+	            </div>
+		</div>
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<br/>
+				<h3>电价信息</h3>
+				<hr style="border: solid 1px #cccccc; margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-12">
+				<!--//Location-->
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>开始时间</th>
+							<th>结束时间</th>
+							<th>电价(元/千瓦时)</th>
+							<th>服务费(元)</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="price, priceItemIter : ${prices}" th:attr="data-id=${price.id}">
+							<td th:text="${priceItemIter.count}">#</td>
+							<td th:text="${price.startAt}">开始时间</td>
+							<td	th:text="${price.endAt}">结束时间</td>
+							<td th:text="${price.price}">电价(元/千瓦时)</td>
+							<td th:text="${price.fee}">服务费(元)</td>
+							<td th:text="${price.remark}">备注</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>其他信息</h3>
+				<hr style="border: solid 1px #cccccc; margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputCode"> 创建人： <span th:text="*{creator}"></span>
+				</label>
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputCode"> 创建时间： <span th:text="*{#dates.format(createdAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+				</label>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

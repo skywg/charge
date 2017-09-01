@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>充电卡划账</title>
+<script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>  
+<script th:inline="javascript">
+        /*<![CDATA[*/
+        $(document).ready(function(){
+        	
+        	
+        	$("#one").bind("click",function(){
+        		$("#money").val(100);
+        	});
+        	$("#two").bind("click",function(){
+        		$("#money").val(200);
+        	});
+        	$("#five").bind("click",function(){
+        		$("#money").val(500);
+        	});
+        	$("#thou").bind("click",function(){
+        		$("#money").val(1000);
+        	});
+        });
+        function check(){    
+        	var balance = $("#balance").val();
+        	var charger = $("#money").val();
+        	var chargerNum=parseInt(charger);
+    		var chargerLenght=String(chargerNum).length
+        	if((balance-charger)<0){
+        		alert("余额不足");
+        		return false;
+        	}
+        	if($("#cardStatus").val() !="正常" || $("#accountStatus").val() != "正常"){
+        		$("#money").attr("readyOnly",true);
+        		$(".num").attr("disabled",true);
+        		$("#money").val(0);
+        		alert("会员或者卡处于异常状态，无法充值");
+        		return false;
+        	}
+        	if(isNaN(charger)){
+        		alert("请输入数字");
+        		return false;
+        	}
+        	if($("#money").val()-1<0){
+        		alert("最低充值1元");
+        		return false;
+        	}
+        	if(charger[0]=="0"){
+        		alert("不能以0开头");
+        		return false;
+        	}
+        	if(chargerLenght>9){
+        		alert("金额过大，请重新输入");
+        		return false;
+        	}
+        	return true;
+        }
+        
+	    /*]]>*/
+    </script>
+</head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/cards/}">会员中心</a></li>
+        <li><a th:href="@{/admin/cards/}">充电卡管理</a></li>
+        <li class="active">充电卡划账</li>
+    </ol>
+        <div class="panel" th:object="${card}">
+	        <div role="tabpanel" class="panel-tabs">
+	            <ul class="nav nav-tabs">
+					<li role="presentation" class="active"><a>充电卡划账详情</a></li>
+	            </ul>
+	        </div>
+	        <form role="form" method="post" th:action="@{/admin/cards/charging?cardNo={cardNo}(cardNo=${card.cardNo})}" th:object="${card}">
+            <div class="panel-body" th:include="admin/card/rechargeform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html"
+                               th:href="@{/admin/cards/search}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary remit-btn-id" onclick="return check()">划账</button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+            </form>
+        </div>
+</div>
+</body>
+</html>

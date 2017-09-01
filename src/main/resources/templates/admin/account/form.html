@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="row">
+	<div class="col-sm-12 col-md-12">
+        <div class="row section">
+			<div class="form-group col-md-12">
+				<h3>基本信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="box-title-button"><!--//title-->
+                  <button type="button" id="edit_info" style="display: none;margin-right:15px"  class="btn-query btn-primary query-edit-id">编辑</button>
+           </div>
+			<div class="form-group col-md-12">
+				<div class="form-group col-md-3" style="text-align:center;">
+					<label for="inputTitle" style="display:block;"><span>会员头像</span></label>
+					<img  th:if="*{avatar==null}" th:src="@{/images/account-head.png}" style="width:200px;height:200px;"/>
+					<img  th:if="*{avatar!=null}" th:src="@{*{avatar}}" style="width:200px;height:200px;"/>
+				</div>
+				<div class="form-group col-md-9">
+					<div class="form-group col-md-4">
+		                <label for="inputTitle">姓名</label>
+		                <input type="hidden" th:value="*{id}" id="inputAccountId"/>
+		                <input type="text" th:field="*{realName}" maxlength="20" class="form-control" id="inputNickname"
+                       	style="cursor:auto;" disabled="disabled" required="required" />
+		            </div>
+		            <div class="form-group col-md-4">
+		                <label for="inputTitle"><span style="color:red"></span>手机</label>
+		                <input type="text" th:field="*{phone}" maxlength="11" class="form-control" id="inputphone"
+							style="cursor:auto;" disabled="disabled" pattern="^1[3-9]\d{9}$" required="required" />
+		            </div>
+		            <div class="form-group col-md-4">
+		                <label for="inputTitle"><span style="color:red"></span>昵称</label>
+		                <input type="text" th:field="*{nickname}" maxlength="20" class="form-control" id="inputrname"
+							style="cursor:auto;" disabled="disabled" required="required" />
+		            </div>
+		            <div class="form-group col-md-4">
+		                <label for="inputTitle"><span style="color:red"></span>邮箱</label>
+		                <input type="text" th:field="*{email}" maxlength="20" style="cursor:auto;" disabled="disabled" class="form-control" id="inputemail"
+	                       pattern="^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$" 
+	                        required="required"/>
+		            </div>
+
+ 		            <div class="form-group col-md-4" th:if="${account.accountType== 'PERSON' }">
+		                <label for="inputTitle"><span style="color:red"></span>出生日期</label>
+		                <input type="text" th:field="*{birth}" class="form-control"
+                      style="cursor:auto;" disabled="disabled" maxlength="10"/>
+		            </div>
+		            <div class="form-group col-md-4" th:if="${account.accountType== 'PERSON' }">
+		                <label for="inputTitle"><span style="color:red"></span>性别</label>
+		                <input class="form-control" id="inputType" style="cursor:auto;" disabled="disabled" th:value="${account.gender}"/>
+		            </div> 
+
+		            <div class="form-group col-md-4">
+		                <label for="inputTitle"><span style="color:red"></span>状态</label>
+		                <input class="form-control" id="inputType" style="cursor:auto;" disabled="disabled" th:value="${account.status.title}"/>
+		            </div>
+		            <div class="form-group col-md-4">
+		                <label for="inputTitle"><span style="color:red"></span>注册时间</label>
+		                <input type="text" th:value="${#dates.format(account.createdAt,'yyyy-MM-dd HH:mm:ss')}" class="form-control"
+                      style="cursor:auto;" disabled="disabled" maxlength="10"/>
+		            </div>
+		            <div class="form-group col-md-4">
+		                <label for="inputTitle"><span style="color:red"></span>积分</label>
+		                <input type="text" th:value="${account.credit}" required="required" maxlength="20" class="form-control" id="inputTitle"
+		                       style="cursor:auto;" disabled="disabled" />
+		            </div>
+		            <div class="form-group col-md-4">
+		                <label for="inputTitle"><span style="color:red"></span>会员等级</label>
+		                <input type="text" required="required" maxlength="20" class="form-control" id="inputTitle"
+		                       style="cursor:auto;" disabled="disabled" />
+		            </div>
+		            <div class="form-group col-md-4">
+		                <label for="inputTitle"><span style="color:red"></span>钱包余额(元)</label>
+		                <input type="text" th:value="${account.money}" required="required" maxlength="20" class="form-control" id="inputTitle"
+		                       style="cursor:auto;" disabled="disabled" />
+		            </div>
+				</div>
+			</div>
+		</div>
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>绑定信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-12">
+				<table class="table table-striped table-bordered table-hover">
+		        	<thead>
+	                    <tr>
+					        <th>类型</th>
+			                <th>昵称</th>
+			                <th>性别</th>
+			                <th style="width:50px">头像</th>
+			                <th>国家</th>
+			                <th>省市</th>
+			                <th>城市</th>
+			                <th>状态</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                	 <tr th:each="auth, authIter : ${account.authorizations}">
+	                        <td th:text="${auth.provider}" style="padding:8px;line-height: 40px;">类型</td>
+	                        <td th:text="${auth.nickname}" style="padding:8px;line-height: 40px;">昵称</td>
+	                        <td th:text="${auth.gender}" style="padding:8px;line-height: 40px;">性别</td>
+	                        <td style="padding:8px"><img th:if="${auth.avatar!=null}" th:src="@{${auth.avatar}}" style="width:40px;height:40px"/></td>
+	                        <td th:text="${auth.country}" style="padding:8px;line-height: 40px;">国家</td>
+	                        <td th:text="${auth.provice}" style="padding:8px;line-height: 40px;">省市</td>
+	                        <td th:text="${auth.city}" style="padding:8px;line-height: 40px;">城市</td>
+	                        <td style="padding:8px;line-height: 40px;">
+	                            <span th:if="${account.phone==null}" th:text="未绑定"></span>
+	                        	<span th:if="${account.phone!=null}" th:text="绑定"></span>
+	                        </td>
+                      </tr>
+	                </tbody>
+		        </table>
+			</div>		
+		</div>		
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>偏好信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-12">
+				<table class="table table-striped table-bordered table-hover">
+		        	<thead>
+	                    <tr>
+			                <th>汽车品牌</th>
+			                <th>家庭住址</th>
+			                <th>公司地址</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                	 <tr th:each="preference, preferenceIter : ${account.preference}" >
+	                        <td  th:text="${preference.carBrand}">类型</td>
+	                        <td th:text="${preference.homeAddress}">家庭住址</td>
+	                        <td th:text="${preference.compnayAddress}">公司地址</td>
+                     	 </tr>
+	                </tbody>
+		        </table>
+			</div>
+		</div>
+		<div class="row section">	
+		<div class="form-group col-md-12">
+                <h3>可充电的站</h3>
+				<hr style="margin:0px;padding:0px"/>
+				<div class="form-group col-md-12">
+		            	<!-- <label for="inputTitle">备注</label>
+				            <textarea class="form-control"   th:field="*{note}" id="inputDescription" maxlength="250"
+				         				placeholder=""></textarea> -->
+									<!-- <label for="inputTitle"><span style="color:red"></span>可充电的站</label> -->
+									<textarea id="checkboxinput"  data-toggle="modal" data-target='#myModal' class="form-control state-id" readOnly="readOnly"></textarea>
+									<input type="hidden" id="stationIds"  name="stationIds"/>
+									<!-- <textarea class="form-control"   th:field="*{note}" id="inputDescription" maxlength="250"
+				         				placeholder=""></textarea> -->
+		            </div>
+        </div>	
+        </div>
+	</div>
+</div>
+</body>
+</html>

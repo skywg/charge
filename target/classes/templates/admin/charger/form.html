@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body onload="init()">
+		<script th:inline="javascript">
+			function init(){
+				/*<![CDATA[*/
+				var select ='';
+				var objSt = document.getElementById("inputStation").options;
+				for(var i=0;i<objSt.length;i++){
+		            var flag = objSt[i].selected;
+		            if(flag){
+		            	select = objSt[i].value;
+		            }
+		         }
+		        //var select = objS.options[0].value;
+		        var selected='';
+		        var inputstations = document.getElementById("inputstations").options;
+		        if(inputstations){
+	    			for(var i=0;i<inputstations.length;i++){
+	    				 var operatorId = inputstations[i].value;
+	    				 var stationId = inputstations[i].text;
+	    				 if(select==stationId){
+	    					 selected =operatorId;
+	    					 break;
+	    				 }
+	    			}
+	    		}
+	    		var data = [[${operators}]];
+	    		for(var i=0;i<data.length;i++){
+	    			if(selected==data[i].id){
+	    				var objS = document.getElementById("tran");
+	    	        	objS.value=data[i].codeAndName;
+	    	        	var objSReal = document.getElementById("tranReal");
+	    	        	objSReal.value=data[i].id;
+	    				//alert(data[i].codeAndName)
+	    				break;
+	    			}
+	    		}
+		       /*  var objS = document.getElementById("tran");
+		        if(objS.value==""){
+		        	objS.value=obj.text;
+		        }
+	        	var objSReal = document.getElementById("tranReal");
+	        	if(objSReal.value==""){
+	        		objSReal.value=obj.value;
+	        	} */
+	        	//
+	        	supportCars();
+				//console.info(obj);
+				/*]]>*/
+			}
+			//初始化支持厂家
+			function supportCars(){
+			      /*<![CDATA[*/
+				var supportCar = document.getElementById("sc").value;
+				//var supportCar = "比亚迪,别克,力帆,宝马,其它";
+				var supports = document.getElementsByName("supportCars");
+				var supportCarList = null;
+				if(supportCar != null){
+					supportCarList = supportCar.split(",");	
+				}
+				if(supportCarList != null){
+					for(var i=0; i<supports.length; i++) {
+					   	for(var j=0; j<supportCarList.length; j++ ){
+					   	   	if(supportCarList[j] == supports[i].value){
+					   	   		supports[i].setAttribute("checked","checked");
+					   	   		}
+					   	   	}
+						  }
+				}  
+			 /*]]>*/
+			}
+   		 </script>
+    <script th:inline="javascript">
+    	/*<![CDATA[*/
+    	function checkOperator(obj){
+    		var selected='';
+    		var select = obj.options[obj.selectedIndex].value;
+    		var inputstations = document.getElementById("inputstations").options;
+    		if(inputstations){
+    			for(var i=0;i<inputstations.length;i++){
+    				 var operatorId = inputstations[i].value;
+    				 var stationId = inputstations[i].text;
+    				 if(select==stationId){
+    					 selected =operatorId;
+    					 break;
+    				 }
+    			}
+    		}
+    		var data = [[${operators}]];
+    		for(var i=0;i<data.length;i++){
+    			if(selected==data[i].id){
+    				var objS = document.getElementById("tran");
+    	        	objS.value=data[i].codeAndName;
+    	        	var objSReal = document.getElementById("tranReal");
+    	        	objSReal.value=data[i].id;
+    				//alert(data[i].codeAndName)
+    				break;
+    			}
+    		}
+        	 //var selected = objS.options[objS.selectedIndex].selected;
+    	}
+    	//提交表单时，给supportCars赋值
+    	function setSupportCars(){
+    		var supportsCars = document.getElementsByName("supportCars");
+    		var supportCar = document.getElementById("sc");	
+    		var supports ="";
+    		for(var i = 0 ; i < supportsCars.length; i++){
+    			if(supportsCars[i].checked == true){
+    				supports+=supportsCars[i].value+",";
+    			}
+    		}
+    		supportCar.value=supports.substring(0,supports.length-1);
+    		return true;
+    	}
+    	
+    	function check(){
+    		var selectAll = document.getElementById("selectAll");
+    		var supportsCars = document.getElementsByName("supportCars");
+    		if(selectAll.checked==false){
+    			for(var i = 0 ; i < supportsCars.length ; i++){
+    				supportsCars[i].checked=false;
+    			}
+    		}else{
+    			for(var i = 0 ; i < supportsCars.length ; i++){
+    				supportsCars[i].checked=true;
+    			}
+    		}
+    	}
+    	/*]]>*/
+    </script>
+<div class="row">
+<div class="form-group col-md-12">
+				<span style="font-size:20px">充电桩信息</span><br/>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+    <div class="col-sm-9 col-md-9">
+        <div class="row section">
+        
+            <div class="form-group col-md-6"><!--//title-->
+                <label for="inputCode"><span style="color:red">*</span>充电桩编号</label>
+                <input type="text" th:field="*{code}" maxlength="16" class="form-control" required="required" id="inputCode"
+                       placeholder="" pattern="^[0-9]*[1-9][0-9]*$" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+            </div>
+            <div class="form-group col-md-6"><!--//title-->
+                <label for="inputTitle"><span style="color:red">*</span>充电桩名称</label>
+                <input type="text" th:field="*{name}" maxlength="20" class="form-control" required="required" id="inputTitle"
+                       placeholder="测试桩1"/>
+            </div>
+            <div class="form-group col-md-6"><!--//title-->
+                <label for="inputTitle">车位号</label>
+                <input type="text" th:field="*{parkNo}" maxlength="20" class="form-control" id="inputTitle"
+                       placeholder="粤DSB110"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputArea"><span style="color:red">*</span>充电桩厂家</label>
+                <select class="form-control"  style="cursor:auto;"  required="required" th:field="*{manufacturer}">
+                    <option th:each="t : ${manufacturers}"
+                            th:value="${t.dictValue}"
+                            th:text="${t.descr}" selected="selected">Type
+                    </option>
+                </select>
+                <!-- <select class="form-control" id="inputManufacturer" required="required" th:field="*{manufacturer}">
+                    <option value="亨通新能源">亨通新能源</option>
+                    <option value="普天">普天</option>
+                    <option value="许继">许继</option>
+                    <option value="南瑞">南瑞</option>
+                    <option value="奥特迅">奥特迅</option>
+                    <option value="泰坦">泰坦</option>
+                    <option value="万马">万马</option>
+                    <option value="华商三优">华商三优</option>
+                    <option value="特锐德">特锐德</option>
+                    <option value="其他">其他</option>
+                </select> -->
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputType"><span style="color:red">*</span>充电桩类型</label>
+                <select class="form-control" id="inputType" required="required" th:field="*{type}">
+                    <option th:each="t : ${types}"
+                            th:value="${t.dictValue}"
+                            th:text="${t.descr}">Type
+                    </option>
+                </select>
+            </div>
+            <!-- <div class="form-group col-md-6">
+                <label for="inputType"><span style="color:red">*</span>充电接口</label>
+                <select class="form-control" id="inputType1" required="required" th:field="*{chargeIf}">
+                    <option th:each="t : ${chargeIfs}"
+                            th:value="${t.dictValue}"
+                            th:text="${t.descr}" selected="selected">Type
+                    </option>
+                </select>
+            </div> -->
+            <div class="form-group col-md-4">
+                <label for="inputType"><span style="color:red">*</span>联网方式</label>
+                <select class="form-control" id="inputType1" required="required" th:field="*{netingWorkModel}">
+                    <option th:each="t : ${netingWorkModels}"
+                            th:value="${t.dictValue}"
+                            th:text="${t.descr}" selected="selected">Type
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputType"><span style="color:red">*</span>电桩型号</label>
+                <select class="form-control" id="inputType1" required="required" th:field="*{chargerModel}">
+                    <option th:each="t : ${chargeModels}"
+                            th:value="${t.dictValue}"
+                            th:text="${t.descr}" selected="selected">Type
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-md-12"><!--//title-->
+                <label for="inputCode"><span style="color:red">*</span>二维码</label>
+                <input type="text" th:field="*{qrcode}"  pattern="^[0-9a-zA-Z]*$"  title="（只能输入字母和数字！）" maxlength="64" class="form-control" id="inputTitle" required="required"     placeholder="二维码"/>
+            </div>
+            
+        </div>
+        <script type="text/javascript">
+		        function dbChange(){
+		        	var objS = document.getElementById("pid");
+		        	var obj = objS.options[objS.selectedIndex];
+		        	 var selected = objS.options[objS.selectedIndex].selected;
+		        	//清空选择
+		        	obj.selected = "";
+		        	//清除数据
+		        	var objSs = document.getElementById("realSupportCar");
+			         var object = objSs.value;
+		        	if(selected){
+			        	 //包含
+				         if(object.indexOf(obj.value)!=-1){
+				        	 objSs.value=objSs.value.replace(obj.value+",","");
+				         }
+		        	}
+		        }
+        
+		       function gradeChange(){
+		        var objS = document.getElementById("pid");
+		        var grade = objS.options[objS.selectedIndex].value;
+		         var objSs = document.getElementById("realSupportCar");
+		         var bject = objSs.value;
+		      	 //不包含
+		         if(bject.indexOf(grade)==-1){
+		        	 objSs.value += grade+','; 
+		         }
+		       }
+		</script>
+        <div class="row section">
+            <div class="form-group col-md-12"><!--//description-->
+                <label for="inputDescription"><span style="color:red">*</span>支持厂家</label>&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="selectAll" value="全选" style="margin-right:10px;" onclick="check()"/>全选
+                <br/>
+                <!-- <input type="checkbox" name="supportCars" value="比亚迪" style="margin-right:10px;"/>多选<br/> -->
+                <!--  
+                 <select id="pid" class="form-control" size="2" ondblclick="dbChange()" onchange="gradeChange()"  multiple="multiple">
+				       <option value="比亚迪" >比亚迪</option>
+				       <option value="特斯拉" >特斯拉</option>
+				       <option value="奇瑞" >奇瑞</option>
+				</select>
+				-->
+				<div style="border:1px solid #AAAAAA;padding:10px" >
+				 	<label th:each="cars,carsIter : ${carssupports}">
+				 		<input type="checkbox" name="supportCars"  th:value="${cars.dictValue}"  th:text="${cars.dictValue}" style="margin-right:10px;"/>
+				 	</label>
+				</div>
+				<input type="hidden" id = "sc" th:value="*{supportCars}"/>
+				<!--  <div style="border:1px solid #AAAAAA;padding:10px">
+				<input type="checkbox" name="supportCars" value="比亚迪" style="margin-right:10px;"/>比亚迪
+				<input type="checkbox" name="supportCars" value="别克" style="margin-left:10px;margin-right:10px;"/>别克
+				<input type="checkbox" name="supportCars" value="大众" style="margin-left:10px;margin-right:10px;"/>大众
+				<input type="checkbox" name="supportCars" value="奥迪" style="margin-left:10px;margin-right:10px;"/>奥迪
+				<input type="checkbox" name="supportCars" value="奔驰" style="margin-left:10px;margin-right:10px;"/>奔驰
+				<input type="checkbox" name="supportCars" value="长安" style="margin-left:10px;margin-right:10px;"/>长安
+				<input type="checkbox" name="supportCars" value="北汽" style="margin-left:10px;margin-right:10px;"/>北汽
+				<input type="checkbox" name="supportCars" value="丰田" style="margin-left:10px;margin-right:10px;"/>丰田
+				<input type="checkbox" name="supportCars" value="东风" style="margin-left:10px;margin-right:10px;"/>东风
+				<input type="checkbox" name="supportCars" value="康迪" style="margin-left:10px;margin-right:10px;"/>康迪
+				<input type="checkbox" name="supportCars" value="江淮" style="margin-left:10px;margin-right:10px;"/>江淮
+				<input type="checkbox" name="supportCars" value="荣威" style="margin-left:10px;margin-right:10px;"/>荣威<br/>
+				<input type="checkbox" name="supportCars" value="奇瑞" style="margin-right:10px;"/>奇瑞
+				<input type="checkbox" name="supportCars" value="华泰" style="margin-left:10px;margin-right:10px;"/>华泰
+				<input type="checkbox" name="supportCars" value="吉利" style="margin-left:10px;margin-right:10px;"/>吉利
+				<input type="checkbox" name="supportCars" value="众泰" style="margin-left:10px;margin-right:10px;"/>众泰
+				<input type="checkbox" name="supportCars" value="力帆" style="margin-left:10px;margin-right:10px;"/>力帆
+				<input type="checkbox" name="supportCars" value="腾势" style="margin-left:10px;margin-right:10px;"/>腾势
+				<input type="checkbox" name="supportCars" value="特斯拉" style="margin-left:10px;margin-right:10px;"/>特斯拉
+				<input type="checkbox" name="supportCars" value="知豆" style="margin-left:10px;margin-right:10px;"/>知豆
+				<input type="checkbox" name="supportCars" value="宝马" style="margin-left:10px;margin-right:10px;"/>宝马
+				<input type="checkbox" name="supportCars" value="其它" style="margin-left:10px;margin-right:10px;"/>其它
+            	</div>-->
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-3 col-md-3">
+		<div class="row section">
+             <div  class="form-group col-md-12"><!--//Location-->
+                <label for="inputStation"><span style="color:red">*</span>所属充电站</label>
+                <input type="hidden" name="stationId" th:value="${stationId}"/>
+                <input th:if="${stationId gt 0}" type="text" readonly="readonly" id="tran" th:field="*{station.name}" class="form-control"/> 
+                <select th:if="${stationId==null}" class="form-control" id="inputStation" onchange="checkOperator(this)" th:field="*{station}">
+                    <option th:each="s : ${stations}"
+                            th:value="${s.id}"
+                            th:text="${s.codeAndName}">Type
+                    </option>
+                </select>
+            </div>
+            <div th:if="${stationId gt 0}"  class="form-group col-md-12"><!--//Location-->
+                <label><span style="color:red">*</span>所属运营商</label>
+                <input type="text" readonly="readonly" id="tranReal" th:field="*{station.operator.name}" class="form-control"/>
+            </div>
+             <div th:if="${stationId==null}"  class="form-group col-md-12"><!--//Location-->
+                <label><span style="color:red">*</span>所属运营商</label>
+                <input type="text" readonly="readonly" id="tran" th:value="*{operator.codeAndName}" class="form-control"/>
+                <input type="hidden" readonly="readonly" id="tranReal" th:field="*{operator}" class="form-control"/>
+                 <select style="display: none"  id="inputstations" >
+                    <option th:each="o : ${stations}"
+                            th:value="${o.operator.id}" 
+                            th:text="${o.id}">Type
+                    </option>
+                </select> 
+            </div>
+            <!-- <div th:if="${stationId gt 0}" class="form-group col-md-12">//Location
+                <label><span style="color:red">*</span>所属运营商</label>
+                <input type="text" readonly="readonly" id="tran" th:value="*{station.operator.codeAndName}" class="form-control"/>
+                <input type="hidden" readonly="readonly" id="tranReal" th:field="*{operator}" class="form-control"/>
+                <select class="form-control"  id="inputOperater" required="required" th:field="*{operator}">
+                    <option th:each="o : ${operators}"
+                            th:value="${o.id}"
+                            th:text="${o.codeAndName}">Type
+                    </option>
+                </select> 
+            </div> -->
+        </div>
+        <!-- <div class="row section">
+             <div class="form-group col-md-6">//Location
+                <label><span style="color:red">*</span>额定电压</label>
+                <input type="text" th:field="*{voltage}" maxlength="20" class="form-control" placeholder="220v" required="required"/>
+            </div>
+             <div class="form-group col-md-6">//Location
+                <label><span style="color:red">*</span>额定电流</label>
+                <input type="text" th:field="*{electricity}" maxlength="20" required="required" class="form-control" placeholder=""/>
+            </div>
+        </div> -->
+        
+        <div class="row section">
+             <!-- <div class="form-group col-md-6">//Location
+                <label><span style="color:red">*</span>额定功率</label>
+                <input type="text" th:field="*{power}" maxlength="20" required="required" class="form-control" placeholder=""/>
+            </div> -->
+             <div class="form-group col-md-6"><!--//Location-->
+                <label><span style="color:red">*</span>是否支持预约</label><br/>
+                <input type="radio" th:field="*{onorder}" value="true" style="margin-left:10px;"/>是
+	            <input type="radio" th:field="*{onorder}"  value="false" style="margin-left:10px;"/>否
+	            <!-- 
+                <select class="form-control" required="required" id="inputOnorder" th:field="*{onorder}">
+                    <option value="true">是</option>
+                    <option value="false">否</option>
+                </select>
+                -->
+            </div>
+        </div>
+		<div class="row section">
+            <div class="form-group col-md-6">
+                <label for="inputArea"><span style="color:red">*</span>认证状态</label><br/>
+                <input type="radio" th:field="*{onlined}" value="true" style="margin-left:10px;"/>是
+	            <input type="radio" th:field="*{onlined}"  value="false" style="margin-left:10px;"/>否
+	            <!-- 
+                <select class="form-control" required="required" id="inputOnlined" th:field="*{onlined}">
+                    <option value="true">是</option>
+                    <option value="false">否</option>
+                </select>
+                -->
+            </div>
+        </div>
+        <div class="row section">
+            <!-- <div class="form-group col-md-6">
+                <label for="inputArea"><span style="color:red">*</span>认证状态</label><br/>
+                <input type="radio" th:field="*{onlined}" value="true" style="margin-left:10px;"/>是
+	            <input type="radio" th:field="*{onlined}"  value="false" style="margin-left:10px;"/>否
+	            
+                <select class="form-control" required="required" id="inputOnlined" th:field="*{onlined}">
+                    <option value="true">是</option>
+                    <option value="false">否</option>
+                </select>
+               
+            </div> -->
+            <div class="form-group col-md-6">
+                <label for="inputArea"><span style="color:red">*</span>联网状态</label><br/>
+                <input type="radio" th:field="*{certified}" value="true" style="margin-left:10px;"/>是
+	            <input type="radio" th:field="*{certified}" value="false" style="margin-left:10px;"/>否
+	             <!-- 
+                <select class="form-control" required="required" id="inputCertified" th:field="*{certified}">
+                    <option value="true">是</option>
+                    <option value="false">否</option>
+                </select>
+                -->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row section" id="div2">
+			<div class="form-group col-md-12">
+				<h3>充电枪信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-12">
+				<!--//Location-->
+				<table class="table table-striped table-bordered table-hover" id="tabProduct">
+					<thead>
+						<tr>
+							<!-- <td widtd="32" align="center" bgcolor="#EFEFEF" Name="Num"><input type="checkbox" name="checkbox" value="checkbox" /></td> -->
+							<td name="Num" EditType="TextBox"><span style="color:red">*</span>枪号</td>
+							<td name="Num" EditType="TextBox"><span style="color:red">*</span>枪名称</td>
+							<td name="Amount" EditType="TextBox"><span style="color:red">*</span>接口名称</td>
+							<td name="Price" EditType="TextBox"><span style="color:red">*</span>额定电压(V)</td>
+							<td name="Price" EditType="TextBox"><span style="color:red">*</span>额定电流(A)</td>
+							<td name="Price" EditType="TextBox"><span style="color:red">*</span>额定功率(kW)</td>
+							<td name="Price" EditType="TextBox">备注</td>
+						</tr>
+					</thead>
+					<tbody >
+						<tr th:each="gun:${charger.guns}">
+							<!-- <td width="32" align="center"><input type="checkbox" name="checkbox" value="checkbox" /></td> -->
+							<td width="80" style="padding-bottom:10px"><input type="text" th:value="${gun.gunNo}" name="gunNos" class="form-control gunNo" style="padding-left:10px" readonly="readonly"/></td>
+							<td	width="80" style="padding-bottom:10px"><input type="text"  th:value="${gun.gunName}" name="gunNames"  class="form-control gunName" style="padding-left:10px"  readonly="readonly" /></td>
+							<!-- <td ><input type="text" th:value="${gun.chargeIf}" name="chargeIfs"  data-toggle="modal" data-target='#myModal' class="state-id form-control-input chargeIf"   readonly="readonly"/></td> -->
+							<td width="100"><select style="height:31px"  name="chargeIfs">
+                                	<option th:each="o : ${chargeIfs}"
+                                		th:value="${o.dictValue}"
+                                		th:text="${o.descr}"
+                                		th:selected="${gun.chargeIf != null &amp;&amp; gun.chargeIf == o.dictValue}">
+                                	</option>	
+                                </select>
+							</td>
+							<td width="120"><input type="text" th:value="${gun.voltage}"  name="voltages" required="required" maxlength="10" pattern="^\d+$|^\d+\.\d+$" placeholder="请输入数字" class="form-control fee"  /></td>
+							<td width="120"><input type="text" th:value="${gun.electricity}" name="electricitys" required="required" maxlength="20" pattern="^\d+$|^\d+\.\d+$" placeholder="请输入数字" class="form-control electricity" /></td>
+							<td width="120"><input type="text" th:value="${gun.power}"  name="powers" maxlength="20" required="required" pattern="^\d+$|^\d+\.\d+$" placeholder="请输入数字" class="form-control power" /></td>
+							<td width="120"><input type="text" th:value="${gun.bak}" name="baks"   maxlength="20" class="form-control bak" /></td>
+						</tr>
+					</tbody>
+					</table>
+				<input type="button" name="Submit" value="新增" onclick="AddRowCharger(document.getElementById('tabProduct'),1)" style="margin-top:10px;"/>
+				<input type="button" name="Submit2" value="删除" onclick="DeleteRowCharger(document.getElementById('tabProduct'),1)" style="margin-top:10px;margin-left:10px;"/>
+			</div>
+		</div>
+</body>
+</html>

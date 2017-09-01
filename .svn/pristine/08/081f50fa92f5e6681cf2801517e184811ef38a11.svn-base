@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>编辑本站充电桩</title>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/stations/}">设备中心</a></li>
+        <li><a th:href="@{/admin/stations/}">充电站</a></li>
+        <li class="active">编辑本站充电桩</li>
+    </ol>
+    <div class="panel border">
+        <div class="panel-tabs" role="tabpanel">
+            <ul class="nav nav-tabs">
+  					<li role="presentation"><a th:href="@{/admin/stations/edit/{id}(id=${station.id})}">基本信息</a></li>
+					<li role="presentation"><a th:href="@{/admin/stations/edit/images/{id}(id=${station.id})}">图片</a></li>
+                    <li role="presentation" class="active"><a th:href="@{/admin/stations/edit/chargers/{id}(id=${station.id})}">电桩</a></li>
+<!--                     <li class="pull-right" style="margin-right:0">
+                    <a class="btn btn-primary" href="add.html" th:href="@{/admin/stations/adds/{stationId}(stationId=${station.id})}" style="margin-right:0"><i class="fa fa-plus fa-fw all-tubiao"></i>添加</a>	
+                    </li> -->
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive" style="margin-top: 1px">
+            	<div class="col-md-12" style="padding-bottom:10px;padding-right:0px;">
+            		<a class="btn btn-query btn-primary pull-right add-btn-id" href="add.html" th:href="@{/admin/stations/adds/{stationId}(stationId=${station.id})}" style="padding-top:5px">添加</a>
+            	</div>
+				<div class="col-md-12 navbar-xian">
+                            <hr class="xian-color"/>
+               </div>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+				        <th>充电桩编号</th>
+		                <th>充电桩名称</th>
+		                <th>所属运营商</th>
+		                <th>所属充电站</th>
+		                <th>充电桩类型</th>
+		                <th>充电桩厂家</th>
+		                <th>电桩型号</th>
+		                <!-- <th>状态</th> -->
+		                <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="charger,chargerIter : ${page.content}" th:attr="data-id=${charger.id}">
+                        <td th:text="${chargerIter.count}">1</td>
+						<td th:text="${charger.code}">充电桩编号</td>
+		                <td th:text="${charger.name}">充电桩名称</td>
+		                <td th:text="${charger.operator.name}">运营商</td>
+		                <td th:text="${charger.station.name}">充电站</td>
+		                <td ><div th:each="cs , csIter : ${types}" th:if="${charger.type==cs.dictValue}" th:text="${cs.descr}"></div></td>
+		                <td th:text="${charger.manufacturer}">充电桩厂家</td>
+		                <td ><div th:each="cs , csIter : ${chargeModels}" th:if="${charger.chargerModel==cs.dictValue}" th:text="${cs.descr}"></div></td>
+		                <!-- <td th:text="${charger.status.title}" class="all-state">状态</td> -->
+		                <td>
+                        <a data-toggle="modal"  data-target="#myModal" class="delete-id"></a>
+						<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-dialog">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						        <h4 class="modal-title text-center" id="myModalLabel">删除确认</h4>
+						      </div>
+						      <div class="modal-body text-center">
+						        	<h4>是否确认删除所选项？</h4><p>删除后不可恢复。</p>
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn-query btn-primary cancel-btn-id" data-dismiss="modal">取消</button>
+						        <a type="button" class="btn btn-query btn-primary sure-btn-id" href="#" th:href="@{/admin/chargers/dels/{stationId}/{chargerId}(stationId=${station.id},chargerId=${charger.id})}" style="padding-top:3px">确定</a>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="navbar-right" style="margin-top:10px;margin-right:10px">
+           		<div th:replace="element/pagination"></div>
+            </div>
+        </div>
+        <div class="panel-footer">
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="container-fluid">
+                     <div class="navbar-right">
+                     	<a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                                th:href="@{/admin/stations/search}" style="padding-top:4px;margin-right:7px">返回</a>
+                     </div>
+                 </div>
+             </nav>
+        </div>
+    </div>
+
+    <!-- /.row -->
+
+</div>
+<script>
+    $(document).ready(function() {
+        $('.custom-input input').phAnim();
+    })
+</script>
+</body>
+
+</html>
+

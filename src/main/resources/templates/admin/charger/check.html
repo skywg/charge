@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>查看充电桩</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/chargers/}">设备中心</a></li>
+        <li><a th:href="@{/admin/chargers/}">充电桩</a></li>
+        <li class="active">查看充电桩</li>
+        
+    </ol>
+        <div class="panel" th:object="${charger}">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a th:href="@{/admin/chargers/check/{id}(id=${charger.id})}">基本信息</a></li>
+                    <li role="presentation"><a th:href="@{/admin/chargers/param/{id}(id=${charger.id})}">参数信息</a></li>
+                    <li role="presentation"><a th:href="@{/admin/chargers/checkDeal/{id}(id=${charger.id})}">订单信息</a></li>
+                    <li role="presentation"><a th:href="@{/admin/chargers/commLog/{id}(id=${charger.id})}">通信日志</a></li>
+                   <!--  <li role="presentation"><a href="#"
+                                               th:href="@{/admin/chargers/images/{id}(id=${charger.id})}">图片</a></li>
+                    <li role="presentation"><a href="#">评价</a></li>
+                    <li role="presentation"><a href="#">充电记录</a></li> -->
+                </ul>
+            </div>
+		
+            <div class="panel-body" th:include="admin/charger/checkform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/chargers/search}" style="padding-top:4px;">返回</a>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+
+        </div>
+
+</div>
+</body>
+</html>

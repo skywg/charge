@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>添加充电桩</title>
+</head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+     <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/chargers/}">设备中心</a></li>
+        <li><a th:href="@{/admin/chargers/}">充电桩</a></li>
+        <li class="active">添加充电桩</li>
+    </ol>
+ <script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        function checksubmit(){
+        	var flag = false;
+        	 var supportsCars = document.getElementsByName("supportCars");
+             for(var i = 0 ; i < supportsCars.length ; i++){
+     			if(supportsCars[i].checked){
+     				flag = true;
+     				break;
+     			}
+     		}
+             if(!flag){
+            	 alert("支持厂家必填！");
+             }
+             return flag;
+        }
+        
+        /*]]>*/
+    </script>
+    
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">添加充电桩</a></li>
+                </ul>
+            </div>
+			<form role="form" onsubmit="return checksubmit()" method="post" th:action="@{/admin/chargers/}" th:object="${charger}">
+            <div class="panel-body" th:include="admin/charger/form"></div>
+
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a th:if="${stationId == null}" class="btn btn-query btn-primary cancel-btn-id" href="index.html" th:href="@{/admin/chargers/search}" style="padding-top:5px">取消</a>
+                        	<a th:if="${stationId gt 0}" class="btn btn-query btn-primary cancel-btn-id" href="index.html" th:href="@{/admin/chargers/ret/{stationId}(stationId=${stationId})}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+            </form>
+            <form name="formsearch">
+						<div class="modal fade" id='myModal' tabindex="-1" role="dialog"
+							aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content" style="width: 800px;">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">
+											<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+										</button>
+										<h4 class="modal-title text-center" id="myModalLabel">接口名称</h4>
+									</div>
+									<div class="box-title" style="border-bottom: 1px solid #e5e5e5;padding:15px 15px 0px 15px">
+										<input type = "radio" name="chargerIfName" value="国标直流枪"/>国标直流枪
+										<input type = "radio" name="chargerIfName" value="国标交流枪"/>国标交流枪
+									</div>
+									<div class="modal-footer">
+									<button type="button" id="buttoncheckbox" 
+											class="btn-query btn-primary sure-btn-id">确定</button>
+										<button type="button"
+											class="btn-query btn-primary cancel-btn-id"
+											data-dismiss="modal">取消</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+        </div>
+    
+</div>
+<div layout:fragment="javascript" id="javascript">
+    <script src="../../static/js/material.min.js" th:src="@{/js/material.min.js}"></script>
+    <script src="../../static/js/moment-with-locales.min.js" th:src="@{/js/moment-with-locales.min.js}"></script>
+    <script src="../../static/js/bootstrap-material-datetimepicker.js" th:src="@{/js/bootstrap-material-datetimepicker.js}"></script>
+    
+    <script type="text/javascript">
+    /*<![CDATA[*/
+        $(document).ready(function(){
+            var table = document.getElementById('tabProduct');
+            $.material.init()
+            
+           $("#buttoncheckbox").click(function(){
+            	   var obj=$('input[name="chargerIfName"]:checked').val();
+            	   var tableElement = document.getElementById("tabbody");
+            	   var ifname =tableElement.childNodes[1].cells[3].childNodes[0];
+            	   console.info(ifname);
+            	   $(".chargeIf").attr("value",obj);
+            	   $('#myModal').modal('hide');
+               })
+            
+        });
+        function AddRowCharger(table, index){
+      	  var lastRow = table.rows[table.rows.length-1];
+      	  var newRow = lastRow.cloneNode(true);
+      	  console.info(table.rows.length)
+      	  if(table.rows.length==2){
+      		newRow.cells[0].childNodes[0].value='20';
+        	newRow.cells[1].childNodes[0].value='B枪';  
+      	  }
+      	  if(table.rows.length==3){
+      		newRow.cells[0].childNodes[0].value='30';
+        	newRow.cells[1].childNodes[0].value='C枪';  
+      	  }
+      	  if(table.rows.length==4){
+      		newRow.cells[0].childNodes[0].value='40';
+        	newRow.cells[1].childNodes[0].value='D枪';  
+      	  }
+      	  if(table.rows.length>4){
+      		alert("最多支持四把充电枪");
+      		return;
+      	  }
+      	  table.tBodies[0].appendChild(newRow);
+      	  SetRowCanEdit(newRow);
+      	  $.material.init()
+      	  return newRow;
+
+      	}
+        function DeleteRowCharger(table, index){
+        	if(table.rows.length-1>1){
+        		table.deleteRow(table.rows.length-1);
+        	}else{
+        		alert("请最少保留一把充电枪");
+        	}
+        	
+      	  /* for(var i=table.rows.length - 1; i <= 1;i++){
+      		    var chkOrder = table.rows[i].cells[0].firstChild;
+      		    if(chkOrder){
+      		      if(chkOrder.type = "CHECKBOX"){
+      		        if(chkOrder.checked){
+      		          //执行删除
+      		        	alert("首行禁止删除，请确认后重新填写！");
+      		        }
+      		      }
+      		    }
+      		  }
+        
+      	  for(var i=table.rows.length - 1; i>1;i--){
+      	    var chkOrder = table.rows[i].cells[0].firstChild;
+      	    if(chkOrder){
+      	      if(chkOrder.type = "CHECKBOX"){
+      	        if(chkOrder.checked){
+      	          //执行删除
+      	          table.deleteRow(i);
+      	        }
+      	      }
+      	    }
+      	  } */
+
+      }
+        /*]]>*/
+    </script>   
+
+
+	<script th:inline="javascript">//引用  
+		
+	 </script>
+
+	<!-- <script th:inline="javascript">
+		$(document).ready(function() {   
+	        $("#aa-a").addClass("active");
+			$("#aa-a1").addClass("in").attr("aria-expanded","true");
+			$("#aa-b").addClass("active");
+			$("#aa-b1").addClass("in").attr("aria-expanded","true");
+			$("#aa-c2").addClass("active");
+			$('.custom-input input').phAnim();
+	    })
+	 </script> -->
+
+</div>
+</body>
+</html>

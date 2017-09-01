@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>查看内容</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/contents/}">内容中心</a></li>
+        <li><a th:href="@{/admin/contents/}">内容管理</a></li>
+        <li class="active">查看内容</li>
+    </ol>
+    <form role="form" action="#" method="post"
+           th:object="${content}">
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">查看内容</a></li>
+                </ul>
+            </div>
+            <div class="panel-body" th:include="admin/content/checkform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/contents/?flag=true}" style="padding-top:4px">返回</a>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+
+        </div>
+    </form>
+</div>
+<div layout:fragment="javascript">
+<script src="../../static/js/contact/js/froala_editor.min.js" th:src="@{/js/contact/js/froala_editor.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/colors.min.js" th:src="@{/js/contact/js/plugins/colors.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/font_family.min.js" th:src="@{/js/contact/js/plugins/font_family.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/font_size.min.js" th:src="@{/js/contact/js/plugins/font_size.min.js}"></script>
+<script>
+			$(function(){
+				$('#edit2').editable({inlineMode: false,alwaysBlank: true});
+				$(".froala-box .f-basic").removeClass("f-placeholder");
+				var textType = $("#inputHiddenTextType");
+				var type =textType.val(); 
+				if(type=="IMAGE"){
+					$("#input1").attr("checked","checked");
+					$("#input2").attr("disabled","disabled");
+					$("#input3").attr("disabled","disabled");
+					$("#content-checked-a").show();
+					$("#content-checked-b").hide();
+					$("#content-checked-c").show();
+				}
+				if(type=="TEXT"){
+					$("#input2").attr("checked","checked");
+					$("#input1").attr("disabled","disabled");
+					$("#input3").attr("disabled","disabled");
+					$("#content-checked-b").show();
+					$("#content-checked-a").show();
+					$("#content-checked-c").hide();
+				}
+			    if(type=="URL"){
+			    	$("#input3").attr("checked","checked");
+					$("#input1").attr("disabled","disabled");
+					$("#input2").attr("disabled","disabled");
+					$("#content-checked-c").show();
+					$("#content-checked-a").hide();
+					$("#content-checked-b").hide();
+				}
+			});
+			function upload(){
+	    		document.getElementById("slide").style.display="none";//隐藏
+	    		document.getElementById("upload").style.display="block";
+	    		document.getElementById("loadid").style.display="none";
+	    		document.getElementById("cacelid").style.display="block";
+	    	
+	    	
+	    	}
+	    	function cacel(){
+	    		document.getElementById("slide").style.display="block";
+	    		document.getElementById("upload").style.display="none";
+	    		document.getElementById("loadid").style.display="block";
+	    		document.getElementById("cacelid").style.display="none";
+	    		
+	    		
+	    	}
+
+			</script>
+</div>
+</body>
+</html>

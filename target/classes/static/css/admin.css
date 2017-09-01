@@ -1,0 +1,792 @@
+body {
+    background-color: #2D3642;
+}
+
+.navbar-default {
+    background-color: #2D3642;
+    border-color: #2D3642
+}
+
+.navbar-default .navbar-brand {
+    color: #ffffff;
+}
+
+.sidebar .nav > li > a {
+    color: #A9B3BE;
+}
+
+.sidebar ul li {
+    border-bottom-color: #3F4956
+}
+
+.sidebar ul li a.active {
+    background-color: #414B5A;
+}
+.sidebar ul li ul li a.active {
+    background-color: #414B5A;
+}
+.sidebar ul > li.active > a, .sidebar ul > li.active > a:focus, .sidebar ul > li.active > a:hover {
+    background-color: #0075c1;
+    color: #ffffff;
+}
+
+.sidebar ul.nav-second-level ul li a {
+    background-color: transparent;
+}
+
+.sidebar .nav > li > a:focus, .sidebar .nav > li > a:hover {
+    background-color: #414B5A
+}
+
+.bg #page-wrapper {
+    background-color: #EBEEF0
+}
+
+.breadcrumb {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.07);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.07);
+    background: #F5F5F5;
+    margin: 0 -15px 8px;
+    position: relative;
+    border-radius: 0;
+}
+
+.breadcrumb a {
+    color: #757575;
+}
+
+.breadcrumb > li + li:before {
+    content: "\203A";
+}
+
+/* Card */
+.panel {
+    background-color: #FFF;
+    border-radius: 3px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px;
+    box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px;
+    color: #717171;
+    border: none;
+}
+
+.panel .table > thead > tr > th {
+    border-bottom: 1px solid #ECECEC;
+    font-weight: 400;
+    color: #717171;
+}
+.panel .table > tbody > tr > td {
+    border-top: 1px solid #ECECEC;
+    color: #717171;
+}
+
+.panel .table-hover tr:hover td {
+    background: #F5FBFF;
+}
+
+.panel-tabs {
+    background-color: #F5F6F7;
+    border-radius: 3px 3px 0px 0px;
+}
+
+.panel-tabs .nav-tabs {
+    border-bottom: 1px solid #EBEEF0;
+}
+
+.panel-tabs .nav-tabs > li > a {
+    border-bottom: 1px solid #EBEEF0;
+}
+
+.panel-tabs .nav-tabs > li > a,
+.panel-tabs .nav-tabs > li.active > a:hover,
+.panel-tabs .nav-tabs > li.active > a:focus {
+    border: none;
+    border-radius: inherit;
+    border-right: 0;
+}
+
+.panel-tabs .nav-tabs > li:first-child > a {
+    border-top-left-radius: 3px;
+}
+
+.panel-heading {
+    color: #31373D;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.section .panel {
+    margin-bottom: 0;
+}
+
+.panel .navbar {
+    background-color: transparent;
+    border: none;
+    border-radius: inherit;
+    margin-bottom: 0;
+    min-height: 0;
+}
+
+.panel .navbar .navbar-btn {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 5px 20px;
+}
+
+.panel-filter {
+    padding: 15px 15px 0;
+}
+
+.page-header {
+    margin: 10px 0;
+    font-size: 26px;
+    color: #878787;
+}
+
+.uploader {
+    text-align: center;
+    position: relative;
+}
+
+.form-group .uploader, .decentralized-uploader {
+    text-align: left;
+}
+
+.decentralized-uploader .btn {
+    margin-top: 0 !important;
+}
+
+.uploader .btn {
+    position: relative;
+    min-width: 7.167em;
+    overflow: hidden !important;
+    direction: ltr;
+    margin-top: 10px;
+}
+
+.uploader .uploader-file {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    font: 200px monospace !important;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+div.data-table-info {
+    padding-top: 8px;
+    white-space: nowrap;
+}
+
+div.data-table-pagination {
+    margin: 0;
+    white-space: nowrap;
+    text-align: right;
+}
+
+div.data-table-pagination ul.pagination {
+    margin: 2px 0;
+    white-space: nowrap;
+}
+/* 图标 */
+.lock{
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	background:url(../images/operation/check.png) center center no-repeat;
+	background-size:90% 90%;
+	background-color: none;
+	cursor: pointer;
+}
+/* 编辑 */
+.edit-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background:url(../images/operation/edit.png) center center no-repeat;
+	background-size: 18px 18px;
+	background-color: none;
+	cursor: pointer;
+}
+.edit-id:hover{
+	display: inline-block;
+	background:url(../images/operation/edit-2.png) center center no-repeat;
+	background-size: 18px 18px;
+	background-color: none;
+}
+/* 升级 */
+.update-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background:url(../images/operation/upgrade-1.png) no-repeat;
+	background-size: 90% 90%;
+	background-color: none;
+	cursor: pointer;
+}
+.update-id:hover{
+	display: inline-block;
+	background:url(../images/operation/upgrade-2.png) no-repeat;
+	background-size: 90% 90%;
+	background-color: none;
+}
+/* 二维码 */
+.erweima-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background:url(../images/erweima-1.png) no-repeat;
+	background-size: 90% 90%;
+	background-color: none;
+	cursor: pointer;
+}
+.erweima-id:hover{
+	display: inline-block;
+	background:url(../images/erweima-2.png) no-repeat;
+	background-size: 90% 90%;
+	background-color: none;
+}
+/* 查看 */
+.lock{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background:url(../images/operation/check-1.png) center center no-repeat;
+	background-size: 90% 90%;
+	background-color: none;
+	cursor: pointer;
+}
+.lock:hover{
+	display: inline-block;
+	background: url(../images/operation/check-2.png) center center no-repeat;
+	background-size: 90% 90%;
+}
+/* 删除 */
+.delete-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/delete.png) center left no-repeat;
+	background-size: 16px 16px;
+	background-color: none;
+	cursor: pointer;
+}
+.delete-id:hover{
+	display: inline-block;
+	background: url(../images/operation/delete-2.png) center left no-repeat;
+	background-size: 16px 16px;
+}
+/* 告警 */
+.event-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/event-1.png) center center no-repeat;
+	background-size: 90% 90%;
+	background-color: none;
+	cursor: pointer;
+}
+.event-id:hover{
+	display: inline-block;
+	background: url(../images/operation/event-2.png) center center no-repeat;
+	background-size: 90% 90%;
+}
+/* 下发 */
+.issued-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/Issued.png) center center no-repeat;
+	background-size: 16px 16px;
+	background-color: none;
+	cursor: pointer;
+}
+.issued-id:hover{
+	display: inline-block;
+	background: url(../images/operation/Issued-2.png) center center no-repeat;
+	background-size: 16px 16px;
+}
+/* 回复 */
+.reply-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/reply-1.png) center center no-repeat;
+	background-size: 75% 75%;
+	background-color: none;
+	cursor: pointer;
+}
+.reply-id:hover{
+	display: inline-block;
+	background: url(../images/operation/reply-2.png) center center no-repeat;
+	background-size: 75% 75%;
+}
+/* 处理 */
+.manage-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/manage-1.png) center center no-repeat;
+	background-size: 75% 75%;
+	background-color: none;
+	cursor: pointer;
+}
+.manage-id:hover{
+	display: inline-block;
+	background: url(../images/operation/manage-2.png) center center no-repeat;
+	background-size: 75% 75%;
+}
+/* 禁止 */
+.prohibit-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/prohibit-1.png) center center no-repeat;
+	background-size: 18px 18px;
+	background-color: none;
+	cursor: pointer;
+}
+.prohibit-id:hover{
+	display: inline-block;
+	background: url(../images/operation/prohibit-2.png) center center no-repeat;
+	background-size: 18px 18px;
+}
+/* 启用 */
+.using-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/using-1.png) center center no-repeat;
+	background-size: 90% 90%;
+	background-color: none;
+	cursor: pointer;
+}
+.using-id:hover{
+	display: inline-block;
+	background: url(../images/operation/using-2.png) center center no-repeat;
+	background-size: 90% 90%;
+}
+/* 通过 */
+.adopt-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/adopt-1.png) center center no-repeat;
+	background-size: 16px 16px;
+	background-color: none;
+	cursor: pointer;
+}
+.adopt-id:hover{
+	display: inline-block;
+	background: url(../images/operation/adopt-2.png) center center no-repeat;
+	background-size: 16px 16px;
+}
+/*未通过 */
+.refer-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/refer-1.png) center center no-repeat;
+	background-size: 16px 16px;
+	background-color: none;
+	cursor: pointer;
+}
+.refer-id:hover{
+	display: inline-block;
+	background: url(../images/operation/refer-2.png) center center no-repeat;
+	background-size: 16px 16px;
+}
+/*提交 */
+.put-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/put-1.png) center center no-repeat;
+	background-size: 75% 75%;
+	background-color: none;
+	cursor: pointer;
+}
+.put-id:hover{
+	display: inline-block;
+	background: url(../images/operation/put-2.png) center center no-repeat;
+	background-size: 75% 75%;
+}
+/*审核 */
+.examine-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/examine-1.png) center center no-repeat;
+	background-size: 90% 90%;
+	background-color: none;
+	cursor: pointer;
+}
+.examine-id:hover{
+	display: inline-block;
+	background: url(../images/operation/examine-2.png) center center no-repeat;
+	background-size: 90% 90%;
+}
+/*发布 */
+.publish-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/publish-1.png) center center no-repeat;
+	background-size: 75% 75%;
+	background-color: none;
+	cursor: pointer;
+}
+.publish-id:hover{
+	display: inline-block;
+	background: url(../images/operation/publish-2.png) center center no-repeat;
+	background-size: 75% 75%;
+}
+/*下架 */
+.shelf-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/shelf-1.png) center center no-repeat;
+	background-size: 75% 75%;
+	background-color: none;
+	cursor: pointer;
+}
+.shelf-id:hover{
+	display: inline-block;
+	background: url(../images/operation/shelf-2.png) center center no-repeat;
+	background-size: 75% 75%;
+}
+/*充值 */
+.recharge-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/recharge-1.png) center center no-repeat;
+	background-size: 75% 75%;
+	background-color: none;
+	cursor: pointer;
+}
+.recharge-id:hover{
+	display: inline-block;
+	background: url(../images/operation/recharge-2.png) center center no-repeat;
+	background-size: 75% 75%;
+}
+/*挂失 */
+.loss-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/loss-1.png) center center no-repeat;
+	background-size: 90% 90%;
+	background-color: none;
+	cursor: pointer;
+}
+.loss-id:hover{
+	display: inline-block;
+	background: url(../images/operation/loss-2.png) center center no-repeat;
+	background-size: 90% 90%;
+}
+/*注销*/
+.pin-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/pin-1.png) center center no-repeat;
+	background-size: 18px 18px;
+	background-color: none;
+	cursor: pointer;
+}
+.pin-id:hover{
+	display: inline-block;
+	background: url(../images/operation/pin-2.png) center center no-repeat;
+	background-size: 18px 18px;
+}
+/*重置密码*/
+.reset-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/reset-1.png) center center no-repeat;
+	background-size: 18px 18px;
+	background-color: none;
+	cursor: pointer;
+}
+.reset-id:hover{
+	display: inline-block;
+	background: url(../images/operation/reset-2.png) center center no-repeat;
+	background-size: 18px 18px;
+}
+/*划账*/
+.transfer-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/transfer-1.png) center center no-repeat;
+	background-size: 18px 18px;
+	background-color: none;
+	cursor: pointer;
+}
+.transfer-id:hover{
+	display: inline-block;
+	background: url(../images/operation/transfer-2.png) center center no-repeat;
+	background-size: 18px 18px;
+}
+/*发送*/
+.send-id{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: url(../images/operation/send-1.png) center center no-repeat;
+	background-size: 75% 75%;
+	background-color: none;
+	cursor: pointer;
+}
+.send-id:hover{
+	display: inline-block;
+	background: url(../images/operation/send-2.png) center center no-repeat;
+	background-size: 75% 75%;
+}
+/* button图标 */
+/*添加*/
+.add-btn-id{
+	background: url(../images/button/add-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*查询*/
+.query-btn-id{
+	background: url(../images/button/query-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*编辑*/
+.query-edit-id{
+	background: url(../images/button/edit.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*保存*/
+.keep-btn-id{
+	background: url(../images/button/keep-1.png) no-repeat;
+	background-position:9px 7px;
+	background-size:15px 15px;
+}
+/*取消*/
+.cancel-btn-id{
+	background: url(../images/button/cancel-1.png) no-repeat;
+	background-position:10px 8px;
+	background-size:12px 12px;
+}
+/*上传*/
+.up-pic-btn-id{
+	background: url(../images/button/up-pic-1.png) no-repeat;
+	background-position:9px 7px;
+	background-size:15px 15px;
+}
+/*返回*/
+.back-btn-id{
+	background: url(../images/button/back-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*确定*/
+.sure-btn-id{
+	background: url(../images/button/sure-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*导出*/
+.export-btn-id{
+	background: url(../images/button/export-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*编辑*/
+.edit-btn-id{
+	background: url(../images/operation/edit.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*批量转账*/
+.debit-btn-id{
+	background: url(../images/button/debit-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*转账*/
+.remit-btn-id{
+	background: url(../images/button/remit-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*充值*/
+.recharge-btn-id{
+	background: url(../images/button/recharge-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*发送*/
+.send-btn-id{
+	background: url(../images/button/send-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*升级*/
+.up-btn-id{
+	background: url(../images/button/up-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*下发*/
+.lower-btn-id{
+	background: url(../images/button/lower-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*转发*/
+.repeat-btn-id{
+	background: url(../images/button/repeat-1.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/*上传图片按钮*/
+.account-up-id{
+	background: url(../images/account-up.png) no-repeat;
+	background-position:8px 6px;
+	background-size:16px 16px;
+}
+/* 消息中心 */
+.message-new-id label{
+	float: left;
+}
+.message-new-id a{
+	width:94px;
+	height:94px;
+	border:1px solid #e4e4e4;
+	border-radius:15px;
+	cursor: pointer;
+	display: inline-block;
+}
+.message-new-id a:hover{
+	border-color:#278ef7;
+}
+.message-new{
+	background: url(../images/message-new-1.png) center center no-repeat;
+	background-size: 100% 100%;
+}
+.message-mail{
+	background: url(../images/message-mail-1.png) center center no-repeat;
+	background-size: 100% 100%;
+}
+.message-app{
+	background: url(../images/message-app.png) center center no-repeat;
+	background-size: 100% 100%;
+}
+.message-app-t{
+	background: url(../images/message-app-1.png) center center no-repeat;
+	background-size: 100% 100%;
+}
+.message-app-x{
+	background: url(../images/message-app-2.png) center center no-repeat;
+	background-size: 100% 100%;
+}
+.new-add-people{
+	height:57px;
+	padding-left:0px;
+	padding-top:27px
+}
+.new-add-people-pic{
+	width:30px;
+	height:30px;
+	background: url(../images/plus_.png) 0px 4px no-repeat;
+	background-size:80% 80%;
+	opacity: 0.7;
+}
+.new-add-people-num{
+	width:600px;
+	height:400px;
+	position: fixed;
+	z-index:9999;
+	left:59%;
+	top:50%;
+	margin-left:-300px;
+	margin-top:-200px;
+	background-color: #ffffff;
+	display:none;
+}
+/* 查询搜索 */
+.box-title{
+	width:100%;
+	margin: 0 auto;
+	position: relative;
+}
+.box-title .box-title-sm{
+	display: inline-block;
+	margin-bottom: 10px;
+}
+.box-title-sm label{
+	text-align: center;
+	width:80px;
+	display:inline-block;
+}
+.box-title-sm input{
+
+}
+.box-title-button{
+	position: absolute;
+	right: 0px;
+	display: inline-block;
+}
+.box-title-button a:hover{
+	text-decoration: none;
+}
+/*会员管理-充电卡信息*/
+#card{
+	text-align: center;
+}
+.card-box{
+	width:625px;
+	margin:0 auto;
+	text-align: left;
+}
+.cardno{
+	width:300px;
+	height:225px;
+	background: url(../images/cards-1.png) no-repeat;
+	background-size:100% auto;
+	display: inline-block;
+	margin:5px;
+}
+.card-number{
+	color:#ffffff;
+	padding-top:157px;
+	font-size:16px;
+	text-align: center;
+}
+.card-pep{
+	padding-top:15px;
+	text-align: center;
+}
+@media screen and (max-width: 767px) {
+    div.data-table-info,
+    div.data-table-pagination {
+        text-align: center;
+    }
+}
+
+@media (min-width: 768px) {
+    #page-wrapper {
+        padding: 0;
+        margin-left: 200px;
+    }
+
+    .sidebar {
+        width: 200px;
+    }
+}

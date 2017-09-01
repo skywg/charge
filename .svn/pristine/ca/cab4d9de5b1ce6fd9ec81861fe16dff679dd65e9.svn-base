@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>添加代码值</title>
+	<script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>    
+     <script th:inline="javascript">
+	     /*<![CDATA[*/
+	     var failed = [[${failed}]];
+	     if(failed){
+	     	alert(failed)
+	     }
+	     /*]]>*/
+        /*<![CDATA[*/
+        $(document).ready(function(){
+        	
+        	$("#dictType").bind("change",function(){
+        		var idVar = $("#dictType").val();
+        		$("#parentKey").html("");
+        		$.ajax({
+            		url:'/admin/dictDatas/getDictData?id='+idVar,
+            		dataType:'text',
+            		type:'get',
+            		error:function(){   
+         		       alert('error');   
+         		    },   
+         		    success:function(data){
+         		    	data = data.substring(1,data.length-1);
+         		    	var strObj = data.split(",");
+         		    	var firstHTML = "<option value=></option>";
+         		    	$("#parentKey").append(firstHTML);
+         		    	for(var i = 0; i < strObj.length;i++){
+         		    		var singer = strObj[i].split(":");
+         		    		console.info(singer);
+         		    		if(singer[1]==undefined){
+         		    			singer[1]="";
+         		    		}else{
+         		    			if(singer[1].trim()!=""){
+             		    			singer[1] = singer[1].substring(1,singer[1].length-1);
+             		    		}
+         		    		}
+         		    		if(singer[0].trim()!=""){
+         		    			singer[0] = singer[0].substring(0,singer[0].length);
+         		    		}
+         		    		
+         		    		var optHTML = '<option value='
+         		    						+singer[0]
+         		    						+'>'
+         		    						+singer[1]+
+         		    						'</option>';
+         		    		console.info(optHTML);
+         		    		 $("#parentKey").append(optHTML);
+         		    	}
+         		    }
+        		})
+        	})
+       	})          
+                   
+     	/*]]>*/
+    </script>
+</head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/dictDatas/}">系统管理</a></li>
+        <li><a th:href="@{/admin/dictDatas/}">代码值</a></li>
+        <li class="active">添加代码值</li>
+    </ol>
+
+    
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">添加代码值</a></li>
+                </ul>
+            </div>
+            <form role="form" method="post" th:action="@{/admin/dictDatas/dictAdd}" th:object="${dict}">
+            <div class="panel-body" th:include="admin/system/dict/upon/addform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html" th:href="@{/admin/dictDatas/?flag=true}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button class="btn-query btn-primary keep-btn-id" onclick="return save()">保存</button>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            </form>
+        </div>
+    
+</div>
+</body>
+
+
+</html>

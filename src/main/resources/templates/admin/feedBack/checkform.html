@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>客服信息</h3>
+				<hr class="form-group col-md-12" style="margin:0px;padding:0px;" />
+			</div>
+			<div class="form-group col-md-12" id="content-checked">
+            	<input type="hidden" id="inputHiddenStatus" th:value="${feedBack.isValid()}" disabled="disabled"/>
+                <label for="inputTitle">类型:</label>
+                <input name="Fruit" type="radio" id="input1" style="margin-left:5px;margin-right:5px;cursor:auto;"/>有效 
+				<input name="Fruit" type="radio" id="input2" style="margin-left:20px;margin-right:5px;cursor:auto;"/>无效
+            </div>
+         
+			 <div class="form-group custom-input col-md-6">
+				<label for="inputType1" class="form-control-label">流水号</label>
+				<input type="text" id="inputHiddenclassification" class="form-control" th:field="*{seqNo}" disabled="disabled" required="required" style="cursor:auto;"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red"></span>时间</label>
+                <input type="text" th:value="${#dates.format(feedBack.updatedAt,'yyyy-MM-dd')}"  required="required"  class="form-control" disabled="disabled" style="cursor:auto;" placeholder=""/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red"></span>会员名称</label>
+                <input type="text" th:field="*{accountName}" required="required" maxlength="20" class="form-control" id="inputTitle"
+                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red"></span>会员电话</label>
+                <input type="text" th:field="*{accountPhone}"  required="required" maxlength="20" class="form-control" id="inputTitle" style="cursor:auto;" disabled="disabled" placeholder=""/>
+                
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red"></span>来源</label>
+                <input type="text" th:each="cg:${channels}" th:if="${feedBack.channel == cg.dictValue}" maxlength="20" class="form-control" th:value="${cg.descr}" style="cursor:auto;" disabled="disabled" placeholder=""/>
+                
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red"></span>定位</label>
+                <input type="text" th:each="cg:${categorys}" th:if="${feedBack.category == cg.dictValue}" maxlength="20" class="form-control" th:value="${cg.descr}" style="cursor:auto;" disabled="disabled" placeholder=""/>
+                
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputTitle"><span style="color:red"></span>内容</label>
+                <textarea class="form-control" th:field="*{content}"  id="inputDescription" maxlength="500" style="cursor:auto;" disabled="disabled"
+         				placeholder=""></textarea>
+            </div>
+            <div class="form-group col-md-12">
+            	<h3>处理信息</h3>
+				<hr class="form-group col-md-12" style="margin:0px;padding:0px;" />
+			</div>
+			<div class="form-group col-md-12" th:attr="data-id=${iteration.index}" th:each="feedBackAuditLog ,iteration: ${feedBack.auditLogList}">
+				<div class="col-md-3" style="padding:0px">
+	            	<label for="inputTitle">时间 :<span th:text="${#dates.format(feedBackAuditLog.updatedAt,'yyyy-MM-dd hh:mm:ss')}" ></span></label>
+				</div>
+				<div class="col-md-3" style="padding:0px">
+	            	<label for="inputTitle">责任人:<span th:text="${feedBackAuditLog.manager.realname}" ></span></label>
+				</div>
+				<div class="col-md-3" style="padding:0px">
+	            	<label for="inputTitle">状态 :<span th:text="${feedBackAuditLog.status.title}" ></span></label>
+				</div>
+				<div class="col-md-4" style="padding:0px">
+					<label for="inputTitle" style="display: block;width:100%">内容 :</label>
+				</div>
+				<div class="col-md-12" style="border:1px solid #cccccc;background:#EEEEEE;border-radius:4px;" >
+                	<div class="editor">
+                		<input type="hidden" th:value="${feedBackAuditLog.content}" class="c"/>
+					    <div style="width: 100%;height: 100%;position:absolute;z-index: 999999;"></div>   
+					</div>
+				</div>
+			</div>   
+		</div>	
+	</div>
+	
+</body>
+</html>

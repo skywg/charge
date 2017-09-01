@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group custom-input col-md-6">
+				<label for="inputType1" class="form-control-label">时间</label>
+				<input type="text"  class="form-control" th:value="${createAt}" name="createAt" readOnly="readonly" required="required"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red"></span>责任人</label>
+                <input type="hidden" th:value="${manager.loginName}" name="loginName1"/>
+                <input type="text" th:value="${manager.realname}" required="required" readOnly="readonly"  class="form-control"  placeholder=""/>
+            </div>
+			<div class="form-group col-md-12" id="content-checked">
+                <label for="inputTitle"><span style="color:red"></span>状态</label>
+				<input   name="statu" type="radio"  value="CONFIRM" style="margin-left:5px;margin-right:5px;"/>确认
+				<input   name="statu" type="radio"  value="SUSPENDING" checked="checked" style="margin-left:20px;margin-right:5px;"/>待处理
+				<input   name="statu" type="radio"  value="HANDLING" style="margin-left:25px;margin-right:5px;"/>处理中
+				<input   name="statu" type="radio"  value="SOLVED" style="margin-left:30px;margin-right:5px;"/>已解决   
+				<input   name="statu" type="radio"  value="CLOSED" style="margin-left:35px;margin-right:5px;"/>已关闭
+            </div>
+         	<div class="form-group custom-input col-md-12">
+         		<label for="inputTitle">内容</label>
+				<input type="hidden" name="contents" id="text"/>
+				<div>
+					<section id="editor">
+						<div id='edit2'></div>
+					</section>	
+				</div>
+			</div>
+            <div class="form-group custom-input col-md-3">
+				<label for="inputType1" class="form-control-label">转发责任人</label>
+			        <select class="form-control" id="inputType1" name="loginName" onchange="change();"> 
+			           <option value="" selected="selected"></option>
+			           <option th:each="t : ${managers}"
+			              th:value="${t.loginName}"
+			              th:text="${t.realname}">Type
+			           </option>
+			    	</select>
+            </div>
+              
+		</div>	
+	</div>
+	
+</body>
+</html>

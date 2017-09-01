@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>添加APP版本</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/system/version/}">系统管理</a></li>
+        <li><a th:href="@{/admin/system/version/}">APP升级</a></li>
+        <li class="active">添加APP版本</li>
+    </ol>
+ <script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        /*]]>*/
+        
+        /*<![CDATA[*/
+        var success = [[${success}]];
+        if(success){
+        	alert(success)
+        }
+        /*]]>*/
+        
+    </script>
+<script>
+	window.onload=function(){
+		var appType=document.getElementById("inputType");
+		changedType(appType.value);
+	
+	}
+      function sDialog(id) {
+           var file_input = document.getElementById(id);
+           file_input.click();
+  
+      }
+      //src:文件路径
+      function getName(src){
+    	  var input = null;
+    	  var typeName = document.getElementById("inputType").value;
+    	  if(typeName=="ANDROID"){
+    		  input = document.getElementById("input_android");
+    	  }
+    	  if(typeName=="IOS"){
+    		  input = document.getElementById("input_ios");
+    	  }
+    	  input.value=src;
+    	  
+      }
+      function changedType(typeName){
+    	  if(typeName=="ANDROID"){
+    		  setOnDisabled("input_android","input_ios");
+    	  }
+    	  if(typeName=="IOS"){
+    		  setOnDisabled("input_ios","input_android");
+    	  }
+      }
+   
+      function setOnDisabled(use,dis){ 	  
+		  var userObject = document.getElementById(use);
+		  var disObject = document.getElementById(dis);
+		  disObject.value="";
+		  disObject.setAttribute("disabled","disabled");
+		  userObject.removeAttribute("disabled");
+      }
+      //用于后台分辨“升级”还是“保存”,检验文件名格式
+      function addSubmit(actionCode){
+    	  var action= document.getElementById("actionCode");
+    	  var appType = document.getElementById("inputType").value;
+    	  var version = document.getElementById("inputVersion").value;
+    	  var check = null;
+    	 
+    	  if(appType=="ANDROID") check=document.getElementById("input_android");
+    	  if(appType=="IOS") check=document.getElementById("input_ios");
+    	  
+    	  var re = new RegExp("charger_"+version+"\.[a-zA-Z]{3,}");
+    	  if(check.value.trim() != ""){
+    		  if( !re.test(check.value)){
+        		  alert("上传命名格式：charger_{版本号}.后缀名，如charger_1.0.1.apk，请检查格式是否正确");
+        		  return false
+        	  } 
+    	  }
+    	  
+    	  action.value=actionCode;  	  
+    	  return true;
+      }
+</script>
+
+    
+<!-- <script type="text/javascript">
+    
+$(function(){
+	var td="";
+	$("#submit").click(function(){
+		alert("ok");
+		})
+		
+	})
+</script> -->
+
+
+    
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">添加APP版本</a></li>
+                </ul>
+            </div>
+            <form name="dataFrom" role="form" method="post" th:action="@{/admin/system/version/addversion}" th:object="${appVersion}" enctype="multipart/form-data">
+            <div class="panel-body" th:include="admin/system/version/addform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                    <input type="hidden" name="actionCode" id = "actionCode"/>
+                    	<div class="navbar-right">
+                            <a class="btn btn-query btn-primary add-btn-id" href="index.html" th:href="@{/admin/system/version/?flag=true}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary up-btn-id" id="submit" onclick="return addSubmit('upgrade')">升级</button>
+                        </div>
+						<div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary keep-btn-id" id="submit" onclick="return addSubmit('save')">保存</button>
+                        </div>
+                        
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+            </form>
+        </div>
+    
+</div>
+</body>
+
+
+</html>

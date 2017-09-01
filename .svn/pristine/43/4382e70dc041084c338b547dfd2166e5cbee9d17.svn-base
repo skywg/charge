@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>查看本站充电桩</title>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/stations/}">设备中心</a></li>
+        <li><a th:href="@{/admin/stations/}">充电站</a></li>
+        <li class="active">查看本站充电桩</li>
+    </ol>
+    <div class="panel border">
+        <div class="panel-tabs" role="tabpanel">
+            <ul class="nav nav-tabs">
+  					<li role="presentation"><a th:href="@{/admin/stations/check/{id}(id=${station.id})}">基本信息</a></li>
+					<li role="presentation"><a th:href="@{/admin/stations/check/images/{id}(id=${station.id})}">图片</a></li>
+                    <li role="presentation" class="active"><a th:href="@{/admin/stations/check/chargers/{id}(id=${station.id})}">电桩</a></li>
+            		<li role="presentation"><a th:href="@{/admin/stations/check/reviews/{id}(id=${station.id})}">评论</a></li>
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive" style="margin-top: 1px">
+                <table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th style="width:32px;">#</th>
+				        <th style="width:152px;">充电桩编号</th>
+		                <th>充电桩名称</th>
+		                <th>所属运营商</th>
+		                <th>所属充电站</th>
+		                <th style="width:108px;">充电桩类型</th>
+		                <th style="width:108px;">充电桩厂家</th>
+		                <th style="width:108px;">电桩型号</th>
+		                <!-- <th style="width:64px;">状态</th> -->
+		                <th style="width:108px;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="charger,chargerIter : ${page.content}" th:attr="data-id=${charger.id}">
+                        <td th:text="${chargerIter.count}">1</td>
+						<td th:text="${charger.code}">充电桩编号</td>
+		                <td th:text="${charger.name}" th:attr="title=${charger.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">充电桩名称</td>
+		                <td th:text="${charger.operator.name}" th:attr="title=${charger.operator.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">运营商</td>
+		                <td th:text="${charger.station.name}" th:attr="title=${charger.station.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">充电站</td>
+		                <td ><div th:each="cs , csIter : ${types}" th:if="${charger.type==cs.dictValue}" th:text="${cs.descr}"></div></td>
+		                <td th:text="${charger.manufacturer}">充电桩厂家</td>
+		                <td ><div th:each="cs , csIter : ${chargeModels}" th:if="${charger.chargerModel==cs.dictValue}" th:text="${cs.descr}"></div></td>
+		                <!-- <td th:text="${charger.status.title}" class="all-state">状态</td> -->
+		                <td class="all-icon">
+		                <a href="check.html" name="checkCharger" style="display: none;"  th:href="@{/admin/chargers/check1/{id}/{id1}(id=${charger.id},id1=${station.id})}" class="lock" title="查看"></a>
+		                </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="navbar-right" style="margin-top:10px;margin-right:10px">
+           				<div th:replace="element/pagination"></div>
+            </div>
+        </div>
+        <div class="panel-footer">
+   			<nav class="navbar navbar-default" role="navigation">
+				<div class="container-fluid">
+                     <div class="navbar-right">
+                     	<a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                                th:href="@{/admin/stations/search}" style="padding-top:4px">返回</a>
+                     </div>
+                 </div>
+             </nav>
+        </div>
+    </div>
+    <!-- /.row -->
+</div>
+<script>
+    $(document).ready(function() {
+        $('.custom-input input').phAnim();
+    })
+</script>
+</body>
+
+</html>
+

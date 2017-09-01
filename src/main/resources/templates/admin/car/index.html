@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>车主认证</title>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/car/}">会员中心</a></li>
+        <li class="active">车主认证</li>
+    </ol>
+    <div class="panel border">
+        <div class="panel-tabs" role="tabpanel">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="#">车主认证列表</a></li>
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive" style="margin-top: 1px">
+                
+                    <form role="form" action="/admin/car/search" method="get">
+                        <div class="box-title">
+                        <div class="box-title-sm">
+                            <label for="inputOperater" class="form-control-label">开始日期</label>
+                            <input type="text" class="form-control-input" id="start" name="startAt"  th:value="${car.formstartAt}" placeholder=""  readonly="readonly" style="background-color:#FFFFFF;"/>
+                        </div>
+                        <div class="box-title-sm">
+                            <label for="inputOperater" class="form-control-label">结束日期</label>
+                            <input type="text" class="form-control-input" id="end" name="updatedAt"  th:value="${car.formupdateAt}"  placeholder=""  readonly="readonly" style="background-color:#FFFFFF;"/>
+                        </div>
+                        <div class="box-title-sm">
+                            <label for="inputOperater" class="form-control-label">会员名称</label>
+                            <input type="text" class="form-control-input" id="inputAccountName" th:value="${car.account.realName}" name="account.realName" placeholder=""/>
+                        </div>
+                        <div class="box-title-sm">
+							<label for="inputType1" class="form-control-label">电话</label>
+			            	<input type="text" class="form-control-input" id="inputPhone" name="account.phone" th:value="${car.account.phone}" placeholder=""/>
+                        </div>
+                        <div class="box-title-sm">
+						<label for="inputType1" class="form-control-label">状态</label>
+						<input type="hidden"  id="inputHiddenstatus" th:value="${car.carIdentifyStatus}"/>
+			                <select class="form-control-input" id="inputType22"  name="carIdentifyStatus" >
+			                    <option value="" selected="selected">全部</option>
+			                    <option value="PASSED">认证通过</option>
+			                    <option value="CHECKING">资料提交</option>
+			                    <option value="FAILED">认证失败  </option>
+			                </select>
+                        </div> 
+                        <div class="box-title-button"><!--//title-->
+                            <button type="submit" name="searchCar" style="display: none;" class="btn-query btn-primary query-btn-id">查询</button>
+                        </div>
+                           <script type="text/javascript">
+/*<![CDATA[*/
+      var  chargeIf =document.getElementById("inputHiddenstatus");
+	  var inputTypes = document.getElementById("inputType22").options;  
+	  if(inputTypes){
+			if(chargeIf){
+				for(var i=0;i<inputTypes.length;i++){
+  				 var chargeIfId = inputTypes[i].value;
+  				 if(chargeIf.value==chargeIfId){
+  					 inputTypes[i].selected="selected";
+  					 break;
+  				 }
+  			}
+			}
+		} 
+ 
+/*]]>*/
+</script>
+                        </div>
+                         <input type="hidden"  name="flag" value="1" />
+                    </form>
+                    <div class="col-md-12 navbar-xian">
+                            <hr class="xian-color"/>
+                    </div>
+                <table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th style="width:32px;">#</th>
+		                <th style="width:160px;">时间</th>
+		                <th>会员名称</th>
+		                <th>会员电话</th>
+		                <th>车辆品牌</th>
+		                <th>车辆型号</th>
+		                <th>车牌号</th>
+		                <th style="width:100px;">状态</th>
+		                <th style="width:80px;">操作</th>
+                    </tr>
+                    </thead>
+                     <tbody>
+                    <tr th:each="car ,carIter : ${page.content}" th:attr="data-id=${car.id}">
+                        <td th:text="${carIter.count}">1</td>
+		                <td th:text="${#dates.format(car.updatedAt,'yyyy-MM-dd HH:mm:ss')}">时间</td>
+		                <td><div th:if="${car.account!=null}" th:attr="title=${car.account.realName}" th:text="${car.account.realName}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;"></div></td>
+		                <td><div th:if="${car.account!=null}" th:attr="title=${car.account.phone}" th:text="${car.account.phone}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;"></div></td>
+		                <td th:attr="title=${car.carBrand}" th:text="${car.carBrand}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">车辆品牌</td>
+		                <td th:attr="title=${car.carType}" th:text="${car.carType}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">车辆型号</td>
+		                <td th:attr="title=${car.plateNumber}" th:text="${car.plateNumber}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">车牌号</td>
+		                <td th:text="${car.carIdentifyStatus.title}" class="all-state">状态</td>
+		                <td class="all-icon">
+		                <a href="check.html" class="lock" name="checkCar" style="display: none;" th:href="@{/admin/car/check/{id}(id=${car.id})}" title="查看"></a>
+		                <a href="edit.html" class="manage-id" name="identifyCar" style="display: none;" th:if="${car.carIdentifyStatus.title}=='资料提交'" th:href="@{/admin/car/deal/{id}(id=${car.id})}" title="处理"></a>
+		                </td>         
+                    </tr>
+                    </tbody> 
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div th:replace="element/pagination"></div>
+        </div>
+    </div>
+
+    <!-- /.row -->
+
+</div>
+<div layout:fragment="javascript">
+<script type="text/javascript">
+	 var start = {
+	  elem: '#start',
+	  format: 'YYYY-MM-DD',
+	  min: '2016-01-01 23:59:59', //设定最小日期为当前日期
+	  max: '2099-06-16 23:59:59', //最大日期
+	  istoday: false,
+	  choose: function(datas){
+	     end.min = datas; //开始日选好后，重置结束日的最小日期
+	     end.start = datas //将结束日的初始值设定为开始日
+	  }
+	};
+	var end = {
+	  elem: '#end',
+	  format: 'YYYY-MM-DD',
+	  min: laydate.now(),
+	  max: '2099-06-16 23:59:59',
+	  istoday: false,
+	  choose: function(datas){
+	    start.max = datas; //结束日选好后，重置开始日的最大日期
+	  }
+	};
+	laydate(start);
+	laydate(end); 
+	$(document).ready(function(){
+		$(".abc").hover(function(e){
+			var aa =$(this).html();
+			$(this).attr("title",aa)
+		});
+	})
+</script>
+</div>
+<script>
+    $(document).ready(function() {
+        $('.custom-input input').phAnim();
+    })
+</script>
+</body>
+
+</html>
+

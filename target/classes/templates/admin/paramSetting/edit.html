@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>编辑设备参数下发</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/paramSettings/}">设备中心</a></li>
+        <li><a th:href="@{/admin/paramSettings/}">充电桩设置</a></li>
+        <li><a th:href="@{/admin/paramSettings/}">设备参数下发</a></li>
+        <li class="active">编辑设备参数下发</li>
+    </ol>
+	<script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        /*]]>*/
+    </script>
+     <script type="text/javascript">
+	    function addSubmit(actionType){
+	    	var type = $("#paramType").val();
+	    	var demo = $("#demo").val();
+	 		 var  b = $("#sel1").find("option:selected").attr("value");
+	 		$("#hidden").val(b);
+	    	 document.getElementById("actionType").value=actionType;
+	    	var value = document.getElementById("chargerView2").value;
+	    	 if(value==''){
+	    		alert("充电桩必须选择！");
+	    		return false;
+	    	}else{
+	    		if(demo==''){
+		        	alert("生效时间必填！");
+		    		return false;
+		        }else{
+		        	return true;
+		        }
+	    	}  
+	    }
+    </script>
+    
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">编辑设备参数下发</a></li>
+                </ul>
+            </div>
+            <form role="form" action="#" method="post"
+          th:action="@{/admin/paramSettings/{id}(id=${paramSetting.id})}" th:object="${paramSetting}">
+
+            <div class="panel-body" th:include="admin/paramSetting/form"></div>
+			<input type="hidden" id="actionType" name="actionType"/>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                    	<div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html"
+                               th:href="@{/admin/paramSettings/search}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary lower-btn-id" onclick="return addSubmit('send')">下发</button>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">                        	
+                            <button type="submit" class="btn-query btn-primary keep-btn-id" onclick="return addSubmit('add')">保存</button>
+                        </div>  
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+            </form>
+        </div>
+    
+<script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+ <script>
+ /*<![CDATA[*/
+	$(function(){
+		var type = $("#paramType").val();
+		$.ajax({
+		   	   type: "post",
+	           url: "/admin/paramSettings/paramTemplate",
+	           data: {"type":type },
+	           dataType: "json",
+	           success:function(result){
+	        	 var paramTemplates =result.data;
+	        	 $("#sel1 option").remove();
+	        	 for(var i=0;i<paramTemplates.length;i++){
+	        		  var param = paramTemplates[i];
+	        		  $("#sel1").append("<option value='"+param.id+"'>"+param.name+"</option>");  
+	        	 }
+	           }
+		   })     	
+	  })
+$("#paramType").on("change",function(){
+	   var type = $("#paramType").val();
+	   $.ajax({
+	   	   type: "post",
+        url: "/admin/paramSettings/paramTemplate",
+        data: {"type":type },
+        dataType: "json",
+        success:function(result){
+     	 var paramTemplates =result.data;
+     	 $("#sel1 option").remove();
+     	 for(var i=0;i<paramTemplates.length;i++){
+     		  var param = paramTemplates[i];
+     		  $("#sel1").append("<option value='"+param.id+"'>"+param.name+"</option>");  
+     	 }
+        }
+	   }) 
+})
+$(document).ready(function() {
+        $("#aa-a").addClass("active");
+		$("#aa-a1").addClass("in").attr("aria-expanded","true");
+		$("#aa-b").addClass("active");
+		$("#aa-b1").addClass("in").attr("aria-expanded","true");
+		$("#aa-c1").addClass("active");
+    })
+/*]]>*/
+ 
+</script>
+</div>
+</body>
+</html>

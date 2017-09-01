@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <div class="row section">
+            <div class="form-group col-md-12">
+                <h3>基本信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="form-group col-md-3" style="text-align:center;">
+               		<div style="width:210px;margin:0 auto;border:none;">
+                        <label for="inputTitle" style="display:block;border:none;"><span>会员头像</span></label>
+                        <img id="cvs" th:if="*{avatar==''}" th:src="@{/images/account-head.png}" style="width:200px;height:200px;"/>
+						<img id="cvs" th:if="*{avatar!=''}" th:src="@{*{avatar}}" style="width:200px;height:200px;"/>
+                        <input type="hidden" id="avatar" th:field="*{avatar}"/>
+                        <span class="btn upload btn-query btn-primary up-pic-btn-id" style="margin-top:10px;margin-left:65px;padding-top:5px;background-color:#2e6da4;color:#ffffff">修改头像<input type="file" class="upload_pic" id="uploada" accept="image/*"/></span>
+                	</div>
+                </div>
+                <div class="form-group col-md-7">
+                    <div class="form-group col-md-6">
+                        <label for="inputTitle"><span style="color:red">*</span>姓名</label>
+                        <input type="text" th:if="${editflag}=='edit'" readonly="readonly" th:field="*{realName}" maxlength="20" class="form-control" id="inputNickname"
+                        placeholder="张三" required="required" style="background:#ffffff"/>
+                        <input type="text" th:if="${editflag}!='edit'" th:field="*{realName}" maxlength="20" class="form-control" id="inputNickname"
+                        placeholder="张三" required="required" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputTitle"><span style="color:red">*</span>手机</label>
+                        <input type="text" th:field="*{phone}" maxlength="11" class="form-control" id="inputphone"
+                            placeholder="15072****75" pattern="^1[3-9]\d{9}$" required="required" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputTitle">昵称</label>
+                        <input type="text" th:field="*{nickname}" maxlength="20" class="form-control" id="inputrname"
+                            placeholder="小张"/>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputTitle"><span style="color:red">*</span>邮箱</label>
+                        <input type="text" th:field="*{email}" maxlength="20" class="form-control" id="inputemail"
+                           placeholder="394466***@qq.com" 
+                           pattern="^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$" 
+                            required="required"/>
+                    </div>
+                    <div class="form-group col-md-6" th:if="${account.accountType=='PERSON'}">
+                        <label for="inputTitle">出生日期</label>
+                        <input type="text" th:field="*{birth}" class="form-control" id="birth"
+                      style="cursor:auto;" placeholder="年/月/日" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"/>
+                    </div>
+                    <div class="form-group col-md-6" th:if="${account.accountType=='PERSON'}">
+                        <label for="inputTitle">性别</label>
+                        <select class="form-control" required="required" th:field="*{gender}">
+                            <option th:each="t : ${genders}"
+                                    th:value="${t.name()}"
+                                    th:text="${t.title}">Type
+                            </option>
+                        </select>
+                    </div>
+<!--                     <div class="form-group col-md-4" th:if="${account.createdAt}!=null">
+                        <label for="inputTitle"><span style="color:red"></span>注册时间</label>
+                        <input type="text"  th:value="${#dates.format(account.createdAt,'yyyy-MM-dd HH:mm:ss')}" class="form-control"
+                      style="cursor:auto;background:#ffffff" disabled="disabled" placeholder=""  maxlength="10"/>
+                    </div> -->
+                    <!-- <div class="form-group col-md-4" style="visibility:hidden">
+		                <label for="inputTitle"><span style="color:red">*</span>空占地方不显示</label>
+		                <input type="text" maxlength="20" class="form-control" id="inputemail"
+	                       pattern="^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$" 
+	                       />
+		            </div> -->
+                    <div class="form-group col-md-4" style="width:180x">
+		                <label for="inputTitle"><span style="color:red">*</span>省份</label>
+		                 <select th:field="*{province}" required="required" id="province"  class="form-control">
+		           		 </select>
+		                 <input type="hidden" id="provinceHidden" th:value="${account.province}"/>
+		            </div>
+		            <div class="form-group col-md-4" style="width:180x">
+		                <label for="inputTitle"><span style="color:red">*</span>城市</label>
+		                 <select th:field="*{city}" required="required" id="city"   onchange="change(2)" class="form-control">
+		           		 </select>
+		                 <input type="hidden" id="cityHidden" th:value="${account.city}"/>
+		            </div>
+		            <div class="form-group col-md-4" style="width:180x">
+		                <label for="inputTitle"><span style="color:red">*</span>区域</label>
+						 <select th:value="${account.area}" required="required" id="district" name="district" class="form-control">
+		           		 </select>
+		                 <input type="hidden" id="districtHidden" th:value="${account.area}"/>
+		            </div>
+		            <!-- <div class="form-group col-md-2" style="visibility:hidden">
+		                <label for="inputTitle"><span style="color:red">*</span>空占地方不显示</label>
+		                <input type="text" maxlength="20" class="form-control" id="inputemail"
+	                       pattern="^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$" 
+	                       />
+		            </div> -->
+		            <!-- <div class="form-group col-md-4" th:if="${account.createdAt}!=null">
+		                <label for="inputTitle"><span style="color:red"></span>注册时间</label>
+		                <input type="text"  th:value="${#dates.format(account.createdAt,'yyyy-MM-dd HH:mm:ss')}" class="form-control"
+                      style="cursor:auto;" disabled="disabled" placeholder=""  maxlength="10"/>
+		            </div> -->
+		            <div class="form-group col-md-12">
+		            	<label for="inputTitle">地址</label>
+				            <textarea class="form-control" th:field="*{detailAddress}"  maxlength="250"
+				         				placeholder="" id="address"></textarea>
+		            </div>
+                    <div class="form-group col-md-12">
+                        <label for="inputTitle">备注</label>
+                            <textarea class="form-control"   th:field="*{note}" id="inputDescription" maxlength="250"
+                                        placeholder=""></textarea>
+                    </div>
+                </div>
+                <div class="form-group col-md-7" style="visibility:hidden">
+                11
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group col-md-12" th:if="${account.accountType='COMPANY'}">
+                <h3>权限信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+				<div class="form-group col-md-12">
+		            	<!-- <label for="inputTitle">备注</label>
+				            <textarea class="form-control"   th:field="*{note}" id="inputDescription" maxlength="250"
+				         				placeholder=""></textarea> -->
+									<label for="inputTitle"><span style="color:red">*</span>选择充电站</label>
+									<textarea id="checkboxinput"  data-toggle="modal" data-target='#myModal' class="form-control state-id" readOnly="readOnly"></textarea>
+									<input type="hidden" id="stationIds"  name="stationIds"/>
+									<!-- <textarea class="form-control"   th:field="*{note}" id="inputDescription" maxlength="250"
+				         				placeholder=""></textarea> -->
+		            </div>
+        </div>
+    </div>
+</div>
+<script>
+//获取上传按钮
+var input1 = document.getElementById("uploada"); 
+ 
+if(typeof FileReader==='undefined'){ 
+     //result.innerHTML = "抱歉，你的浏览器不支持 FileReader"; 
+     input1.setAttribute('disabled','disabled'); 
+}else{ 
+     input1.addEventListener('change',readFile,false); 
+     /*input1.addEventListener('change',function (e){
+        console.log(this.files);//上传的文件列表
+     },false); */
+}
+function readFile(){ 
+    var file = this.files[0];//获取上传文件列表中第一个文件
+	if(!/image\/\w+/.test(file.type)){
+		alert("文件必须为图片！");
+		return false; 
+	}
+	var fileSize = this.files[0].size/1000;
+	if(fileSize>4096){
+		alert("图片大小不超过4M！");
+		return false;
+	}
+    //if(!/image\/\w+/.test(file.type)){
+    //图片文件的type值为image/png或image/jpg
+      //  alert("文件必须为图片！");
+     //   return false; 
+   // } 
+     $.ajax({
+         type:"post",
+         async: false,
+         url:"/ajax/photo-storage-settings",
+         data:{"directory":"brands"},
+         dataType:"json",
+         success:function(settings){
+                 var data = new FormData();
+                 data.append('policy', settings.policy);
+                 data.append('signature', settings.signature);
+                 data.append('file', file);
+                 var request = new XMLHttpRequest();
+                 request.open('POST', settings.endpoint,false); 
+                 request.onload = function (e) {
+                     var data = jQuery.parseJSON(request.response);
+                        if (data.code == 200) {
+                            console.info(data);
+                            var avatar = "http://youetong.b0.upaiyun.com"+data.url;;
+                            document.getElementById("cvs").src=avatar;
+                            document.getElementById("avatar").value=avatar;
+                            //uploader.find('.uploader-preview').attr('src', "http://youetong.b0.upaiyun.com" + data.url);
+                             //console.log(data.url);
+                            // imagesSrc += data.url+",";
+                            // document.getElementById("station-images").value=imagesSrc;
+                         } else {
+                            var mes = data.message;
+                            if(mes!="need file"){
+                                alert(data.message);
+                            }
+                         }
+                    };
+                 request.send(data);
+                }
+               })
+    
+};
+</script>
+</body>
+</html>

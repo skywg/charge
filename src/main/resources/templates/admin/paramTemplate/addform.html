@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>基本信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+				<div class="form-group col-md-6" id="wrap1">
+	                <label for="inputTitle"><span style="color:red">*</span>状态</label>
+	               	<input type="radio"  th:value="VALID"   name="status"  style="margin-left:5px;margin-right:5px;"/>有效
+	               	<input type="radio"  th:value="INVALID"  name="status"   style="margin-left:20px;margin-right:5px;"/>无效            
+	            </div> 
+	        <div class="form-group col-md-6" id="wrap">
+                <label for="inputTitle"><span style="color:red">*</span>类型:</label>
+                <input th:field="*{type}"  name="type" type="radio" value="PARAM"  style="margin-left:5px;margin-right:5px;" checked="checked"/>参数模板 
+				<input th:field="*{type}"  name="type" type="radio" value="PRICE" style="margin-left:20px;margin-right:5px;"/>电价模板
+				<input th:field="*{type}"  name="type" type="radio" value="UPDATE" style="margin-left:20px;margin-right:5px;"/>升级模板
+            </div>
+	        <div class="form-group col-md-6">
+	             <label for="inputTitle"><span style="color:red">*</span>模板名称</label>
+	             <input type="text" th:field="*{name}" required="required" maxlength="20" class="form-control" id="inputTitle"
+	                       placeholder="最多可以输入20个字" />
+	        </div>
+	        <div class="form-group col-md-12">
+	                <label for="inputTitle"><span style="color:red">*</span>模板说明</label>
+                        <textarea class="form-control" id="inputDescription" maxlength="500"
+                                  required="required" th:field="*{description}"  placeholder="最多可以输入500个字"></textarea>
+	        </div>
+		</div>
+		<!-- 参数信息 -->
+		<div class="row section" id="div1">
+			<div class="form-group col-md-12">
+				<h3>参数信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-24">
+				<div class="form-group custom-input col-md-6">
+                   <label for="inputTitle" class="form-control-label"><span style="color:red">*</span>目标IP</label>
+                   <input type="text" class="form-control" maxlength="20" name="ip" id="ip"  pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" placeholder="请输入正确的ip地址" />
+                </div>
+                <div class="form-group custom-input col-md-6">
+                   <label for="inputTitle" class="form-control-label"><span style="color:red">*</span>端口号</label>
+                   <input type="text" class="form-control" maxlength="20" name="port" id="port"  pattern="^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$"  placeholder="请输入正确的端口号"/>
+                </div>
+                <div class="form-group custom-input col-md-6">
+                    <label for="inputTitle" class="form-control-label"><span style="color:red">*</span>上传周期</label>
+                   <input type="text" class="form-control" maxlength="20" name="interval" id="interval"  pattern="^\d+$" placeholder="请输入整数" />
+                </div>
+			</div>
+		</div>
+		<!-- 电价信息 -->
+		<div class="row section" id="div2">
+			<div class="form-group col-md-12">
+				<h3>电价信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-12">
+				<!--//Location-->
+				<table class="table table-striped table-bordered table-hover" id="tabProduct">
+					<thead>
+						<tr>
+							<td widtd="32" align="center" bgcolor="#EFEFEF" Name="Num"><input type="checkbox" name="checkbox" value="checkbox" /></td>
+							<td widtd="186" name="Num" EditType="TextBox">开始时间</td>
+							<td width="186" name="Num" EditType="TextBox">结束时间</td>
+							<td width="186" name="Amount" EditType="TextBox">电价(元/千瓦时)</td>
+							<td width="186" name="Price" EditType="TextBox">服务费(元)</td>
+							<td width="186" name="Price" EditType="TextBox">备注</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr  th:each="attr, attrItemIter : ${attrs}" >
+							<td width="32" align="center"><input type="checkbox" name="checkbox" value="checkbox" /></td>
+							<td width="180" style="padding-bottom:10px"><input type="text" name="startAt" class="form-control Time" style="padding-left:10px" readonly="readonly" /></td>
+							<td	width="150" style="padding-bottom:10px"><input type="text" name="endAt" class="form-control Time" style="padding-left:10px"   readonly="readonly" /></td>
+							<td ><input type="text" name="price" id="price" maxlength="10" pattern="^\d+$|^\d+\.\d+$"  class="form-control price"  /></td>
+							<td ><input type="text" name="fee"  id="fee" maxlength="10" pattern="^\d+$|^\d+\.\d+$" class="form-control fee"  /></td>
+							<td ><input type="text" name="remark"  id="remark" maxlength="20"  class="form-control remark" /></td> 
+						</tr>
+					</tbody>
+					</table>
+				<input type="button" name="Submit" value="新增" onclick="AddRow(document.getElementById('tabProduct'),1)" style="margin-top:10px;"/>
+				<input type="button" name="Submit2" value="删除" onclick="DeleteRow(document.getElementById('tabProduct'),1)" style="margin-top:10px;margin-left:10px;"/>
+			</div>
+		</div>
+		<div class="row section" id="div3">
+			<div class="form-group col-md-12">
+				<h3>升级信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-12">
+				
+			</div>
+		</div>
+		
+	</div>
+	<div class="form-group col-md-12" style="text-align:center; color:#ff0000;margin-bottom:0px">
+		    	<span id='message'></span>
+	</div>
+</body>
+</html>

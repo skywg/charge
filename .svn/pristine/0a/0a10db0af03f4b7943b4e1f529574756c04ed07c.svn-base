@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>内容管理</title>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/contents/}">内容中心</a></li>
+        <li class="active">内容管理</li>
+    </ol>
+    <div class="panel border">
+        <div class="panel-tabs" role="tabpanel">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="#">内容管理列表</a></li>
+<!--                  <li class="pull-right" style="margin-right:0">
+                    <a class="btn btn-primary" href="add.html" name="addContent" th:href="@{/admin/contents/add}" style="margin-right:0;display:none;"><i class="fa fa-plus fa-fw all-tubiao"></i>添加</a>
+                </li> -->
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive" style="margin-top: 1px">
+                
+                    <form role="form" action="/admin/contents/search" method="get">
+                    	<input type="hidden" id="page" name="page" value="*{page}"/>
+					    <input type="hidden" id="size" name="size" value="*{size}"/>
+                        <div class="box-title">
+                        <div class="box-title-sm">
+                            <label for="inputOperater" class="form-control-label">开始日期</label>
+                            <input type="text" class="form-control-input" id="start" name="startAt" placeholder=""
+                             th:value="${content.startAt}==null?${content.startAt}:${#dates.format(content.startAt,'yyyy-MM-dd')}" readonly="readonly" style="background-color:#FFFFFF;"/>
+                        </div>
+                        <div class="box-title-sm">
+                            <label for="inputOperater" class="form-control-label">结束日期</label>
+                            <input type="text" class="form-control-input" id="end" name="releasedAt" placeholder=""
+                              th:value="${content.releasedAt}==null?${content.releasedAt}:${#dates.format(content.releasedAt,'yyyy-MM-dd')}" readonly="readonly" style="background-color:#FFFFFF;"/>
+                        </div>
+                        <div class="box-title-sm">
+                            <label for="inputOperater" class="form-control-label">标题</label>
+                            <input type="text" class="form-control-input" th:value="${content.title}" 
+                            id="title" name="title" placeholder=""/>
+                        </div>
+                        <div class="box-title-sm">
+						<label for="inputType1" class="form-control-label">分类</label>
+						<input type="hidden"  id="inputHiddenclassification" th:value="${content.classification}" />
+			                <select class="form-control-input" id="inputType1" name="classification">
+			                    <option value="" selected="selected">全部</option>
+			                    <option th:each="t : ${classifications}"
+			                            th:value="${t.dictValue}"
+			                            th:text="${t.descr}">Type
+			                    </option>
+			                </select>
+                        </div>
+                        <div class="box-title-sm">
+						<label for="inputType1" class="form-control-label">状态</label>
+						<input type="hidden"  id="inputHiddenstatus" th:value="${content.transientStatus}"/>
+			                <select class="form-control-input" id="inputType22"  name="transientStatus" >
+			                    <option value="" selected="selected">全部</option>
+			                    <option value="-1">编辑</option>
+			                    <option value="0">提交</option>
+			                    <option value="1"> 审核   </option>
+			                    <option value="2"> 发布   </option>
+			                    <option value="3"> 下架   </option>
+			                </select>
+                        </div> 
+                        <div class="box-title-button"><!--//title-->
+                            <button type="submit" class="btn-query btn-primary query-btn-id"  id="query">查询</button>
+                            <a class="btn btn-query btn-primary add-btn-id" href="add.html" name="addContent" th:href="@{/admin/contents/add}" style="padding-top:3px;display: none;">添加</a>
+                        </div>
+                         <script type="text/javascript">
+/*<![CDATA[*/
+      var  chargeIf =document.getElementById("inputHiddenstatus");
+	  var inputTypes = document.getElementById("inputType22").options;  
+	  if(inputTypes){
+			if(chargeIf){
+				for(var i=0;i<inputTypes.length;i++){
+  				 var chargeIfId = inputTypes[i].value;
+  				 if(chargeIf.value==chargeIfId){
+  					 inputTypes[i].selected="selected";
+  					 break;
+  				 }
+  			}
+			}
+		} 
+ 
+/*]]>*/
+</script>
+                        </div>
+                    </form>
+                    <div class="col-md-12 navbar-xian">
+                            <hr class="xian-color"/>
+                    </div>
+<script type="text/javascript">
+/*<![CDATA[*/
+      var  chargeIf =document.getElementById("inputHiddenclassification");
+	  var inputTypes = document.getElementById("inputType1").options;     
+	  if(inputTypes){
+			if(chargeIf){
+				for(var i=0;i<inputTypes.length;i++){
+  				 var chargeIfId = inputTypes[i].value;
+  				 if(chargeIf.value==chargeIfId){
+  					 inputTypes[i].selected="selected";
+  					 break;
+  				 }
+  			}
+			}
+		}    
+ 
+/*]]>*/
+</script>
+
+                <table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th style="width:32px;">#</th>
+                        <th style="width:120px;">分类</th>
+                        <th style="width:80px;">内容类型</th>
+                        <th>标题</th>
+                        <th style="width:100px;">有效时间</th>
+                        <th style="width:100px;">编辑人</th>
+		                <th style="width:100px;">发布时间</th>
+		                <th style="width:160px;">编辑时间</th>
+		                <th style="width:80px;">状态</th>
+		                <th style="width:110px;">操作</th>
+                    </tr>
+                    </thead>
+                     <tbody>
+                    <tr th:each="content ,contentIter : ${page.content}" th:attr="data-id=${content.id}">
+                        <td th:text="${contentIter.count}">1</td>
+                        <td th:each="cs , csIter : ${classifications}" th:if="${content.classification==cs.dictValue}" th:text="${cs.descr}">分类</td>
+		                <td th:each="ct , ctIter : ${contentTypes}" th:if="${content.textType==ct.dictValue}" th:text="${ct.descr}">内容类型</td>
+		                <td th:attr="title=${content.title}" th:text="${content.title}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">标题</td>
+		                <td th:text="${#dates.format(content.validAt,'yyyy-MM-dd')}">有效时间</td>
+		                <td th:text="${content.name}">编辑人</td>
+		                <td th:text="${#dates.format(content.releasedAt,'yyyy-MM-dd')}">发布时间</td>
+		                <td th:text="${#dates.format(content.updatedAt,'yyyy-MM-dd HH:mm:ss')}">编辑时间</td>
+		                <td th:if="${content.status==-1}" th:text="编辑" class="all-state">状态</td>
+	                    <td th:if="${content.status==0}" th:text="提交" class="all-state">状态</td>
+	                    <td th:if="${content.status==1}" th:text="审核" class="all-state">状态 </td>
+	                    <td th:if="${content.status==2}" th:text="发布" class="all-state">状态 </td>
+	                    <td th:if="${content.status==3}" th:text="下架" class="all-state">状态 </td>
+		                <td class="all-icon">
+		                <a th:if="${content.status==-1 or content.status==2}" name="checkContent" style="display: none;" th:href="@{/admin/contents/check/{id}(id=${content.id})}" title="查看" class="lock"></a>
+		                <a th:if="${content.status==-1}"  name="editContent" style="display: none;" th:href="@{/admin/contents/edit/{id}(id=${content.id})}" title="编辑" class="edit-id"></a>
+		                <a th:if="${content.status==0}" name="submitContent" style="display: none;" th:href="@{/admin/contents/submit/{id}(id=${content.id})}" title="提交" class="put-id"></a>
+		                <a th:if="${content.status==1}" name="examineContent" style="display: none;" th:href="@{/admin/contents/review/{id}(id=${content.id})}" title="审核" class="examine-id"></a>
+		                <a th:if="${content.status==2}" name="publishContent" style="display: none;" th:href="@{/admin/contents/release/{id}(id=${content.id})}" title="发布" class="publish-id"></a>
+		                <a th:if="${content.status==3}" name="shelfContent" style="display: none;" th:href="@{/admin/contents/drop/{id}(id=${content.id})}" title="下架" class="shelf-id"></a>
+		                </td>         
+                    </tr>
+                    </tbody> 
+                </table>
+            </div>
+        </div>
+        <script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>    
+		<script>
+			$(document).ready(function(){
+				$(".abc").hover(function(e){
+					var aa =$(this).html();
+					$(this).attr("title",aa)
+				});
+			})
+		</script>
+        <div class="panel-footer">
+            <div th:fragment="pagination" class="data-table-pagination">
+			     <ul class="pagination">
+			        <li>
+			            <a th:href="'javaScript:gotoPage(0,'+${page.size}+')'"
+			               title='首页'>首页</a>
+			        </li>
+			        <li th:class="${page.hasPreviousPage}">
+			            <a th:if="${not page.hasPreviousPage}"
+			               th:href="'javascript:gotoPage(0,' + ${page.size} + ')'"
+			               title='上一页'>上一页</a>
+			            <a th:if="${page.hasPreviousPage}"
+			               th:href="'javascript:gotoPage(' + ${page.number - 1} + ',' + ${page.size} + ')'"
+			               title='上一页'>上一页</a>
+			        </li>
+			        <li th:each="item : ${page.items}" th:class="${item.current}? 'active' : ''">
+			            <span th:if="${item.current}" th:text="${item.number+1}">1</span>
+			            <a th:if="${not item.current}"
+			               th:href="'javascript:gotoPage(' + ${item.number} + ',' + ${page.size} + ')'">
+			                <span th:text="${item.number+1}">1</span></a>
+					 </li>
+			        <li th:class="${page.hasNextPage}">
+			            <a th:if="${not page.hasNextPage}"
+			               th:href="'javascript:gotoPage(' + ${page.totalPages-1} + ',' + ${page.size} + ')'"
+			               title="下一页">下一页</a>
+			            <a th:if="${page.hasNextPage}"
+			               th:href="'javascript:gotoPage(' + ${page.number+1} + ',' + ${page.size} + ')'"
+			               title="下一页">下一页</a>
+			        </li>
+			        <li>
+			            <a th:href="'javascript:gotoPage(' + ${page.totalPages-1} + ',' + ${page.size} + ')'"
+			               title='尾页'>尾页</a>
+			        </li>
+			        <div style="display:inline; height:35px; line-height:35px; padding-left:10px;">
+			                                总计：<span th:text="${page.total}"></span>
+			        </div> 
+			    </ul> 
+    
+			</div>
+        </div>
+    </div>
+
+    <!-- /.row -->
+
+</div>
+<script>
+    $(document).ready(function() {
+        $('.custom-input input').phAnim();
+    })
+</script>
+<div layout:fragment="javascript">
+<script type="text/javascript">
+	function gotoPage(page, size) {
+	    $("#page").val(page);	
+	    $("#size").val(size);
+	    $("#query").click();
+	}
+		var start = {
+		  elem: '#start',
+		  format: 'YYYY-MM-DD',
+		  min: '2016-01-01 23:59:59', //设定最小日期为当前日期
+		  max: '2099-06-16 23:59:59', //最大日期
+		  istoday: false,
+		  choose: function(datas){
+		     end.min = datas; //开始日选好后，重置结束日的最小日期
+		     end.start = datas //将结束日的初始值设定为开始日
+		  }
+		};
+		var end = {
+		  elem: '#end',
+		  format: 'YYYY-MM-DD',
+		  min: laydate.now(),
+		  max: '2099-06-16 23:59:59',
+		  istoday: false,
+		  choose: function(datas){
+		    start.max = datas; //结束日选好后，重置开始日的最大日期
+		  }
+		};
+		laydate(start);
+		laydate(end); 
+</script>
+</div>
+</body>
+
+</html>
+

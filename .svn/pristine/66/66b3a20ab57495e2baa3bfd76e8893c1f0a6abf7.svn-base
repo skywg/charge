@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group col-md-12" id="content-checked">
+            	<input type="hidden" id="inputHiddenStatus" th:value="${feedBack.isValid()}" />
+                <label for="inputTitle">类型</label>
+				<input  value="1" name="Valid" type="radio" id="input1"  style="margin-left:5px;margin-right:5px;"/>有效
+				<input  value="0" name="Valid" type="radio" id="input2"  style="margin-left:20px;margin-right:5px;"/>无效   
+            </div>
+         
+			 <div class="form-group custom-input col-md-6">
+				<label for="inputType1" class="form-control-label">流水号</label>
+				<input type="text" id="inputHiddenclassification" class="form-control" th:field="*{seqNo}" readOnly="readonly" required="required"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red"></span>时间</label>
+                <input type="text" th:field="*{updatedAt}" name="updatedAt" required="required" readOnly="readonly"  class="form-control"  placeholder=""/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red"></span>会员名称</label>
+                <input type="text" th:field="*{accountName}" required="required" maxlength="20" class="form-control" id="inputTitle" readOnly="readonly"
+                       style="cursor:auto;" placeholder=""/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red"></span>会员电话</label>
+                <input type="text" th:field="*{accountPhone}"  required="required" maxlength="20" class="form-control" id="inputTitle" style="cursor:auto;" readOnly="readonly" placeholder=""/>
+                
+            </div>
+           <!--  <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red"></span>来源</label>
+                <input type="text"  th:value="*{channel.title}" name="channel" required="required" maxlength="20" class="form-control" id="inputTitle" style="cursor:auto;" readOnly="readonly" placeholder=""/>
+                
+            </div> -->
+           <div class="form-group custom-input col-md-3">
+				<label for="inputType1" class="form-control-label">来源</label>
+			        <input class="form-control" id="inputType1" name="channel" th:field="*{channel}" disabled="disabled" style="cursor:auto;" th:each="cs , csIter : ${channels}" th:if="${feedBack.channel==cs.dictValue}" th:value="${cs.descr}" /> 
+            </div>
+            <div class="form-group custom-input col-md-3">
+				<label for="inputType1" class="form-control-label">定位</label>
+			        <select class="form-control" id="inputType1" name="category" th:field="*{category}">
+			           <option th:each="t : ${categorys}"
+			              th:value="${t.dictValue}"
+			              th:text="${t.descr}">Type
+			           </option>
+			        </select>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputTitle"><span style="color:red"></span>内容</label>
+                <textarea class="form-control" th:field="*{content}" readOnly="readonly" id="inputDescription" maxlength="500" style="cursor:auto;" 
+         				placeholder=""></textarea>
+            </div>    
+		</div>	
+	</div>
+	
+</body>
+</html>

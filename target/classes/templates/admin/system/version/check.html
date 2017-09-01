@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>查看APP版本</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/system/version/}">系统管理</a></li>
+        <li><a th:href="@{/admin/system/version/}">APP升级</a></li>
+        <li class="active">查看APP版本</li>
+    </ol>
+    
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">查看APP版本</a></li>
+                </ul>
+            </div>
+		<form role="form" action="#" method="post"
+           th:object="${appVersion}">
+            <div class="panel-body" th:include="admin/system/version/checkform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/system/version/?flag=true}" style="padding-top:4px">返回</a>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+		</form>
+        </div>
+    
+
+</div>
+</body>
+</html>

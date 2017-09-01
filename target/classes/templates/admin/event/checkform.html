@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>告警信息</h3>
+				<hr style="margin:0;padding:0;"/>
+			</div>
+			<div class="form-group custom-input col-md-6">
+				<label for="inputType1" class="form-control-label">编号</label> 
+				<input type="text" id="inputHiddenclassification" class="form-control"
+					th:field="*{id}" disabled="disabled" style="cursor: auto;" required="required"/>
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputTitle"><span style="color: red"></span>时间</label> 
+				<input
+					type="text"
+					th:value="${#dates.format(event.createdAt,'yyyy-MM-dd hh:mm:ss')}"
+					required="required" class="form-control" disabled="disabled" style="cursor:auto;"
+					placeholder="" />
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputTitle"><span style="color: red"></span>充电站名称</label>
+				<input type="text" th:field="*{station}" required="required"
+					maxlength="20" class="form-control" id="inputTitle"
+					style="cursor: auto;" disabled="disabled" placeholder="" />
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputTitle"><span style="color: red"></span>充电桩名称</label>
+				<input type="text" th:field="*{charger.name}" required="required"
+					maxlength="20" class="form-control" id="inputTitle"
+					style="cursor: auto;" disabled="disabled" placeholder="" />
+
+			</div>
+			<div class="form-group custom-input col-md-3">
+				<label for="inputStatus1" class="form-control-label">告警级别</label>
+				<input class="form-control" id="eventLevel" name="eventLevel" disabled="disabled" style="cursor: auto;" th:each="et:${eventLevels}" th:if="${event.eventCode != null and event.eventCode.eventLevel==et.dictValue}" th:value="${et.descr}"/>
+			</div>
+
+			<div class="form-group custom-input col-md-3">
+				<label for="inputStatus1" class="form-control-label">告警类型</label>
+				<input class="form-control" id="eventType" name="eventType" disabled="disabled" style="cursor: auto;" th:each="et:${eventTypes}" th:if="${event.eventCode != null and event.eventCode.eventType==et.dictValue}" th:value="${et.descr}"/>
+
+			</div>
+			<div class="form-group col-md-12">
+				<label for="inputTitle"><span style="color: red"></span>告警内容</label>
+				<textarea class="form-control" th:field="*{eventCode.decription}"
+					id="inputDescription" maxlength="500" style="cursor: auto;"
+					disabled="disabled" placeholder=""></textarea>
+			</div>
+			<div class="form-group col-md-12">
+				<h3>处理情况</h3>
+				<hr style="margin:0;padding:0;"/>
+			</div>
+			<div class="form-group col-md-12"
+				th:attr="data-id=${iteration.index}"
+				th:each="eventAuditLog ,iteration: ${event.eventAuditLogs}">
+				<div class="col-md-3" style="padding:0px">
+					<label for="inputTitle">时间 :<span
+					th:text="${#dates.format(eventAuditLog.updatedAt,'yyyy-MM-dd hh:mm:ss')}"></span></label>
+				</div>
+				<div class="col-md-3" style="padding:0px">
+					<label for="inputTitle">责任人:<span
+					th:text="${eventAuditLog.manager.realname}"></span></label>
+				</div>
+				<div class="col-md-3" style="padding:0px">
+					<label
+						for="inputTitle">状态 :<span
+						th:text="${eventAuditLog.status.title}"></span></label>
+				</div>
+				<div class="col-md-4" style="padding:0px">
+					<label
+					for="inputTitle">内容 :</label>
+				</div>
+				
+				<div class="col-md-12" style="border:1px solid #a5b6c8;background:#EEEEEE;border-radius:4px;" >
+					<div class="editor">
+						<input type="hidden" th:value="${eventAuditLog.content}" class="c" />
+						<div style="width: 100%; height: 100%; position: absolute; z-index: 999999;"></div>
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+	</div>
+
+</body>
+</html>

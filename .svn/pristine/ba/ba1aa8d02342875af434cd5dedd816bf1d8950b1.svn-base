@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<script src="../../static/components/jquery/dist/jquery.min.js"
+	th:src="@{/components/jquery/dist/jquery.min.js}"></script>
+</head>
+
+<body>
+
+	<div class="table-responsive" style="margin-top: 1px"
+		id="cards-recharge-record">
+		<div class="col-md-3 form-group">
+			<a type="submit" class="btn btn-query btn-primary"
+				onclick="recordSearch(7);" style="padding-left:8px;margin-top:8px;">一周</a>
+			<a type="submit" class="btn btn-query btn-primary"
+				onclick="recordSearch(30);" style="padding-left:8px;margin-top:8px;">一个月</a>
+			<a type="submit" class="btn btn-query btn-primary"
+				onclick="recordSearch(90);" style="padding-left:8px;margin-top:8px;">三个月</a>
+			<a type="submit" class="btn btn-query btn-primary"
+				onclick="recordSearch(365);" style="padding-left:8px;margin-top:8px;">一年</a>
+		</div>
+		<div class="col-md-12" id="tableA">
+			<table class="table table-striped table-bordered table-hover" id="tb">
+				<thead>
+					<tr>
+						<th style="width:32px;">#</th>
+						<th>充值流水号</th>
+						<th>充值时间</th>
+						<th>卡号</th>
+						<th>充值类型</th>
+						<th>充值金额</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr
+						th:each="cardRechargeRecord, cardRechargeRecordIter : ${rechargeRecordPage.content}"
+						th:attr="data-id=${cardRechargeRecord.tradeNo}">
+						<td th:text="${cardRechargeRecordIter.count}"></td>
+						<td th:text="${cardRechargeRecord.tradeNo}">充电流水号</td>
+						<td
+							th:text="${#dates.format(cardRechargeRecord.tradeTime,'yyyy-MM-dd HH:mm:ss')}">充值时间</td>
+						<td th:text="${card.getCardNo()}">卡号</td>
+						<td th:text="${cardRechargeRecord.rechargeType}">充值类型</td>
+						<td th:text="${cardRechargeRecord.money}">充值金额</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- Pagination Bar -->
+			<div th:fragment="pagination" class="data-table-pagination" style="margin-top:10px">
+				<ul class="pagination">
+					<li><a
+						th:attr="onclick='javascript:gotoPage(0, ' + ${rechargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title='首页'>首页</a></li>
+					<li th:class="${rechargeRecordPage.hasPreviousPage}"><a
+						th:if="${not rechargeRecordPage.hasPreviousPage}"
+						th:attr="onclick='javascript:gotoPage(0, ' + ${rechargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title='上一页'>上一页</a> <a
+						th:if="${rechargeRecordPage.hasPreviousPage}"
+						th:attr="onclick='javascript:gotoPage(' + ${rechargeRecordPage.number-1} + ', ' + ${rechargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title='上一页'>上一页</a></li>
+					<li th:each="item : ${rechargeRecordPage.items}"
+						th:class="${item.current}? 'active' : ''"><span
+						th:if="${item.current}" th:text="${item.number+1}">1</span> <a
+						th:if="${not item.current}"
+						th:attr="onclick='javascript:gotoPage(' + ${item.number} + ', ' + ${rechargeRecordPage.size} + ', ' + ${timeInterval} + ')'">
+							<span th:text="${item.number+1}">1</span>
+					</a></li>
+					<li th:class="${rechargeRecordPage.hasNextPage}"><a
+						th:if="${not rechargeRecordPage.hasNextPage}"
+						th:attr="onclick='javascript:gotoPage(' + ${rechargeRecordPage.totalPages-1} + ', ' + ${rechargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title="下一页">下一页</a> <a th:if="${rechargeRecordPage.hasNextPage}"
+						th:attr="onclick='javascript:gotoPage(' + ${rechargeRecordPage.number+1} + ', ' + ${rechargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title="下一页">下一页</a></li>
+					<li><a
+						th:attr="onclick='javascript:gotoPage(' + ${rechargeRecordPage.totalPages-1} + ', ' + ${rechargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title='尾页'>尾页</a></li>
+
+					<div
+						style="display: inline; height: 35px; line-height: 35px; padding-left: 10px;">
+						总计：<span th:text="${rechargeRecordPage.total}"></span>
+					</div>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+<script th:inline="javascript">
+    function recordSearch(timeInterval) {
+
+        $.ajax({
+            url: "/admin/cards/rechargeRecordSearch",
+            data: {
+            	cardNo:[[${card.cardNo}]],
+                timeInterval:timeInterval,
+            },
+            type: 'get',//提交方式
+            dataType:'html',//返回数据的类型
+            success: function(data,stats) {//后台处理数据成功后的回调函数
+                if(stats == "success") {
+                    $("#tableA").html($(data).find("#tableA").html());
+                }
+            },
+
+            error: function(data) {//后台处理数据失败后的回调函数
+                  alert("请求失败")
+            }
+        });
+    };
+    
+    function gotoPage(page, pageSize, timeInterval) {
+        $.ajax({
+            url: "/admin/cards/rechargeRecordSearch",
+            data: {
+                cardNo:[[${card.cardNo}]],
+                timeInterval:timeInterval,
+                page:page,
+                size:pageSize
+            },
+            type: 'get',//提交方式
+            dataType:'html',//返回数据的类型
+            success: function(data,stats) {//后台处理数据成功后的回调函数
+            	if(stats == "success") {
+                    $("#tableA").html($(data).find("#tableA").html());
+                }
+            },
+
+            error: function(data) {//后台处理数据失败后的回调函数
+                  alert("请求失败")
+            }
+        });	
+    }
+</script>
+</html>

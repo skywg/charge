@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+layout:decorator="admin/layout">
+<head>
+    <title>评价管理</title>
+</head>    
+ <body>
+<div layout:fragment="content" id="content">
+	<ol class="breadcrumb">
+	    <li><a th:href="@{/admin/}">首页</a></li>
+	    <li><a th:href="@{/admin/reviews/}">运营中心</a></li>
+	    <li class="active">评价管理</li>
+	</ol>
+	<script th:inline="javascript">
+        /*<![CDATA[*/
+        function addContent(obj){
+        	$("#contentId").val("");
+        	document.getElementById("myModal").style.display="block"; 
+        	var reviewId = $(obj).prev().val();
+        	$("#hiddenid").val(reviewId)
+        	}
+        function btn(){
+        	var id=$("#hiddenid").val();
+        	var content = $("#contentId").val();
+        	window.location.href="/admin/reviews/addReview?id="+id+"&content="+content;
+        }
+        /*]]>*/
+    </script>
+	<div class="panel border">
+	    <div class="panel-tabs" role="tabpanel">
+	        <ul class="nav nav-tabs">
+	            <li role="presentation" class="active">
+	                <a href="#">评价列表</a>
+	            </li>
+	        </ul>
+	    </div>
+	    <div class="panel-body">
+	        <div class="table-responsive" style="margin-top: 1px">
+	        	 <form role="form" action="/admin/reviews/research/" method="get">
+	        	 	<div class="box-title">
+	                    <div class="box-title-sm">
+	                        <label for="startAt" class="form-control-label">开始日期</label>
+	                        <input type="text" class="form-control-input" id="start" name="startAt" readonly="readonly"
+	                        th:value="${review.startAt}==null?${review.startAt}:${#dates.format(review.startAt,'yyyy-MM-dd')}" placeholder="" />
+	                    </div>
+	                    <div class="box-title-sm">
+	                        <label for="updatedAt" class="form-control-label">结束日期</label>
+	                        <input type="text" style="padding-right:0px" class="form-control-input" id="end" name="updatedAt" readonly="readonly"
+	                        th:value="${review.updatedAt}==null?${review.updatedAt}:${#dates.format(review.updatedAt,'yyyy-MM-dd')}" placeholder="" />
+	                    </div>
+	                    <div class="box-title-sm">
+	                        <label for="name" class="form-control-label" >充电站名称 </label>
+	                        <input type="text" class="form-control-input"  name="station.name" 
+	                        th:value="${reviewValue.station}==null?${reviewValue.station}:${reviewValue.station.name}" placeholder="" />
+	                    </div>
+	                    <div class="box-title-sm">
+	                    	<label for="nickname" class="form-control-label"> 评价人 </label>
+	                        <input type="text" class="form-control-input" name="account.realName" 
+	                        th:value="${reviewValue.account}==null?${reviewValue.account}:${reviewValue.account.realName}" placeholder="" />
+	                    </div>
+	                     <div class="box-title-sm">
+						<label for="inputType1" class="form-control-label">状态</label>
+						<input type="hidden"  id="inputHiddenstatus" th:value="${reviewValue.transientStatus}"/>
+			                <select class="form-control-input" id="inputType22"  name="transientStatus" >
+			                    <option value="" selected="selected">全部</option>
+			                    <option value="-1">未审核</option>
+			                    <option value="0">未通过</option>
+			                    <option value="1"> 通过   </option>
+			                </select>
+                        </div> 
+	                        <input type="text" name="differentiate" th:value="1" placeholder="" hidden="hidden"/>
+	                    <div class="box-title-button">
+	                        <button type="submit" name="searchReview" style="display: none;" class="btn-query btn-primary query-btn-id">查询</button>
+	                    </div>
+	                    <div class="col-md-12 navbar-xian">
+	                        <hr class="xian-color" />
+	                    </div>
+	                    </div>
+	                    <script type="text/javascript">
+/*<![CDATA[*/
+      var  chargeIf =document.getElementById("inputHiddenstatus");
+	  var inputTypes = document.getElementById("inputType22").options;  
+	  if(inputTypes){
+			if(chargeIf){
+				for(var i=0;i<inputTypes.length;i++){
+  				 var chargeIfId = inputTypes[i].value;
+  				 if(chargeIf.value==chargeIfId){
+  					 inputTypes[i].selected="selected";
+  					 break;
+  				 }
+  			}
+			}
+		} 
+ 
+/*]]>*/
+</script>
+	           		 </form>
+	           		 
+	            <table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+	                <thead>
+	                    <tr>
+	                        <th style="width:32px;">#</th>
+	                        <th style="width:100px;">评价人</th>
+	                        <th>评价内容</th>
+	                        <th style="width:160px;">评价时间</th>
+	                        <th style="min-width:210px;">充电站名称</th>
+	                        <th style="width:110px;">手机号</th>  
+	                        <th style="width:150px;">评分</th>
+	                        <th style="width:80px;">状态</th>
+	                        <th style="width:80px;">操作</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr th:if="${review.parent==null}"  th:each="review, reviewIter : ${page.content}" th:attr="data-id=${review.id}" >
+	                        <td th:text="${reviewIter.count}">1</td>
+	                        <td th:text="${review.account.realName}">评价人</td>
+	                        <td th:attr="title=${review.content}" th:text="${review.content}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">评价内容</td>
+	                     	<td th:text="${#dates.format(review.updatedAt,'yyyy-MM-dd HH:mm:ss')}">评价时间</td>
+	                        <td th:attr="title=${review.station.name}" th:text="${review.station.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">充电站名称</td>
+	                        <td th:text="${review.account.phone}">手机号</td>
+	                        <td th:if="${review.rating.total==1}">
+	                        	<img th:src="@{/images/start/stars2.png}" height="14"/>
+	                   		    <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/> 		
+	                        </td>
+	                        <td th:if="${review.rating.total==2}">
+	                     		<img th:src="@{/images/start/stars2.png}" height="14"/>
+	                   		    <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/> 		
+	                        </td>
+	                        <td th:if="${review.rating.total==3}">
+	                     		<img th:src="@{/images/start/stars2.png}" height="14"/>
+	                   		    <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/> 		
+	                        </td>
+	                        <td th:if="${review.rating.total==4}">
+	                     		<img th:src="@{/images/start/stars2.png}" height="14"/>
+	                   		    <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/> 		
+	                        </td>
+	                        <td th:if="${review.rating.total==5}">
+	                     		<img th:src="@{/images/start/stars2.png}" height="14"/>
+	                   		    <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/> 		
+	                        </td>
+	                        <td th:if="${review.status==-1}" th:text="未审核" class="all-state">状态</td>
+	                        <td th:if="${review.status==0}" th:text="未通过" class="all-state">状态</td>
+	                        <td th:if="${review.status==1}" th:text="通过" class="all-state">状态 </td>	    
+	                        <td class="all-icon">
+	                            <a th:if="${review.status==-1}" name="yesReview" style="display: none;" th:href="@{/admin/reviews/verifyY/{id}(id=${review.id})}" title="通过" class="adopt-id"></a>
+	                            <a th:if="${review.status==-1}" name="noReview" style="display: none;" th:href="@{/admin/reviews/verifyN/{id}(id=${review.id})}" title="不通过" class="refer-id"></a>
+	                            <a th:if="${review.status==0}"></a>
+	                            <input type="hidden"  th:value="${review.id}"/>
+	                            <a th:if="${review.status==1}" href="javascript:;" data-toggle="modal"
+	                            data-target="#myModal"  name="reviewContent" style="display: none;" onclick="addContent(this);" title="回复" class="reply-id"></a>
+	                        </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	        </div>
+	    </div>
+	    				<div class="panel-footer">
+	       					 <div th:replace="element/pagination">
+	       					 </div>
+	  				    </div>
+		</div>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+	                    &times;
+	                </button>
+	                <h4 class="modal-title" id="myModalLabel" >
+	               		     回复内容
+	                </h4>
+	            </div>
+	            <div class="modal-body">
+	            	<textarea class="form-control" id="contentId" maxlength="500"></textarea>
+	            </div>
+	            <div class="modal-footer">
+	                <input type="hidden" id="hiddenid" />
+	                <button type="button" class="btn btn-primary" onclick="btn(this);">
+	                 		   确定
+	                </button>
+	                <button type="button" class="btn btn-default" data-dismiss="modal">
+	                  		  取消
+	                </button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</div>
+<div layout:fragment="javascript">
+<script type="text/javascript">
+	 var start = {
+	  elem: '#start',
+	  format: 'YYYY-MM-DD',
+	  min: '2016-01-01 23:59:59', //设定最小日期为当前日期
+	  max: '2099-06-16 23:59:59', //最大日期
+	  istoday: false,
+	  choose: function(datas){
+	     end.min = datas; //开始日选好后，重置结束日的最小日期
+	     end.start = datas //将结束日的初始值设定为开始日
+	  }
+	};
+	var end = {
+	  elem: '#end',
+	  format: 'YYYY-MM-DD',
+	  min: laydate.now(),
+	  max: '2099-06-16 23:59:59',
+	  istoday: false,
+	  choose: function(datas){
+	    start.max = datas; //结束日选好后，重置开始日的最大日期
+	  }
+	};
+	laydate(start);
+	laydate(end); 
+	$(document).ready(function(){
+		$(".abc").hover(function(e){
+			var aa =$(this).html();
+			$(this).attr("title",aa)
+		});
+	})
+</script>
+</div>
+</body>
+</html>

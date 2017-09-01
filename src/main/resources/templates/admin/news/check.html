@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>查看消息</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+<script type="text/javascript">
+	window.onload=function(){
+		var ct = document.getElementById('show_content');
+		show_content = ct.value;
+		for_show_html = document.getElementById('for_show_html');
+		for_show_html.innerHTML=show_content;
+	}
+</script>
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/notify/}">内容中心</a></li>
+        <li><a th:href="@{/admin/notify/}">消息中心</a></li>
+        <li class="active">查看消息</li>
+    </ol>
+    <form role="form" action="#" method="post"
+           th:object="${notification}">
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">查看消息</a></li>
+                </ul>
+            </div>
+            
+            <div class="panel-body" th:include="admin/news/checkform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/notify/?flag=true}" style="padding-top:4px">返回</a>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+			
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

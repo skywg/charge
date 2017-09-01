@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<style>
+p {
+	margin: 1px;
+	padding: 0;
+	padding-bottom: 2px;
+}
+.order-left{
+	width:90px;
+	display: inline-block;
+}
+</style>
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row">
+			<div class="col-sm-3 col-md-3" style="margin:auto;padding-left:0px;padding-right:0px;">
+				<div class="form-group col-md-12">
+					<!--//title-->
+					<!-- <br/> -->
+					<label for="inputCode"><span class="order-left">订单流水号： </span><span
+						th:text="${order.orderId}" style="font-weight:normal"></span>
+					</label>
+				</div>
+				<div class="form-group col-md-12">
+					<!--//title-->
+					<!-- <br/> -->
+					<label for="inputCode"><span class="order-left">运营商名称：</span><span
+						th:text="${order.charger.station.operator.name}" ></span></label>
+
+				</div>
+				<div class="form-group col-md-12">
+					<!--//title-->
+					<label for="inputCode"><span class="order-left">充电站名称：</span><span
+						th:text="${order.charger.station.name}" style="font-weight:normal"></span></label>
+
+				</div>
+				<div class="form-group col-md-12">
+					<!--//title-->
+					<label for="inputCode"><span class="order-left">充电桩名称：</span><span
+						th:text="${order.charger.name}" style="font-weight:normal"></span></label>
+
+				</div>
+				<div class="form-group col-md-12">
+					<!--//title-->
+					<label for="inputCode"><span class="order-left">充电接口：</span><span
+						th:text="${order.ifName}" style="font-weight:normal"></span></label>
+				</div>
+				<div class="form-group col-md-12">
+					<label for="inputCode"><span class="order-left">订单状态： </span><span
+						th:text="${order.status.title}" class="all-state" style="font-weight:normal"></span></label>
+
+				</div>
+			</div>
+			<div class="col-sm-9 col-md-9 text-center"
+				style="height:200px;background:url(/images/small-xian.png) no-repeat;background-size:65% auto;background-position-x:48%;background-position-y:55px;">
+				<br />
+				<div class="form-group col-md-2 col-md-offset-1">
+					<!--//Location-->
+					<img th:src="@{/images/icon-160x160/send-order-green.png}"
+						alt="提交订单" style="height: 70px; width: 70px" />
+					<p style="margin-top:10px">提交订单</p>
+					<span th:text="${#dates.format(order.createdAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+				</div>
+				<div th:if="${order.startAt == null}" class="form-group col-md-2">
+					<!--//Location-->
+					<img th:src="@{/images/icon-160x160/charge-start-grey.png}"
+						alt="开始充电" style="height: 70px; width: 70px" />
+					<p style="margin-top:10px">开始充电</p>
+				</div>
+				<div th:if="${order.startAt != null}" class="form-group col-md-2">
+					<!--//Location-->
+					<img th:src="@{/images/icon-160x160/charge-start-green.png}"
+						alt="开始充电" style="height: 70px; width: 70px" />
+					<p style="margin-top:10px">开始充电</p>
+					<span th:text="${#dates.format(order.startAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+				</div>
+				<div th:if="${order.startAt == null}"  class="form-group col-md-2">
+					<!--//Location-->
+					<img th:src="@{/images/icon-160x160/charging-grey.png}" alt="充电中"
+						style="height: 70px; width: 70px" />
+					<p style="margin-top:10px">充电中</p>
+				</div>
+				<div th:if="${order.startAt != null}"  class="form-group col-md-2">
+					<!--//Location-->
+					<img th:src="@{/images/icon-160x160/charging-green.png}" alt="充电中"
+						style="height: 70px; width: 70px" />
+					<p style="margin-top:10px">充电中</p>
+				</div>
+				<div th:if="${order.endAt == null}" class="form-group col-md-2">
+					<!--//Location-->
+					<img th:src="@{/images/icon-160x160/charge-full-grey.png}"
+						alt="结束充电" style="height: 70px; width: 70px" />
+					<p style="margin-top:10px">结束充电</p>
+				</div>
+				<div th:if="${order.endAt != null}" class="form-group col-md-2">
+					<!--//Location-->
+					<img th:src="@{/images/icon-160x160/charge-full-green.png}"
+						alt="结束充电" style="height: 70px; width: 70px" />
+					<p style="margin-top:10px">结束充电</p>
+					<span th:text="${#dates.format(order.endAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+				</div>
+				<div th:if="${order.endAt ==null || order.status.title=='未支付'}" class="form-group col-md-2">
+					<!--//Location-->
+					<img th:src="@{/images/icon-160x160/charge-end-grey.png}" alt="完成"
+						style="height: 70px; width: 70px" />
+					<p style="margin-top:10px">完成</p>
+				</div>
+				<div th:if="${order.endAt != null &amp;&amp; order.status.title=='已支付'}" class="form-group col-md-2">
+					<!--//Location-->
+					<img th:src="@{/images/icon-160x160/charge-end-green.png}" alt="完成"
+						style="height: 70px; width: 70px" />
+					<p style="margin-top:10px">完成</p>
+					<span th:text="${#dates.format(order.updatedAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+				</div>
+				<!--  <div class="form-group col-md-12">//Location
+	                	<label>会员积分： +25</label>
+	                </div> -->
+
+			</div>
+		</div>
+		<!-- <hr style="border:solid 1px grey"/>
+    	<div class="row">
+	        <div class="col-sm-3 col-md-3">
+                
+	        </div>
+	        <div class="col-sm-9 col-md-9 " style="height:150px; overflow-y:auto;border-left:solid 2px grey;">
+                <div class="row" style="margin:0;padding:0">
+                	<div class="col-md-1"></div>
+	                <div class="form-group col-md-8" style="margin:0;padding:0">//Location   
+	                    <span class="creartTime" th:text="${order.createdAt}" ></span><span class="createInfo" style="margin-left:40px">用户提交订单，等待充电桩确认</span><br/>
+	                    <span class="startTime" th:text="${order.startAt}" ></span><span class="startInfo" style="margin-left:40px">充电桩收到订单，准备就绪，等待用户拔枪充电</span><br/>     
+	                     <span class="startTime" th:text="${order.startAt}" ></span><span class="startInfo" style="margin-left:40px">用户拔枪，充电中</span><br/>     
+	                    <span class="endTime" th:text="${order.endAt}" ></span><span class="endInfo" style="margin-left:40px">已充满，等待用户拔枪 </span><br/>
+	                    <span class="endTime" th:text="${order.endAt}" ></span><span class="endInfo" style="margin-left:40px">用户拔枪，充电结束 </span><br/>
+	                    <span class="updatedTime" th:text="${order.updatedAt}" ></span><span class="updatedInfo" style="margin-left:40px">完成</span><br/>
+	                </div>
+                </div>
+	        </div>
+	    </div> -->
+		<div class="col-md-12 navbar-xian">
+      		<div th:text="${message}" style="text-align:center; color:#ff0000"></div>
+           <hr class="xian-color"/>
+        </div>
+		<div class="row">
+			<div class="col-sm-3 col-md-3" style="padding-left:0px;padding-right:0px;">
+
+				<div class="form-group col-md-10">
+					<!--//title-->
+					<label for="inputTitle"><span class="order-left">会员名称：</span>
+						<span th:if="${order.account==null}" th:text="${order.card != null ? order.card.account.realName : ''}" style="font-weight:normal"></span>
+						<span th:if="${order.account!=null}" th:text="${order.account.realName}" style="font-weight:normal"></span>
+					</label>
+				</div>
+				<div th:if="${order.paidFrom == 'CARD'}" class="form-group col-md-12">
+					<!--//title-->
+					<label for="inputTitle"><span class="order-left">卡号：</span>
+						<span th:text="${order.card.cardNo}" style="font-weight:normal"></span>
+					</label>
+				</div>
+				<div th:if="${order.paidFrom != 'CARD'}" class="form-group col-md-10">
+					<!--//title-->
+					<label for="inputTitle"><span class="order-left">手机号：</span>
+						<span th:text="${order.account != null ? order.account.phone : ''}" style="font-weight:normal"></span>
+					</label>
+				</div>
+				<div class="form-group col-md-10">
+					<!--//title-->
+					<label for="inputCode"><span class="order-left">支付方式：</span><span
+						 th:each="pf : ${paidFroms}" th:if="${order.paidFrom==pf.dictValue}" th:text="${pf.descr}" style="font-weight:normal"></span></label>
+				</div>
+				<div class="form-group col-md-10">
+					<!--//title-->
+					<label for="inputCode"><span class="order-left">时长：</span><span
+						th:text="${order.formatChargingTime()}" style="font-weight:normal"></span></label>
+				</div>
+				<div class="form-group col-md-10">					
+					<label for="inputCode"><span class="order-left">金额(元)：</span><span th:text="${order.money}" style="font-weight:normal"></span></label>
+				</div>
+				<div class="form-group col-md-10">					
+					<label for="inputCode"><span class="order-left">电量(Kwh)：</span><span th:text="${order.degree}" style="font-weight:normal"></span></label>
+				</div>
+				<div class="form-group col-md-12">					
+					<label for="inputCode"><span class="order-left">起止SOC：</span><span th:text="${order.startSoc}" style="font-weight:normal"></span>~<span th:text="${order.endSoc}" style="font-weight:normal"></span>
+					</label>
+				</div>
+			</div>
+			<div class="col-sm-9 col-md-9"
+				style="height: 270px; overflow-y: auto;">
+				<div class="row section">
+					<div class="form-group col-md-12">
+						<!--//Location-->
+						<label>&nbsp;&nbsp;分段计费明细</label>
+					</div>
+					<div class="form-group col-md-12">
+						<!--//Location-->
+						<table class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th style="width:32px">#</th>
+									<th style="width:160px">开始时间</th>
+									<th style="width:160px">结束时间</th>
+									<th>电量</th>
+									<th>时长</th>
+									<th style="width:60px">电价</th>
+									<th style="width:60px">服务费</th>
+									<th>金额(元)</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="orderItem, orderItemIter : ${order.orderItems}">
+									<td th:text="${orderItemIter.count}">#</td>
+									<td
+										th:text="${orderItem.startAt != null ? #dates.format(orderItem.startAt,'yyyy-MM-dd HH:mm:ss') : ''}">开始时间</td>
+									<td
+										th:text="${orderItem.endAt != null ? #dates.format(orderItem.endAt,'yyyy-MM-dd HH:mm:ss') : ''}">结束时间</td>
+									<td th:text="${orderItem.degree}">电量</td>
+									<td th:text="${orderItem.formatChargingTime()}">时长</td>
+									<td th:text="${orderItem.price}">单价</td>
+									<td th:text="${orderItem.fee}">服务费</td>
+									<td th:text="${orderItem.money}">金额</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

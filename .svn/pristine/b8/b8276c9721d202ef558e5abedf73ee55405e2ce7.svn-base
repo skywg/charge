@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="row">
+    <div class="col-sm-9 col-md-9">
+        <div class="row section">    
+            <div class="form-group col-md-5"><!--//title-->
+                <label for="inputCode">运营商编号</label>
+                <input type="text" th:field="*{code}" maxlength="20" class="form-control" required="required" id="inputCode"
+                        style="cursor:auto;" disabled="disabled"/>
+            </div>
+            <div class="form-group col-md-7"><!--//title-->
+                <label for="inputTitle">运营商名称</label>
+                <input type="text" th:field="*{name}" maxlength="20" class="form-control" required="required" id="inputTitle"
+                        style="cursor:auto;" disabled="disabled"/>
+            </div>
+        </div>
+		<div class="row section">    
+            <div class="form-group col-md-5">
+                <label>联系人</label>
+                <input type="text" th:field="*{contact}" maxlength="20" style="cursor:auto;" disabled="disabled" required="required" class="form-control" />
+            </div> 
+             <div class="form-group col-md-7">
+                <label>联系电话</label><!-- pattern="^1[3-9]\d{9}$" -->
+                <input type="text" th:field="*{telephone}" maxlength="20" style="cursor:auto;" disabled="disabled" required="required" class="form-control" />
+            </div> 
+        </div>
+    </div>
+    <div class="col-sm-3 col-md-3">
+        <div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputType">运营商类型</label>
+                <input class="form-control" id="inputType" style="cursor:auto;" disabled="disabled" required="required" th:each="cs , csIter : ${types}" th:if="${operator.type==cs.dictValue}" th:value="${cs.descr}"/>
+            </div>
+        </div>
+
+        <div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputStatus">状态</label>
+                <input class="form-control" id="inputStatus" style="cursor:auto;" disabled="disabled" th:value="${operator.status.title}"/>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-12">
+        <div class="row section">    
+            <div class="form-group col-md-12">
+                <label>运营商地址</label><!-- pattern="^1[3-9]\d{9}$" -->
+                <input type="text" th:field="*{address}" maxlength="50" style="cursor:auto;" disabled="disabled" required="required" class="form-control" />
+            </div> 
+        </div>
+        <div class="row section">
+            <div class="form-group col-md-12"><!--//description-->
+                <label for="inputDescription">描述</label>
+                 <textarea class="form-control" id="inputDescription" maxlength="500"
+                           th:field="*{description}"           
+                           style="cursor:auto;height:100px;" disabled="disabled"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

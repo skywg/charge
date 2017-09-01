@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="row">
+    <div class="col-sm-9 col-md-9">
+        <div class="row section">
+            <div class="form-group col-md-5"><!--//title-->
+                <label for="inputCode"><span style="color:red">*</span>运营商编号</label>
+                <input type="text" th:field="*{code}" maxlength="16" class="form-control" required="required" id="inputCode"
+                       placeholder="" pattern="^[0-9]*[1-9][0-9]*$" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+            </div>
+            <div class="form-group col-md-7"><!--//title-->
+                <label for="inputTitle"><span style="color:red">*</span>运营商名称</label>
+                <input type="text" th:field="*{name}" maxlength="20" class="form-control" required="required" id="inputTitle"
+                       placeholder="国家电网"/>
+            </div>
+        </div>
+        <div class="row section">
+			<div class="form-group col-md-5">
+                <label><span style="color:red">*</span>联系人</label><!-- pattern="^1[3-9]\d{9}$" -->
+                <input type="text" th:field="*{contact}" maxlength="10"  required="required" class="form-control" />
+            </div> 
+             <div class="form-group col-md-7">
+                <label><span style="color:red">*</span>联系电话</label><!-- pattern="^1[3-9]\d{9}$" -->
+                <input type="text" th:field="*{telephone}" maxlength="20"  required="required" class="form-control" pattern="(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+            </div> 
+            
+        </div>
+        <div class="row section">    
+            <div class="form-group col-md-12">
+	            <label><span style="color:red">*</span>运营商地址</label><!-- pattern="^1[3-9]\d{9}$" -->
+	            <input type="text" th:field="*{address}" maxlength="50"   required="required" class="form-control" />
+            </div> 
+        </div>
+        <div class="row section">
+        	<div class="form-group col-md-12"><!--//description-->
+                <label for="inputDescription">描述</label>
+                        <textarea class="form-control" id="inputDescription" maxlength="250"
+                                  style="height:100px;"
+                                  th:field="*{description}"
+                                  placeholder="欢迎使用，竭诚为您服务"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3 col-md-3">
+
+        <div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputType"><span style="color:red">*</span>运营商类型</label>
+                <select class="form-control" id="inputType" required="required" th:field="*{type}">
+                    <option th:each="t : ${types}"
+                            th:value="${t.dictValue}"
+                            th:text="${t.descr}">Type
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputStatus"><span style="color:red">*</span>状态</label>
+                <select class="form-control" id="inputStatus" th:field="*{status}">
+                    <option th:each="s : ${statuses}"
+                            th:value="${s.dictValue}"
+                            th:text="${s.descr}">Type
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+        /*<![CDATA[*/
+         
+        /*]]>*/
+    </script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>用户增长分析</title>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/reports/userCount}">分析中心</a></li>
+        <li class="active">用户增长分析</li>
+    </ol>
+    <div class="panel border">
+        <div class="panel-tabs" role="tabpanel">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="#">用户增长分析</a></li>
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive" style="margin-top: 1px">
+                <div class="col-sm-12 col-md-12">
+                    <form role="form" action="/admin/reports/userCount" method="post">
+                    	<div class="form-group custom-input box-title-sm" style="display:inline-block;">
+                            <label for="inputStatus" class="form-control-label">统计粒度</label>
+                            <input
+									type="radio" name="datetype" value="week" id="week" checked="checked"/><span>近一周</span>
+									<input
+									type="radio" name="datetype" value="halfyear" id="halfyear" /><span>半年</span>
+									<input
+									type="radio" name="datetype" value="fiveyear" id="fiveyear" /><span>五年</span>
+                            <input type="radio" name="datetype"  value="year" id="nian"/><span>年</span>
+    						<input type="radio" name="datetype"  value="month" style="margin-left:10px;" id="yue"/><span>月</span>
+    						<input type="radio" name="datetype"  value="day"  style="margin-left:10px;" id="ri"/><span>日</span>
+                        </div>
+                        <div id="nian-o" style="display:none">
+	                        <div class="form-group custom-input col-md-3 box-title-sm" style="display:inline-block;width:250px;padding:0px;float: none;">
+	                            <label for="inputStartAt" class="form-control-label" style="font-weight: normal;">开始时间</label>
+	                            <input type="text" class="form-control-input laydate-icon" id="datetimepicker1"   name="yearstartdate" placeholder="" style="width:160px"/>
+	                        </div>
+	                        <div class="form-group custom-input box-title-sm" style="display:inline-block;width:250px;padding:0px;float: none;">
+	                            <label for="inputEndAt" class="form-control-label" style="font-weight: normal;">结束时间</label>
+	                            <input type="text" class="form-control-input laydate-icon" id="datetimepicker2"  name="yearenddate" placeholder="" style="width:160px"/>
+	                        </div>
+                        </div>
+                        <div id="yue-o" style="display:none">
+	                        <div class="form-group custom-input col-md-3 box-title-sm" style="display:inline-block;width:250px;padding:0px;float: none;">
+	                            <label for="inputStartAt" class="form-control-label" style="font-weight: normal;">开始时间</label>
+	                            <input type="text" class="form-control-input laydate-icon" id="datetimepicker3"  name="monthstartdate" placeholder="" style="width:160px"/>
+	                        </div>
+	                        <div class="form-group custom-input col-md-3 box-title-sm" style="display:inline-block;width:250px;padding:0px;float: none;">
+	                            <label for="inputEndAt" class="form-control-label" style="font-weight: normal;">结束时间</label>
+	                            <input type="text" class="form-control-input laydate-icon" id="datetimepicker4"  name="monthenddate" placeholder="" style="width:160px"/>
+	                        </div>
+                        </div>
+                        <div id="ri-o" style="display:inline-block;">
+	                        <div class="form-group custom-input col-md-3 box-title-sm" style="display:inline-block; width:250px;padding:0px;float: none;">
+	                            <label for="inputStartAt" class="form-control-label" style="font-weight: normal;">开始时间</label>
+	                            <input type="text" class="form-control-input laydate-icon" id="datetimepicker5"  name="daystartdate" placeholder="" style="width:160px"/>
+	                        </div>
+	                        <div class="form-group custom-input col-md-3 box-title-sm" style="display:inline-block; width:250px;padding:0px;float: none;">
+	                            <label for="inputEndAt" class="form-control-label" style="font-weight: normal;">结束时间</label>
+	                            <input type="text" class="form-control-input laydate-icon" id="datetimepicker6"  name="dayenddate" placeholder="" style="width:160px"/>
+	                        </div>
+                        </div>
+                        <div class="pull-right col-md-1" style="text-align: right;">
+                            <button type="submit" name="searchuserCount" class="btn-query btn-primary navbar-btn query-btn-id" style="margin-top:-1px;display:none;">查询</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-12 navbar-xian" style="clear: both;">
+                	<div th:text="${message}" style="text-align:center; color:#ff0000"></div>
+                    <hr class="xian-color"/>
+                </div>
+                <div class="col-sm-4 col-md-4">
+                	<div class="panel-body" style="padding: 5px;">
+			            <div id="main2" style="width: 100%;height:400px;"></div>
+			        </div>
+                </div>
+                <div class="col-sm-8 col-md-8">
+                	<div class="panel-body" style="padding: 5px;">
+			            <div id="main1" style="width: 100%;height:400px;"></div>
+			        </div>
+                </div>
+                <form role="form" id="submitForm" method="post">
+                <div class="col-md-12" style="padding-right:0px;padding-bottom:10px">
+                	<button type="button" id="export" name="userexport" class="btn-query btn-primary export-btn-id pull-right">导出</button>
+                </div>
+                </form>
+                <div class="col-md-12 navbar-xian">
+                     <hr class="xian-color"/>
+                </div>
+                <div class="col-md-12" style="padding:0px;overflow-y:auto;max-height:300px;">
+	                 <table class="table table-striped table-bordered table-hover">
+	                    <thead>
+	                    <tr>
+	                        <th>#</th>
+	                        <th>时间</th>
+	                        <th>企业会员</th>
+	                        <th>个人会员</th>
+	                        <th>总数</th>
+	                    </tr>
+	                    </thead>
+	                    <tbody class="table_body">
+	                    <tr th:each="data, listIter : ${listpage}">
+	                        <td th:text="${listIter.count}">1</td>
+	                        <td th:text="${data.time}">时间</td>
+	                        <td th:text="${data.qynum}">企业会员</td>
+	                        <td th:text="${data.grnum}">个人会员</td>
+	                        <td th:text="${data.total}">总数</td>
+	                    </tr>
+	                    </tbody>
+	                </table>
+	             </div>   
+            </div>
+        </div>
+        <!-- <div class="panel-footer">
+            <form id="form1" runat="server" style="font-size:14px;">
+			    <div class="data-table-pagination" style="padding-right:80px;position: relative;">
+			        <ul class="pagination" id="pagination">
+			        </ul>
+			         <div style="display:inline;position:absolute;right:20px;bottom:15px;color:#798C9C">
+			                                总计：<span class="zonggong"></span>
+			    	</div> 
+			        <input type="hidden" id="PageCount" runat="server" />
+			        <input type="hidden" id="PageSize" runat="server" value="2" />
+			        <input type="hidden" id="countindex" runat="server" value="7"/>
+			        <input type="hidden" id="visiblePages" runat="server" value="5" />
+			    </div>
+			   
+		    </form>
+        </div> -->
+    </div>
+</div>    
+<div layout:fragment="javascript">
+<script src="../../static/js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>
+<script src="../../static/js/laydate/laydate.js" th:src="@{/js/laydate/laydate.js}"></script>    
+<script th:inline="javascript">
+    /*<![CDATA[*/
+                $("#export").click(function(){
+            	   var flag = false;
+					var obj=document.getElementsByName("datetype");
+				    for (var i=0;i<obj.length;i++){ //遍历Radio 
+				    	if(obj[i].checked){
+				    		if(obj[i].value=='day'){
+				    			 var datetimepicker5=document.getElementById("datetimepicker5").value;
+				            	 var datetimepicker6=document.getElementById("datetimepicker6").value;
+				            	 if(datetimepicker5!=""&&datetimepicker6!=""){
+				            		 flag = true;
+				            	 }
+				    		}else if(obj[i].value=='month'){
+				    			 var datetimepicker3=document.getElementById("datetimepicker3").value;
+				            	 var datetimepicker4=document.getElementById("datetimepicker4").value;
+				            	 if(datetimepicker3!=""&&datetimepicker4!=""){
+				            		 flag = true;
+				            	 }
+				    		}else if(obj[i].value=='year'){
+				    			 var datetimepicker1=document.getElementById("datetimepicker1").value;
+				            	 var datetimepicker42=document.getElementById("datetimepicker2").value;
+				            	 if(datetimepicker1!=""&&datetimepicker2!=""){
+				            		 flag = true;
+				           }
+				    	}else if(obj[i].value=='week'){
+				        	   flag = true;
+				           }else if(obj[i].value=='halfyear'){
+				        	   flag = true;
+				           }else if(obj[i].value=='fiveyear'){
+				        	   flag = true;
+				           }
+				    }
+				    }
+				    if(flag){
+				    	var url="/admin/reports/exportuserCount?"+$("form").serialize();
+				    	 //更改form的action  
+				        $("#submitForm").attr("action", url);  
+				        //触发submit事件，提交表单   
+				        $("#submitForm").submit();
+				    }else{
+				    	alert("时间不能为空！")
+				    	return false;
+				    }
+				})
+               var maplist =[[${maplist}]];
+               var ld =[[${ma.ld}]];
+               var its =[[${ma.its}]];
+               var form = [[${userdata}]];
+               var datetype = form.datetype;
+               var obj=document.getElementsByName("datetype");
+               for (var i=0;i<obj.length;i++){ //遍历Radio 
+	               if(obj[i].value==datetype){ 
+	              	 	obj[i].checked = "checked";
+	              	} 
+               } 
+               if(datetype=="day"){
+            	   var datetimepicker5=document.getElementById("datetimepicker5");
+            	   datetimepicker5.value=form.daystartdate;
+            	   var datetimepicker6=document.getElementById("datetimepicker6");
+            	   datetimepicker6.value=form.dayenddate;
+            	   $("#ri-o").show().css("display","inline-block");
+          			$("#nian-o").hide();
+          			$("#yue-o").hide();
+               }else if(datetype=="month"){
+            	   var datetimepicker3=document.getElementById("datetimepicker3");
+            	   datetimepicker3.value=form.monthstartdate;
+            	   var datetimepicker4=document.getElementById("datetimepicker4");
+            	   datetimepicker4.value=form.monthenddate;
+            	   $("#yue-o").show().css("display","inline-block");
+	           		$("#nian-o").hide();
+	           		$("#ri-o").hide();
+               }else if(datetype=="year"){
+            	   var datetimepicker1=document.getElementById("datetimepicker1");
+            	   datetimepicker1.value=form.yearstartdate;
+            	   var datetimepicker2=document.getElementById("datetimepicker2");
+            	   datetimepicker2.value=form.yearenddate;
+            	   $("#nian-o").show().css("display","inline-block");
+              		$("#yue-o").hide();
+              		$("#ri-o").hide();
+               }
+    // 基于准备好的dom，初始化echarts实例
+    var myChart1 = echarts.init(document.getElementById('main1'));
+    option1 = {
+    	    tooltip : {
+    	        trigger: 'axis'
+    	    },
+    	    toolbox: {
+                show: true,
+                feature: {
+                    restore: {
+                        show: false
+                    },
+                    saveAsImage: {
+                        show: true
+                    }
+                }
+            },
+    	    legend: {
+    	        data:['用户增长']
+    	    },
+    	    calculable : true,
+    	    xAxis : [
+    	        {
+    	            type : 'category',
+    	            boundaryGap : false,
+    	            //data :["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+    	        	data:ld
+    	        }
+    	    ],
+    	    yAxis : [
+    	        {
+    	            type : 'value'
+    	        }
+    	    ],
+    	    series : [
+    	        {
+    	            name:'用户增长',
+    	            type:'line',
+    	            stack: '总量',
+    	            //data:[120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90]
+    	        	data:its
+    	        }
+    	    ]
+    	};
+    myChart1.setOption(option1);
+    var myChart2 = echarts.init(document.getElementById('main2'));
+    option2 = {
+    	    tooltip : {
+    	        trigger: 'item',
+    	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    	    },
+    	    toolbox: {
+                show: true,
+                feature: {
+                    restore: {
+                        show: false
+                    },
+                    saveAsImage: {
+                        show: true
+                    }
+                }
+            },
+    	    legend: {
+    	        orient : 'vertical',
+    	        x : 'left',
+    	        data:['个人','企业']
+    	    },
+    	    calculable : true,
+    	    series : [
+    	        {
+    	            name:'人数',
+    	            type:'pie',
+    	            radius : '70%',
+    	            center: ['50%', '50%'],
+    	            itemStyle : {
+    	                normal : {
+    	                    label : {
+    	                        position : 'inner',
+    	                        formatter : function (params) {                         
+    	                          return (params.percent - 0).toFixed(2) + '%'
+    	                        }
+    	                    }
+    	                }           
+    	            },
+    	            data:maplist
+    	            /* 	[
+    	                {value:335, name:'直流'},
+    	                {value:310, name:'交流'},
+    	            ] */
+    	        }
+    	    ]
+    	};
+    myChart2.setOption(option2);
+    /*]]>*/
+</script>
+<script src="../../static/js/time/js/moment-with-locales.js" th:src="@{/js/time/js/moment-with-locales.js}"></script>
+<script src="../../static/js/time/js/bootstrap-datetimepicker.js" th:src="@{/js/time/js/bootstrap-datetimepicker.js}"></script>
+ <script type="text/javascript">
+ /*<![CDATA[*/
+$("#nian").click(function(){
+	$("#nian-o").show().css("display","inline-block");
+	$("#yue-o").hide();
+	$("#ri-o").hide();
+})
+$("#yue").click(function(){
+	$("#yue-o").show().css("display","inline-block");
+	$("#nian-o").hide();
+	$("#ri-o").hide();
+})
+$("#ri").click(function(){
+	$("#ri-o").show().css("display","inline-block");
+	$("#nian-o").hide();
+	$("#yue-o").hide();
+})
+$(function() {
+	$('#datetimepicker1').datetimepicker({
+		viewMode: 'years',
+          				format: 'YYYY'
+          				//minDate: '2014',
+          				//maxDate: '2016'
+	});
+	$('#datetimepicker2').datetimepicker({
+		viewMode: 'years',
+          				format: 'YYYY'
+          				//minDate: '2014',
+          				//maxDate: '2017'
+	});
+	$("#datetimepicker1").on("dp.change", function(e) {
+		$('#datetimepicker2').data("DateTimePicker").minDate(e.date);
+	});
+	$("#datetimepicker2").on("dp.change", function(e) {
+		$('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
+	});
+});
+$(function() {
+	$('#datetimepicker3').datetimepicker({
+		viewMode: 'years',
+			format: 'YYYY-MM'
+			//minDate: '2014',
+			//maxDate: '2017'
+	});
+	$('#datetimepicker4').datetimepicker({
+		viewMode: 'years',
+			format: 'YYYY-MM'
+			//minDate: '2014',
+			//maxDate: '2017'
+	});
+	$("#datetimepicker3").on("dp.change", function(e) {
+		$('#datetimepicker4').data("DateTimePicker").minDate(e.date);
+	});
+	$("#datetimepicker4").on("dp.change", function(e) {
+		$('#datetimepicker3').data("DateTimePicker").maxDate(e.date);
+	});
+});
+$(function() {
+	$('#datetimepicker5').datetimepicker({
+		viewMode: 'years',
+			format: 'YYYY-MM-DD'
+			//minDate: '01/01/2014',
+			//maxDate: '12/31/2016'
+	});
+	$('#datetimepicker6').datetimepicker({
+		viewMode: 'years',
+			format: 'YYYY-MM-DD'
+			//minDate: '01/01/2014',
+			//maxDate: '12/31/2016'
+	});
+	$("#datetimepicker5").on("dp.change", function(e) {
+		$('#datetimepicker6').data("DateTimePicker").minDate(e.date);
+	});
+	$("#datetimepicker6").on("dp.change", function(e) {
+		$('#datetimepicker5').data("DateTimePicker").maxDate(e.date);
+	});
+});
+/*]]>*/
+</script>
+<script>
+	$(document).ready(function(){
+		$(".abc").hover(function(e){
+			var aa =$(this).html();
+			$(this).attr("title",aa)
+		});
+	})
+</script>
+<script src="../../static/js/jqPaginator.min.js" th:src="@{/js/jqPaginator.min.js}"></script>
+<script src="../../static/js/myPage.js" th:src="@{/js/myPage.js}"></script>
+<script>
+/*<![CDATA[*/
+/* function loadData(num) {
+	var aa=$(".table_body").find("tr").length;
+    $("#PageCount").val(aa);
+    var oLeng=$(".table_body tr").length;
+    for (var i=0;i<oLeng;i++) {
+    	$(".table_body tr").eq(i).hide();
+    }
+    for (var j=num*2-2;j<num*2;j++) {
+    	$(".table_body tr").eq(j).show();
+    }
+    $(".zonggong").text(aa);
+} */
+/*]]>*/	
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+	  <style>
+	  	 #noPageC ul,#pageB ul li{
+	  	 	list-style: none;
+	  	 }
+	  	 #noPageC{
+	  	 	padding-right:85px;
+	  	 	position: relative;
+	  	 	margin: 0;
+		    white-space: nowrap;
+		    text-align: right;
+	  	 }
+	  	 #noPageC ul{
+	  	    display: inline-block;
+		    padding-left: 0;
+		    margin: 20px 0;
+		    border-radius: 4px;
+	  	 }
+	  	 #noPageC ul li{
+	  	 	display: inline;
+	  	 }
+	  	 #noPageC>ul>li>a{
+  	 	    position: relative;
+		    float: left;
+		    padding: 6px 12px;
+		    margin-left: -1px;
+		    line-height: 1.42857143;
+		    color: #337ab7;
+		    text-decoration: none;
+		    background-color: #fff;
+		    border: 1px solid #ddd;
+	  	 }
+	  	 #noPageC>ul>li>a, #noPageC>ul>li>a:focus, #noPageC>ul>li>a:hover{
+	  	 	color: #777;
+	  	 	text-decoration: none;
+	    	cursor: not-allowed;
+	   		background-color: #fff;
+	    	border-color: #ddd;
+	  	 }   
+	  </style>
+<body id="cardR">
+	<div class="table-responsive" style="margin-top: 1px"
+		id="cards-recharge-record">
+		<!--<form role="form" action="/admin/cards/search/" method="get">
+        th:href="@{/admin/cards/chargeRecordSearch/{cardNo}/{timeInterval}(cardNo=${card.cardNo},timeInterval=week)}"
+        -->
+		<div class="form-group col-md-4">
+			<button class="btn-query btn-primary" style="padding-left:8px"
+				onclick="recordSearch(7);">一周</button>
+			<button type="submit" class="btn-query btn-primary"
+				onclick="recordSearch(30);" style="padding-left:8px">一个月</button>
+			<button type="submit" class="btn-query btn-primary"
+				onclick="recordSearch(90);" style="padding-left:8px">三个月</button>
+			<button type="submit" class="btn-query btn-primary"
+				onclick="recordSearch(365);" style="padding-left:8px">一年</button>
+		</div>
+		<!--</form>-->
+		<!--<form role="form" action="/admin/cards/search/" method="get">-->
+		<!-- </form>
+        <form role="form" action="/admin/cards/search/" method="get">-->
+		<!--</form>
+        <form role="form" action="/admin/cards/search/" method="get">-->
+		<input type="hidden" th:value="${timeIntervalA}" id="timeIntervalA"/>
+		<!--</form>-->
+		<div class="col-md-12" id="tableA">
+			<table class="table table-striped table-bordered table-hover" id="tb" style="table-layout: fixed;">
+				<thead>
+					<tr>
+						<th style="width:32px;">#</th>
+						<th>划账流水号</th>
+						<th>划账时间</th>
+						<th>卡号</th>
+						<th>划账类型</th>
+						<th>划账金额(元)</th>
+					</tr>
+				</thead>
+				<tbody class="table_bodyA">
+					<tr
+						th:each="cardRechargeRecord, cardRechargeRecordIter : ${cardRechargeRecords.content}"
+						th:attr="data-id=${cardRechargeRecord.tradeNo}">
+						<td th:text="${cardRechargeRecordIter.count}"></td>
+						<td th:text="${cardRechargeRecord.tradeNo}">充电流水号</td>
+						<td
+							th:text="${#dates.format(cardRechargeRecord.tradeTime,'yyyy-MM-dd HH:mm:ss')}">充值时间</td>
+						<td th:text="${card.getCardNo()}">卡号</td>
+						<td th:text="${cardRechargeRecord.rechargeType}">充值类型</td>
+						<td th:text="${cardRechargeRecord.money}">充值金额</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+<div class="panel-footer" id="pageA" style="background-color:#ffffff;border:0px;">
+            <form id="form1" runat="server" style="font-size:14px;">
+			    <div class="data-table-pagination" style="padding-right:70px;position: relative;">
+			        <ul class="pagination" id="paginationA">
+			        </ul>
+			         <div style="display:inline;position:absolute;right:15px;bottom:15px;color:#798C9C">
+			          	<span>总计:</span><span class="zonggongA"></span>
+			    	</div> 
+ 			        <input type="hidden" id="PageCountA" runat="server" th:value="${PageCountA}"/>
+			        <input type="hidden" id="PageSizeA"  runat="server" value="15" />
+			        <input type="hidden" id="countindexA" runat="server" value="7"/>
+			        <input type="hidden" id="visiblePagesA" runat="server" value="5" />
+			        <input type="hidden" id="currentPageA" runat="server"  />
+			    </div>
+		    </form>
+	</div>
+<script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>  
+<script th:inline="javascript">
+/*<![CDATA[*/
+       function loadDataA(num) {
+            var oLeng=$(".table_bodyA tr").length;
+            for (var i=0;i<oLeng;i++) {
+            	$(".table_bodyA tr").eq(i).hide();
+            }
+            for (var j=num*2-2;j<num*15;j++) {
+            	$(".table_bodyA tr").eq(j).show();
+            } 
+            $(".zonggongA").text($("#PageCountA").val());
+            return $("#PageCountA").val();
+        }
+      	function exeDataA(num, type) {
+      	    loadDataA(num);
+      	    loadpageA();
+      	}
+      	function loadpageA() {
+      	    var myPageCount = parseInt($("#PageCountA").val());
+      	    var myPageSize = parseInt($("#PageSizeA").val());
+      	    var countindex = myPageCount % myPageSize > 0 ? (myPageCount / myPageSize) + 1 : (myPageCount / myPageSize);
+      	    $("#countindexA").val(countindex);
+      	    var index = $("#countindexA").val();
+      	    var max = parseInt(index.substring(0,index.lastIndexOf(".")))-1;
+      	    $.jqPaginator('#paginationA', {
+      	        totalPages: parseInt($("#countindexA").val()),
+      	        visiblePages: parseInt($("#visiblePagesA").val()),
+      	        currentPage: 1,
+      	        first: '<li class="first"><a href="javascript:;" onclick="javascript:gotoPage(0,15)">首页</a></li>',
+      	        prev: '<li class="prev"><a href="javascript:;"onclick="javascript:gotoPage('+[[${currentPage-1}]]+',15)">上一页</a></li>',
+      	        next: '<li class="next"><a href="javascript:;"onclick="javascript:gotoPage('+[[${currentPage+1}]]+',15)">下一页</a></li>',
+      	        last: '<li class="last"><a href="javascript:;"onclick="javascript:gotoPage('+max+',15)">尾页</a></li>',
+      	        page: '<li class="page"><a href="javascript:;" onclick="javascript:gotoPage({{page}}-1,15)">{{page}}</a></li>',
+      	        onPageChange: function (num, type) {
+      	            if (type == "change") {
+      	                exeDataA(num, type);
+      	            }
+      	        }
+      	    });
+      	}
+      	$(function () {
+      	    loadDataA(1);
+      	    if(loadDataA(1)<1){
+      	    	return ;
+      	    }
+      	    loadpageA();
+      	});
+    function recordSearch(timeInterval) {
+         $.ajax({
+            url: "/admin/cards/rechargeRecordSearch",
+            data: {
+                cardNo:[[${card.cardNo}]],
+                timeInterval:timeInterval
+            },
+            type: 'get',//提交方式
+            dataType:'json',//返回数据的类型
+            success: function(data,stats) {//后台处理数据成功后的回调函数
+                if(stats == "success") {
+                	console.info(data);
+                	$("#PageCountA").val(data.PageCount);
+                	$("#timeIntervalA").val(data.timeIntervalA);
+                	$(".table_bodyA").html('');
+                	$("#currentPageA").val(0);
+                	var lists = data.rechargers;
+                	for(var i = 0 ; i < lists.length ; i++){
+                		var tmp='<tr>'
+                					+'<td>'+(i+1)+'</td>'
+                					+'<td>'+lists[i].tradeNo+'</td>'
+                					+'<td>'+lists[i].chargerTime+'</td>'
+                					+'<td>'+lists[i].cardNo+'</td>'
+                					+'<td>'+lists[i].type+'</td>'
+                					+'<td>'+lists[i].money+'</td>'
+                				+'</tr>';
+                		$(".table_bodyA").append(tmp);
+                	}
+                	var pageNum=$(".table_bodyA tr").length;
+                	if(pageNum>0){
+                		$("#noPageD").hide();
+                	}if(pageNum==0){
+                		$("#noPageD").show();
+                		$("#pageB").hide();
+                		$("#pageA").hide();
+                	}
+                	$(function () {
+                	    if(loadDataA(data.page+1)<1){
+                	    	return;
+                	    }
+                	    loadDataA(data.page+1);
+                	    loadpageA();
+                	});
+                }
+            },
+
+            error: function(data) {//后台处理数据失败后的回调函数
+            	alert("请求失败！");
+            }
+        }); 
+    };
+    
+    function gotoPage(page, pagesize) {
+    	var pc = parseInt($("#PageCountA").val()/pagesize)+1;
+    	if(page>=pc){
+    		return ;
+    	}
+    	var timeInterval = $("#timeIntervalA").val();
+    	console.info(page);
+    	$.ajax({
+            url: "/admin/cards/rechargeRecordSearch",
+            data: {
+                cardNo:[[${card.cardNo}]],
+                timeInterval:timeInterval,
+                page:page,
+                size:pagesize
+            },
+            type: 'post',//提交方式
+            dataType:'json',//返回数据的类型
+            success: function(data,stats) {//后台处理数据成功后的回调函数
+            	console.info(data);
+                if(stats == "success") {
+                	$("#PageCountA").val(data.PageCount);
+                	$("#timeIntervalA").val(data.timeIntervalA);
+                	$("#currentPageA").val(data.page);
+                	var html='';
+                	$(".table_bodyA").html('');
+                	var lists = data.rechargers;
+                	for(var i = 0 ; i < lists.length ; i++){
+                		var tmp='<tr>'
+                					+'<td>'+(i+1)+'</td>'
+                					+'<td>'+lists[i].tradeNo+'</td>'
+                					+'<td>'+lists[i].chargerTime+'</td>'
+                					+'<td>'+lists[i].cardNo+'</td>'
+                					+'<td>'+lists[i].type+'</td>'
+                					+'<td>'+lists[i].money+'</td>'
+                				+'</tr>';
+                		$(".table_bodyA").append(tmp);
+                	}
+                	var pageNum=$(".table_bodyA tr").length;
+                	if(pageNum>0){
+                		$("#noPageD").hide();
+                	}if(pageNum==0){
+                		$("#noPageD").show();
+                		$("#pageB").hide();
+                		$("#pageA").hide();
+                	}
+                }
+            },
+
+            error: function(data) {//后台处理数据失败后的回调函数
+            		console.info(data);
+                  alert("请求失败！")
+            }
+        });	
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

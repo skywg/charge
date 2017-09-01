@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>充电桩参数信息</title></head>
+<body class="bg">
+	<div layout:fragment="content" id="content">
+		<ol class="breadcrumb">
+			<li><a th:href="@{/admin/}">首页</a></li>
+        	<li><a th:href="@{/admin/chargers/}">设备中心</a></li>
+			<li><a th:href="@{/admin/chargers/}">充电桩</a></li>
+			<li class="active">充电桩参数信息</li>
+		</ol>
+		<div class="panel">
+			<div role="tabpanel" class="panel-tabs">
+				<ul class="nav nav-tabs" id="account-list">
+                    <li role="presentation"><a th:href="@{/admin/chargers/check/{id}(id=${id})}">基本信息</a></li>
+                    <li role="presentation" class="active"><a th:href="@{/admin/chargers/param/{id}(id=${id})}">参数信息</a></li>
+                    <li role="presentation"><a th:href="@{/admin/chargers/checkDeal/{id}(id=${id})}">订单信息</a></li>
+                    <li role="presentation"><a th:href="@{/admin/chargers/commLog/{id}(id=${id})}">通信日志</a></li>
+				</ul>
+			</div>
+			
+			<div class="panel-body">
+			<div class="row section">
+				<div class="form-group col-md-12">
+					<h3>电价信息</h3>
+					<hr style="margin:0px;padding:0px"/>
+				</div>
+	            
+	            <div class="form-group col-md-12">
+					<table class="table table-striped table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>开始时间</th>
+								<th>结束时间</th>
+								<th>电价</th>
+								<th>服务费</th>
+								<th>备注</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="price : ${prices}" >
+							  <td th:text="${price.startAt}"></td>
+							  <td th:text="${price.endAt}"></td>
+							  <td th:text="${price.price}"></td>
+							  <td th:text="${price.fee}"></td>
+							  <td th:text="${price.remark}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row section">
+				<div class="form-group col-md-12">
+					<h3>参数信息</h3>
+					<hr style="margin:0px;padding:0px"/>
+				</div>
+			
+			<div class="form-group col-md-24" th:each="attr : ${attrs}">
+				<div th:if="${attr.attrName=='ip'}"  class="form-group custom-input col-md-6">
+                   <label for="inputTitle">目标IP</label>
+                   <input type="text" class="form-control" th:value="${attr.attrVal}" disabled="disabled" maxlength="20" name="ip"  placeholder="最多可以输入20个字" required="required"/>
+                </div>
+                <div th:if="${attr.attrName=='port'}" class="form-group custom-input col-md-6">
+                   <label for="inputTitle">端口号</label>
+                   <input type="text" class="form-control" maxlength="20" th:value="${attr.attrVal}" disabled="disabled" name="port" placeholder="最多可以输入20个字"/>
+                </div>
+                <div th:if="${attr.attrName=='interval'}" class="form-group custom-input col-md-6">
+                    <label for="inputTitle">上传周期</label>
+                   <input type="text" class="form-control" th:value="${attr.attrVal}" maxlength="20" disabled="disabled" name="interval" placeholder="最多可以输入20个字" required="required"/>
+                </div>
+			</div>
+		</div>
+		<div class="row section">
+				<div class="form-group col-md-12">
+					<h3>升级信息</h3>
+					<hr style="margin:0px;padding:0px"/>
+				</div>
+			<div class="form-group col-md-12">
+				
+			</div>
+		</div>
+		    </div>
+		    <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/chargers/search}" style="padding-top:4px;">返回</a>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+		</div>
+	</div>
+</body>
+</html>

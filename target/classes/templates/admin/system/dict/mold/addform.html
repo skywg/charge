@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+	            <div class="form-group col-md-8">
+	                <label for="inputTitle"><span style="color:red">*</span>代码类型</label>
+	                <input type="text" th:field="*{name}" required="required" class="form-control" id="inputTitle"
+	                      placeholder="最多输入32个字" maxlength="32"/>
+	            </div>
+	            <div class="form-group col-md-4">
+	                <label for="inputTitle">父类型</label>
+			        <select class="form-control" id="inputType1" name="parent" >
+			            <option value=""></option>
+	                    <option th:each="t : ${types}"
+	                           th:value="${t.id}"
+	                           th:text="${t.descr}">Type
+	                   </option>
+			        </select>
+	            </div>
+	            <div class="form-group col-md-12">
+	                <label for="inputTitle"><span style="color:red">*</span>代码描述</label>
+	                <input type="text" th:field="*{descr}" required="required" class="form-control" id="inputTitle"
+	                      placeholder="最多输入32个字" maxlength="32"/>
+	            </div>
+	            <div class="form-group col-md-4">
+	               <label for="inputTitle"><span style="color:red">*</span>是否可编辑<input type="radio" th:field="*{allowedEdit}" value="1" style="margin-left:10px;"/>是
+	               <input type="radio" th:field="*{allowedEdit}"  value="0" style="margin-left:10px;"/>否</label>
+	            </div>
+	            <div class="form-group col-md-4">
+	               <label for="inputTitle"><span style="color:red">*</span>是否可删除<input type="radio" th:field="*{allowedDel}" value="1" style="margin-left:10px;"/>是
+	               <input type="radio" th:field="*{allowedDel}" value="0" style="margin-left:10px;"/>否</label>
+	            </div>
+	            <div class="form-group col-md-12">
+	                <label for="inputTitle">备注</label>
+                        <textarea class="form-control" id="inputDescription" th:maxlength="500"
+                                   th:field="*{remark}"  placeholder="最多可以输入500字"></textarea>
+	            </div>
+                     
+			
+		</div>
+		
+	</div>
+</body>
+
+
+
+</html>

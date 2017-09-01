@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>会员交易记录</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+       <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/accounts/}">会员中心</a></li>
+        <li><a th:href="@{/admin/accounts/}">会员管理</a></li>
+        <li class="active">会员交易记录</li>
+    </ol>
+        <div class="panel"  th:object="${account}">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs" id="account-list">
+                    <li role="presentation"><a th:href="@{/admin/accounts/{id}(id=${account.id})}">会员信息</a></li>
+                    <li role="presentation"><a th:href="@{/admin/accounts/checkCard/{id}(id=${account.id})}">充电卡信息</a></li>
+                    <li role="presentation" ><a th:href="@{/admin/accounts/checkCar/{id}(id=${account.id})}">车主信息</a></li>
+                    <li role="presentation" class="active"><a th:href="@{/admin/accounts/checkDeal/{id}(id=${account.id})}">交易记录</a></li>
+                    <li role="presentation"><a th:href="@{/admin/accounts/checkCharge/{id}(id=${account.id})}">充值记录</a></li>
+                </ul>
+            </div>
+            
+	            <div class="panel-body"  th:include="admin/account/dealform"></div>
+               <div class="panel-footer" style="background:#ffffff;border:none">
+            		<div th:replace="element/pagination"></div>
+ 			</div>
+             <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/accounts/search}" style="padding-top:4px;margin-right:7px">返回</a>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+          
+        </div>
+</div>
+<div layout:fragment="javascript">
+<script type="text/javascript">
+	 var start = {
+	  elem: '#start',
+	  format: 'YYYY-MM-DD',
+	  min: '2016-01-01 23:59:59', //设定最小日期为当前日期
+	  max: '2099-06-16 23:59:59', //最大日期
+	  istoday: false,
+	  choose: function(datas){
+	     end.min = datas; //开始日选好后，重置结束日的最小日期
+	     end.start = datas //将结束日的初始值设定为开始日
+	  }
+	};
+	var end = {
+	  elem: '#end',
+	  format: 'YYYY-MM-DD',
+	  min: laydate.now(),
+	  max: '2099-06-16 23:59:59',
+	  istoday: false,
+	  choose: function(datas){
+	    start.max = datas; //结束日选好后，重置开始日的最大日期
+	  }
+	};
+	laydate(start);
+	laydate(end); 
+	$(document).ready(function(){
+		$(".abc").hover(function(e){
+			var aa =$(this).html();
+			$(this).attr("title",aa)
+		});
+	})
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+
+    <meta charset="utf-8"/>
+    <title layout:title-pattern="$CONTENT_TITLE - $DECORATOR_TITLE">充电桩运营管理平台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
+    <title>充电桩运营管理平台</title>
+    <link rel='icon' th:href='@{/images/favicon.ico}' type='image/x-ico' /> 
+	<link href="../../static/js/contact/css/font-awesome.min.css"
+          th:href="@{/js/contact/css/font-awesome.min.css}" rel="stylesheet"/>
+    <link href="../../static/js/contact/css/froala_editor.min.css"
+          th:href="@{/js/contact/css/froala_editor.min.css}" rel="stylesheet"/>
+    <link href="../../static/components/bootstrap/dist/css/bootstrap.min.css"
+          th:href="@{/components/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../../static/components/metisMenu/dist/metisMenu.min.css"
+          th:href="@{/components/metisMenu/dist/metisMenu.min.css}" rel="stylesheet"/>
+    <link href="../../static/css/sb-admin-2.css" th:href="@{/css/sb-admin-2.css}" rel="stylesheet"/>
+    <link href="../../static/css/admin.css" th:href="@{/css/admin.css}" rel="stylesheet"/>
+    <!-- 上传图片 -->
+    <link href="../../static/css/zyUpload.css" th:href="@{/css/zyUpload.css}" rel="stylesheet"/>
+    <!-- 分页 -->
+    <link href="../../static/css/myPage.css" th:href="@{/css/myPage.css}" rel="stylesheet"/>
+    <!--<link href="../../static/css/custom-input.css" th:href="@{/css/custom-input.css}" rel="stylesheet"/>-->
+
+    <link href="../../static/components/font-awesome/css/font-awesome.min.css"
+          th:href="@{/components/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
+          
+    <link href="../../static/css/bootstrap-material-datetimepicker.css" th:href="@{/css/bootstrap-material-datetimepicker.css}" rel="stylesheet"/>
+    <link href="../../static/css/bootstrap-treeview.css" th:href="@{/css/bootstrap-treeview.css}" rel="stylesheet"/>
+    <link href="../../static/js/time/css/bootstrap-datetimepicker.css" th:href="@{/js/time/css/bootstrap-datetimepicker.css}" rel="stylesheet"/>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<link rel="Shortcut Icon" href="../../static/images/favicon1.ico" th:href="@{/images/favicon1.ico}" type="image/x-icon"/>
+    <style>
+        *,body,p,h1,h2,h3,h4,h5,h6,div,input{
+            font-family: "微软雅黑", Microsoft Yahei, Arial, sans-serif;
+        }
+        .nav > li > a:hover{
+        	background-color: #286090;
+        	color:#ffffff;
+        }
+        a{
+        	text-decoration: none;
+        	cursor:pointer
+        }
+        a:hover{
+        	color:#0074c2;
+        }
+        .form-control-label{
+        	color: #717171;
+        	font-size:14px;
+        }
+        .form-control-input-charger{
+        	width: 130px;
+			height: 30px;
+			color:#555;
+			background-color: #fff;
+			background-image: none;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+			box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+			-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+			-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+			transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
+        .form-control-input{
+        	width: 150px;
+			height: 30px;
+			color:#555;
+			background-color: #fff;
+			background-image: none;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+			box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+			-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+			-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+			transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
+        .btn-query{
+        	display: inline-block;
+		    font-size: 14px;
+		    padding-left:28px;
+		    padding-right:8px;
+		    height:30px;
+		    font-weight:400;
+		    text-align: center;
+		    white-space: nowrap;
+		    vertical-align: middle;
+		    -ms-touch-action: manipulation;
+		    touch-action: manipulation;
+		    cursor: pointer;
+		    -webkit-user-select: none;
+		    -moz-user-select: none;
+		    -ms-user-select: none;
+		    user-select: none;
+		    border: 1px solid transparent;
+		    border-radius: 4px;
+		    background-color: #8691a4;
+		    text-decoration: none;
+        }
+        .pagination li a{
+        	color:#717171;
+        }
+        .navbar-xian{
+        	margin: 0;
+        	padding: 0;
+        	height:10px;
+        }
+        .xian-color{
+        	height: 1px;
+        	margin-top:0;
+        }
+        form label{
+        	color:#717171;
+        }
+        .panel-box{
+        	display:none;
+        }
+        label{
+         font-size:14px;
+        }
+        .table tbody tr td{
+        	padding-bottom:0px;
+        	padding-top:8px;
+        	padding-left:8px;
+        	padding-right:8px;
+        	height:38px;
+        }
+        .navbar-collapse a{
+        	width:100%;
+        }
+        h3{
+        	font-size:18px;
+        }
+        .modal-open .modal{
+        	overflow-y:hidden;
+        }
+        .dropdown-toggle{
+        	color:#A9B3BE;
+        }
+        .dropdown-toggle:hover{
+        	background-color:#2D3642;
+        }
+        .nav>.dropdown>a:focus, .nav>.dropdown>a:hover{
+        	background-color:#2D3642;
+        }
+        .nav .open>a, .nav .open>a:focus, .nav .open>a:hover{
+        	background-color:#2D3642;
+        	color:#ffffff;
+        }
+        .dropdown-menu .divider {
+            margin : 5px 0
+        }
+        .label {
+		    position: absolute;
+		    top: 16px;
+		    left: 25px;
+		    padding: 2px 3px;
+		    font-size: 9px;
+		    line-height: .9;
+		    color: #fff;
+		    text-align: center;
+		
+		    border-radius: .25em;
+		}
+    </style>
+</head>
+<body style="overflow-x:hidden;min-width:1000px;overflow-y:scroll;">
+<div id="wrapper">
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom:0;width:100%;">
+        <div class="navbar-header">
+<!--            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button> -->
+            <a class="navbar-brand" href="dashboard.html" th:href="@{/admin/}" style="background:url(/images/logo-s.png) no-repeat;background-size:88px 44px;padding-left:110px;background-position-x:10px;background-position-y:8px;height:60px;line-height:48px;letter-spacing:2px">充电桩运营管理平台</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+        <li class="dropdown tasks-menu">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-flag-o"></i>
+                        <span class="label label-danger" id="totalcount"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks">
+                        <li>
+                            <div class="text-center">
+                                <strong>待办任务</strong>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/admin/events/query?eventStatus=SUSPENDING">
+                                <div>
+	                                <strong>告警处理</strong>
+	                                <span class="pull-right text-muted" id="eventcount"></span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/admin/feedBacks/research?status=SUSPENDING">
+                                <div>
+	                               <strong>用户反馈处理</strong>
+	                               <span class="pull-right text-muted" id="feedBackcount"></span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/admin/contents/search?transientStatus=-1">
+                                <div>
+	                               <strong>内容审核</strong>
+	                               <span class="pull-right text-muted" id="contentcount"></span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/admin/reviews/research?transientStatus=-1">
+                                <div>
+	                               <strong>评价审核</strong>
+	                               <span class="pull-right text-muted" id="reviewcount"></span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/admin/car/search?carIdentifyStatus=CHECKING">
+                                <div>
+	                                <strong>车主认证 审核</strong>
+	                                <span class="pull-right text-muted" id="carcount"></span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                欢迎您,<span th:text="${session.user.realname}"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#" data-toggle="modal" data-target="#Profile"><i class="fa fa-user fa-fw"></i> 用户信息</a>
+                    </li>
+                    <li><a href="#" th:href="@{/admin/managers/editPass}" data-toggle="modal" data-target="#editModal"><i class="fa fa-gear fa-fw"></i> 密码修改</a> 
+                    </li> 
+                    <li class="divider"></li>
+                    <li><a href="/logout" th:href="@{/admin/logout}" ><i class="fa fa-sign-out fa-fw"></i>退出</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+             <input type="hidden" id="loginNameHidden" th:value="${session.user.loginName}"/>
+            <input type="hidden" id="loginRoleHidden" th:value="${session.roleflag}"/>
+               <input type="hidden" id="loginRole" th:value="${session.roleId}"/>
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <a href="dashboard.html" th:href="@{/admin/}"><i class="fa fa-dashboard fa-fw"></i> 首页</a>
+                    </li>
+                    <li id="aa-a">
+                        <a href="#" style="display: none" ><i class="fa fa-plug fa-fw"></i> 设备中心<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level" id="aa-a1">
+                            <li><a style="display: none" href="charger/index.html" th:href="@{/admin/chargers/}">充电桩</a></li>
+                            <li><a style="display: none" href="station/index.html" th:href="@{/admin/stations/}">充电站</a></li>
+                            <li>
+                            	<a href="#" style="display: none" >充电桩设置<span class="fa arrow"></span></a>
+		                        <ul class="nav nav-third-level" id="aa-b1">
+		                            <!-- <li><a style="display: none" href="price/index.html" th:href="@{/admin/priceTemplates/}" id="aa-c">电价模板</a></li> -->
+		                            <li><a style="display: none" href="paramTemplate/index.html" th:href="@{/admin/paramTemplates/}" id="aa-c2">参数模板</a></li>
+		                            <li><a style="display: none" href="paramSetting/index.html" th:href="@{/admin/paramSettings/}" id="aa-c1">设备参数下发</a></li>
+		                            <!--<li><a href="paramSetting/resutl.html" th:href="@{/admin/paramSettingResults/}">设备参数下结果</a></li>-->
+		                        </ul>
+                            </li>
+                            <!-- 
+                            <li><a href="charger/applications.html"
+                                   th:href="@{/admin/chargers/applications/}">上报电桩审核</a></li>
+                            <li><a href="price/price.html"
+                                   th:href="@{/admin/prices/}">全局各时段价格</a></li>
+                            <li><a href="charger/reports.html" th:href="@{/admin/chargers/reports/}">故障与报警</a></li>
+                            <li><a href="charger/map.html" th:href="@{/admin/chargers/map}">地图展示</a></li>
+                             -->
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#" style="display: none"><i class="fa fa-users fa-fw"></i> 会员中心<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a style="display: none" href="account/index.html" th:href="@{/admin/accounts/}">会员管理</a></li>
+                            <li><a style="display: none" href="operator/index.html" th:href="@{/admin/operators/}">运营商管理</a></li>
+							<li><a style="display: none" href="card/index.html" th:href="@{/admin/cards/}">充电卡管理</a></li>
+							<li><a style="display: none" href="car/index.html" th:href="@{/admin/car/}">车主认证</a></li>
+                       </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#" style="display: none"><i class="fa fa-cubes fa-fw"></i> 运营中心<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a style="display: none" href="order/index.html" th:href="@{/admin/orders/}">订单管理</a></li>
+                            <li><a style="display: none" href="review/index.html" th:href="@{/admin/reviews/}">评价管理</a></li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#" style="display: none" ><i class="fa fa-wrench fa-fw"></i> 运维中心<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a style="display: none" href="event/index.html" th:href="@{/admin/events/}">告警信息</a></li>
+                            <li><a style="display: none" href="event/eventCode/index.html" th:href="@{/admin/eventCodes/}">故障码</a></li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#" style="display: none" ><i class="fa fa-headphones fa-fw"></i> 客服中心<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a style="display: none" href="feedBack/index.html" th:href="@{/admin/feedBacks/}">客服记录</a></li>
+                        </ul>
+                    </li>                    
+					<li>
+                        <a href="#" style="display: none" ><i class="fa fa-file-text fa-fw"></i> 内容中心<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a style="display: none" href="content/index.html" th:href="@{/admin/contents/}">内容管理</a></li>
+                            <li><a style="display: none" href="news/index.html" th:href="@{/admin/notify/}">消息中心</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" style="display: none" ><i class="fa fa-pie-chart fa-fw"></i> 分析中心<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a style="display: none"  th:href="@{/admin/reports/userCount}">用户增长分析</a></li>
+                             <li><a style="display: none" th:href="@{/admin/reports/chargingDataCount}">充电消费分析</a></li> 
+                             <li><a style="display: none" th:href="@{/admin/reports/eventDataCount}">告警分类趋势</a></li>
+                             <li><a style="display: none" th:href="@{/admin/reports/recordDataCount}">财务增长趋势</a></li>
+                             <li><a style="display: none" th:href="@{/admin/reports/accountDataCount}">会员消费分析</a></li> 
+                        </ul>
+                    </li>
+                   <!--  <li th:if="${session.user.loginName} == 'admin'"> -->
+                     <li>
+                        <a href="#" style="display: none"><i class="fa fa-cog fa-fw fa-lg" style="width:18px;font-size:1.2em;vertical-align:-6%"></i> 系统管理<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a style="display: none" href="system/manager/index.html" th:href="@{/admin/managers/}">用户管理</a></li>
+                            <li th:if="${session.user.loginName} == 'admin'"><a style="display: none" href="system/role/index.html" th:href="@{/admin/system/roles/}">角色分配</a></li>
+                            <li><a style="display: none" href="system/role/log.html" th:href="@{/admin/system/logs/}">操作日志</a></li>         
+                            <li><a style="display: none" href="system/dict/mold/index.html" th:href="@{/admin/dictCategorys/}">代码类型</a></li>
+                            <li><a style="display: none" href="system/dict/upon/index.html" th:href="@{/admin/dictDatas/}">代码值</a></li>
+                            <!-- <li><a href="review/index.html" th:href="@{/admin/roles/}">角色管理</a></li> -->
+                            <li><a style="display: none" href="system/version/index.html" th:href="@{/admin/system/version/}">APP升级</a></li>                       	
+                            <!-- <li><a href="system/permission/index.html" th:href="@{/admin/system/permissions/}">权限分配</a></li> -->
+                        </ul>
+                        
+                        <!-- /.nav-second-level -->
+                    </li>
+                   
+                    
+                     
+                </ul>
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+		<div class="modal fade" id="editModal" role="basic" aria-hidden="true">									
+			<div class="modal-dialog">
+				<div class="modal-content">
+			    </div>
+			</div>
+       </div>
+		
+		
+
+    <!-- Page Content -->
+    <div id="page-wrapper" style="background-color: lightgray">
+        <div class="container-fluid">
+            <div layout:fragment="content">
+                Fake content
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+
+<div class="modal fade" id="Profile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title text-center" id="myModalLabel">用户信息</h4>
+		      </div>
+		      <div class="modal-body">
+		       	<div class="row">
+		    		<div class="col-sm-12 col-md-12">
+				        <div class="row section" th:object="${session.user}">
+				            <div class="form-group col-md-12">
+				                <label for="username">用户名</label>
+				                <input type="text" style="cursor:auto;" disabled="disabled" th:value="*{loginName}" required="required" class="form-control"/>
+				            </div>
+							<div class="form-group col-md-12">
+								<label for="wholename">全名</label>
+								<input type="text" style="cursor:auto;" disabled="disabled" th:value="*{realname}" id="inputRealname" required="required" class="form-control"/>
+							</div>
+							<div class="form-group col-md-12">
+								<label for="phone">联系电话</label>
+							    <input type="text" style="cursor:auto;" disabled="disabled" th:value="*{telephone}"  pattern="^1[3-9]\d{9}$"  id="inputphone" required="required" class="form-control"/>
+							</div>
+				            <div class="form-group col-md-12">
+				                <label for="email">邮箱</label>
+				                <input type="text" style="cursor:auto;" disabled="disabled" th:value="*{email}" pattern="^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$"  id="inputemail" required="required" class="form-control"/>
+				            </div>
+							<div class="form-group col-md-12">
+								<label for="status">状态</label>
+								<input type="text" style="cursor:auto;" disabled="disabled" th:value="*{dis}" required="required" class="form-control"/>
+							</div>
+							<div class="form-group col-md-12">
+								<label for="signupTime">注册时间</label>
+							    <input type="text" style="cursor:auto;" disabled="disabled" th:value="*{#dates.format(registerTime,'yyyy-MM-dd HH:mm:ss')}" required="required" class="form-control"/>
+							</div>
+				        </div>
+		         	</div> 
+		         </div>
+		      </div>
+		      <div class="modal-footer" id="not_edit">
+		        <button type="button"  id="edit_info" class="btn-query btn-primary back-btn-id">编辑</button>
+		        <button type="button"  class="btn-query btn-primary back-btn-id" data-dismiss="modal">返回</button>
+		      </div>
+		      <div class="modal-footer" id="for_edit">     
+		      	<button class="btn-query btn-primary keep-btn-id" id="ajax_save">保存</button>
+                            <a class="btn btn-query btn-primary back-btn-id" 
+                               href="#" style="padding-top:4px"  id="cancel_edit">取消</a> 
+		      </div>
+		    </div>
+		  </div>
+		</div>
+<!-- /#wrapper -->
+
+<script src="../../static/components/jquery/dist/jquery.min.js"
+        th:src="@{/components/jquery/dist/jquery.min.js}"></script>    
+<script src="../../static/components/bootstrap/dist/js/bootstrap.min.js"
+        th:src="@{/components/bootstrap/dist/js/bootstrap.js}"></script>        
+<script src="../../static/components/metisMenu/dist/metisMenu.min.js"
+        th:src="@{/components/metisMenu/dist/metisMenu.min.js}"></script>
+<script src="../../static/js/sb-admin-2.js"
+        th:src="@{/js/sb-admin-2.js}"></script>
+<script src="../../static/js/bootstrap-treeview.js" th:src="@{/js/bootstrap-treeview.js}"></script>
+ <script>
+/*<![CDATA[*/
+var xhr = new XMLHttpRequest();
+xhr.open("POST", "/admin/menu/menuData", true);
+xhr.setRequestHeader("Content-type","application/json");
+xhr.onreadystatechange = function(){
+  var loginNames = document.getElementById("loginNameHidden").value;
+    if(loginNames=="admin"){
+    	var a = document.getElementById("side-menu").getElementsByTagName('a');
+        for(var t=0;t<a.length;t++){ 
+            	a[t].style.display='block';
+        }
+    }else {
+    	var XMLHttpReq = xhr;
+    	  if (XMLHttpReq.readyState == 4) {
+    	        if (XMLHttpReq.status == 200) {
+    	            var text = XMLHttpReq.responseText;
+    	            var obj = JSON.parse(text); 
+    	            if(obj!=null&&obj.length>0){
+    	            	 var a = document.getElementById("side-menu").getElementsByTagName('a');
+    	            	 for(var i=0;i<obj.length;i++){ 
+    	                     for(var t=0;t<a.length;t++){ 
+    	     		            	if(a[t].id!='sy'){
+    	     		            		var innerText = a[t].innerText.replace(/(^\s*)|(\s*$)/g, "");
+    	     	            			var menuName = obj[i].menuName.replace(/(^\s*)|(\s*$)/g, "");
+    	     	            			if(innerText==menuName){
+    	     		            			a[t].style.display='block';
+    	     		            		}
+    	     		            	}
+    	     		            } 
+    	                 } 
+    	            }
+    	        }
+    	    }
+    }
+};
+xhr.send(null);
+
+var xhrr = new XMLHttpRequest();
+xhrr.open("POST", "/admin/menu/buttonId", true);
+xhrr.setRequestHeader("Content-type","application/json");
+xhrr.onreadystatechange = function(){
+	var loginNames = document.getElementById("loginNameHidden").value;
+    if(loginNames=="admin"){
+    	var element = $("button");
+    	//var element = document.getElementsByTagName('button');
+        for(var t=0;t<element.length;t++){
+        	element[t].style.display='inline-block';
+        }
+        var elementa = $("a");
+        //var elementa = document.getElementsByTagName('a');
+        for(var t=0;t<elementa.length;t++){
+        	elementa[t].style.display='inline-block';
+        }
+    } else{
+    	var XMLHttpReqq = xhrr;
+        if (XMLHttpReqq.readyState == 4) {
+            if (XMLHttpReqq.status == 200) {
+                var text = XMLHttpReqq.responseText;
+                var obj = JSON.parse(text); 
+                if(obj!=null&&obj.length>0){
+                	  var leno = obj.length;
+                	  var element = $("button");
+                	for(var i=0;i<obj.length;i++){
+                		var len = element.length;
+                        for(var t=0;t<len;t++){
+                        	if(obj[i]==element[t].name){
+                        		element[t].style.display='inline-block';
+                        	}
+                        }
+                        var elementa = $("a");
+                        //var elementa = document.getElementsByTagName('a');
+                        var lens = elementa.length;
+                        for(var t=0;t<lens;t++){
+                        	if(obj[i]==elementa[t].name){
+                        		elementa[t].style.display='inline-block';
+                        	}
+                        }
+                	}
+                }
+            }
+        }
+    }
+    
+};
+xhrr.send(null);
+/*]]>*/
+</script>
+<script type="text/javascript">
+/*<![CDATA[*/
+           $(document).ready(function(){
+       	   $("#not_edit").show();
+       	   $("#for_edit").hide();
+        	var email_first = $('#inputemail').val();
+    		var phone_first = $('#inputphone').val();
+    		var realName_first = $('#inputRealname').val();
+    		//点击编辑
+        	$('#edit_info').click(function(){
+        		$('#inputRealname').removeAttr('disabled');
+        		$('#inputphone').removeAttr('disabled');
+        		$('#inputemail').removeAttr('disabled');
+        		$('#not_edit').hide();
+        		$('#for_edit').show();
+        	});
+        	//取消按钮
+        	$('#cancel_edit').click(function(){
+        		/* var id = $('#inputAccountId').val();
+        		location.href="/admin/accounts/"+id; */
+        		$('#inputRealname').val(realName_first);
+        		$('#inputphone').val(phone_first);
+        		$('#inputemail').val(email_first);
+        		$('#inputRealname').attr('disabled','disabled');
+        		$('#inputphone').attr('disabled','disabled');
+        		$('#inputemail').attr('disabled','disabled');
+        		$('#for_edit').hide();
+        		$('#not_edit').show();
+        	})
+        	//更新数据
+        	$('#ajax_save').click(function(){
+        		var phone = $('#inputphone').val();
+        		var email = $('#inputemail').val();
+        		var realName = $('#inputRealname').val();
+        		var loginName = $('#loginNameHidden').val();
+        		if(isNaN(phone)||phone.length!=11){
+        			alert('手机号必须是11位数字');
+        			return ;
+        		}
+        		$.ajax({
+        			url:'/admin/managers/edit_ajax',
+        			data:{'telephone':phone,'realname':realName,'email':email,'loginName':loginName},
+        			dataType:'json',
+        			type:'GET',
+        			error:function(){
+        				alert('error:出错啦--请稍后重试');
+        			},
+        			success:function(data){
+        				console.info(data);
+        				if(data.errMsg!=null){
+        					alert(data.errMsg);
+        					$('#for_edit').hidden();
+        	        		$('#not_edit').show();
+        				}else{
+        					$('#inputphone').val(data.phone).attr('disabled','disabled');
+        					$('#inputemail').val(data.email).attr('disabled','disabled');
+        					$('#inputRealname').val(data.realName).attr('disabled','disabled');
+        					$('#for_edit').hide();
+        	        		$('#not_edit').show();
+        	        		phone_first = $('#inputphone').val();
+        	        		email_first = $('#inputemail').val();
+        	        		realName_first = $('#inputRealname').val();
+        	        		alert(data.sucMsg);
+        				}
+        			}
+        		})
+        	})
+        })
+           
+           
+           
+         $.ajax({
+	    //type: "Post",
+	    url: "/css/countNodo",
+	    dataType: "json",
+	    async: false,
+	    success: function (result) {
+	    	$("#eventcount").text(result.eventcount);
+	    	$("#feedBackcount").text(result.feedBackcount);
+	    	$("#contentcount").text(result.contentcount);
+	    	$("#reviewcount").text(result.reviewcount);
+	    	$("#carcount").text(result.carcount);
+	    	$("#totalcount").text(result.totalcount);
+	   	 	}
+	    })  
+           
+           
+           var loginRoleHidden = document.getElementById('loginRoleHidden').value;
+if('roleflag'==loginRoleHidden){
+	var defaultData ="";
+	$.ajax({
+	    type: "Post",
+	    url: "/admin/menu/meunTree",
+	    dataType: "json",
+	    async: false,
+	    success: function (result) {
+	    	defaultData = JSON.stringify(result);
+	   	 	}
+	    })
+	var nodeID="";
+	$('#treeview1').treeview({
+	data: defaultData,
+	showCheckbox:true,
+	onNodeChecked: function (event,data) {
+		if(data.state){
+			data.state.checked=true;
+			data.state.selected=true;
+		}
+		getTempValue(data)
+		var childrens =data.nodes;
+		if(childrens){//父节点被选中子节点默认全选
+			addChildrens(childrens);
+		}
+		getParentNode(data);
+	},
+	onNodeUnchecked: function (event, node) { 
+		clearTempValue(node);
+		var childrens =node.nodes;
+		if(childrens){//父节点被取消选中子节点默认取消
+			delChildrens(childrens);
+		}
+	}
+	/* onNodeSelected: function(event, data) {
+		console.info(data.tags);
+		gettemppermission(data.tags);
+	} */
+	});
+	//gettemppermission("");      
+      //function gettemppermission(tags){
+	 $.ajax({
+		    type: "Post",
+		    url: "/admin/menu/permissionTree",
+		    dataType: "json",
+		    //data:{"menuId":tags},
+		    async: false,
+		    success: function (result) {
+		    	console.info(result)
+		    	var oTop=$(".list-group").offset().top-2;
+				var oLength=$("#treeview1").find("li").length;
+				for (var k=0;k<oLength;k++){
+					var num=$("#treeview1").find("li").eq(k).find(".indent").length;
+					var wenzi=$("#treeview1").find("li").eq(k).text();
+					var oLeft=$("#treeview1").find("li").eq(k).offset().top-oTop+"px";
+					var menuName = wenzi.replace(/(^\s*)|(\s*$)/g, "");
+					if(result){
+						for(var i=0;i<result.length;i++){
+							if(result[i].text==menuName){
+								var node = result[i].nodes;
+								var html="<li>";
+								if(node){
+									var element = document.getElementById('temppermission');
+									for(var t=0;t<node.length;t++){
+										if(element){
+											var val = element.value;
+											if(val.indexOf(node[t].tags)!=-1){
+												html+='<span style="padding-right:10px"><input type="checkbox"  checked="checked" name="formtemppermission" value="'+node[t].tags+'" /><span style="padding-left:3px">'+node[t].text+'</span></span>';
+											}else{
+												html+='<span style="padding-right:10px"><input type="checkbox" name="formtemppermission" value="'+node[t].tags+'" /><span style="padding-left:3px">'+node[t].text+'</span></span>';
+											}
+										}else{
+											html+='<span style="padding-right:10px"><input type="checkbox" name="formtemppermission" value="'+node[t].tags+'" /><span style="padding-left:3px">'+node[t].text+'</span></span>';
+										}
+										
+									}
+								}
+								html+='</li>';
+								var oLi=$(html);
+								oLi.css({
+									"top":oLeft,
+									"left":"0px"
+								})
+								if(num!=0&&menuName!="充电桩设置"){
+									$("#jiaoshe-quan-add").append(oLi)
+								}
+							
+							}
+				    	}
+					}
+				}
+		    	
+			/*var managerData = JSON.stringify(result);
+		   $('#treeviewpermssion').treeview({ 
+		   		    data: managerData,
+		   		    showCheckbox:true,
+		   		    onNodeChecked: function (event,node) {
+		   		    	var childrens =node.nodes;
+		   				var element = document.getElementById('temppermission');
+		   				if(element){
+		   					var ele = element.value;
+		   					if(ele){
+		   						var elements = ele.split(",");
+		   					}else{
+		   						var elements=new Array();
+		   					}
+		   					if(childrens!=null&&childrens.length>0){
+		   						for(var i=0;i<childrens.length;i++){
+		       						$('#treeviewpermssion').treeview('checkNode', [ childrens[i].nodeId, { silent: true } ]);
+		       						elements.push(childrens[i].tags)
+		       					}
+		       					document.getElementById('temppermission').value=elements.join(",")
+		   					}else{
+		   						var data =  $('#treeviewpermssion').treeview('getParent', node);
+		   						if(data.state){
+		   							$('#treeviewpermssion').treeview('checkNode', [ data.nodeId, { silent: true } ]);
+		   						}
+		   						elements.push(node.tags);
+		   						document.getElementById('temppermission').value=elements.join(",");
+		   					}
+		   				}
+		   		    },
+		   		    onNodeUnchecked: function (event, node) { 
+		   		    	var tag = node.tags;
+		   		    	var element = document.getElementById('temppermission');
+		   		    	var childrens =node.nodes;
+		   		    		if(childrens!=null&&childrens.length>0){
+		   						for(var i=0;i<childrens.length;i++){
+		   							$('#treeviewpermssion').treeview('uncheckNode', [childrens[i].nodeId, { silent: true } ]);
+		   							if(element){
+		               		    		var tvalue = element.value;
+		               		    		if(tvalue){
+		               		    			var arr = tvalue.split(",");
+		               		    			var childtag = childrens[i].tags;
+		               		    			 for(var t=0; t<arr.length; t++) {
+		               		    				if(arr[t]==childtag){
+		               		    					arr.splice(t, 1);
+		               		    				}
+		               		    			}
+		               		    			document.getElementById('temppermission').value=arr.join(",");
+		               		    		}
+		               		    	} 
+		   						}
+		   					}else{
+		       		    		if(element){
+		           		    		var tvalue = element.value;
+		           		    		if(tvalue){
+		           		    			var arr = tvalue.split(",");
+		           		    			 for(var i=0; i<arr.length; i++) {
+		           		    				if(arr[i]==tag){
+		           		    					arr.splice(i, 1);
+		           		    				}
+		           		    			}
+		           		    			document.getElementById('temppermission').value=arr.join(",");
+		           		    		}
+		           		    	} 
+		   		    	}
+		   	 		}
+		 	   })   */
+		    }
+		})
+
+function getParentNode(child){
+var data =  $('#treeview1').treeview('getParent', child);
+if(data.state){
+	$('#treeview1').treeview('checkNode', [ data.nodeId, { silent: true } ]);
+	var tag = data.tags;
+	var element = document.getElementById('tempMenu');
+	if(element){
+		var ele = element.value;
+		if(ele){
+			var arr = ele.split(",");
+			var flag = false;
+			for(var i=0; i<arr.length; i++) {
+				if(arr[i]==tag){
+					flag = true;
+					break;
+				}else{
+					flag = false;
+				}
+			} 
+			if(!flag){
+				  arr.push(tag);
+			}
+			document.getElementById('tempMenu').value=arr.join(",");
+			getParentNode(data);
+		}
+	}
+	var parentnode = $('#treeview1').treeview('getParent', data);
+}
+}
+
+function getTempValue(data){
+var tag = data.tags;
+var element = document.getElementById('tempMenu');
+if(element){
+	var nodeIDs = element.value;
+	if(nodeIDs){
+		var arr = nodeIDs.split(",");
+		var flag = false;
+		  for(var i=0; i<arr.length; i++) {
+			if(arr[i]==tag){
+				flag = true;
+				break;
+			}else{
+				flag = false;
+			}
+		} 
+		  if(!flag){
+			  arr.push(tag);
+		  }
+		document.getElementById('tempMenu').value=arr.join(",");
+	}else{
+		nodeIDs+=tag;
+		document.getElementById('tempMenu').value=nodeIDs;
+	}
+}
+}
+function clearTempValue(data){
+var tag = data.tags;
+var element = document.getElementById('tempMenu');
+if(element){
+	var tvalue = element.value;
+	if(tvalue){
+		var arr = tvalue.split(",");
+		 for(var i=0; i<arr.length; i++) {
+			if(arr[i]==tag){
+				arr.splice(i, 1);
+			}
+		}
+		document.getElementById('tempMenu').value=arr.join(",");
+	}
+} 
+}
+function addChildrens(childrens){
+for(var i=0;i<childrens.length;i++){
+	$('#treeview1').treeview('checkNode', [ childrens[i].nodeId, { silent: true } ]);
+	if(childrens[i].state){
+		childrens[i].state.checked=true;
+		childrens[i].state.selected=true;
+	}
+	getTempValue(childrens[i]);
+	var child =childrens[i].nodes;
+	if(child){
+		addChildrens(child);
+	}
+}
+}  
+function delChildrens(childrens){
+for(var i=0;i<childrens.length;i++){
+	$('#treeview1').treeview('uncheckNode', [childrens[i].nodeId, { silent: true } ]);
+	if(childrens[i].state){
+		childrens[i].state.checked=true;
+		childrens[i].state.selected=true;
+	}
+	clearTempValue(childrens[i]);
+	var child =childrens[i].nodes;
+	if(child){
+		delChildrens(child);
+	}
+}
+} 
+}
+    
+         	/*]]>*/     
+</script>
+
+<script src="../../static/js/pccs.js" th:src="@{/js/pccs.js}"></script>
+<script src="../../static/js/gridedit.js" th:src="@{/js/gridedit.js}"></script>
+
+<!--滚动图片-->
+<script src="../../static/js/slide.js" th:src="@{/js/slide.js}"></script>
+<!--上传图片 -->
+<script src="../../static/js/zyFile.js" th:src="@{/js/zyFile.js}"></script>
+<script src="../../static/js/zyUpload.js" th:src="@{/js/zyUpload.js}"></script>
+<!--时间插件 -->
+<script src="../../static/js/laydate/laydate.js" th:src="@{/js/laydate/laydate.js}"></script>
+	<!-- 上传图片插件 -->
+	<script type="text/javascript">
+		 var selectedFiles = null;
+		 $("#upload").zyUpload({			
+			width            :   "650px",                 // 宽度
+			height           :   "400px",                 // 宽度
+			itemWidth        :   "120px",                 // 文件项的宽度
+			itemHeight       :   "100px",                 // 文件项的高度
+			//url              :   "/upload/UploadAction",  // 上传文件的路径
+			//				 :"/ajax/photo-storage-settings",
+			multiple         :   true,                    // 是否可以多个文件上传
+			dragDrop         :   true,                    // 是否可以拖动上传文件
+			del              :   true,                    // 是否可以删除文件
+			finishDel        :   false,  				  // 是否在上传文件完成后删除预览
+			
+			/* 外部获得的回调接口*/
+			 onSelect: function(files, allFiles){           // 选择文件的回调方法
+				console.info("当前选择了以下文件：");
+				console.info(files);
+				console.info("之前没上传的文件：");
+				console.info(allFiles);
+				selectedFiles = allFiles;
+			},
+			onDelete: function(file, surplusFiles){         // 删除一个文件的回调方法
+				console.info("当前删除了此文件：");
+				console.info(file);
+				console.info("当前剩余的文件：");
+				console.info(surplusFiles);
+			},
+			onSuccess: function(file){                    // 文件上传成功的回调方法
+				console.info("此文件上传成功：");
+				console.info(file);
+			},
+			onFailure: function(file){                    // 文件上传失败的回调方法
+				console.info("此文件上传失败：");
+				console.info(file);
+			},
+			onComplete: function(responseInfo){           // 上传完成的回调方法
+				console.info("文件上传完成");
+				console.info(responseInfo);
+			} 
+		});
+	</script>
+	
+	<script type="text/javascript">
+	$(function(){
+		<!-- 图片滚动插件 -->
+		$("#slide").slide({
+			big_pic:".big",
+			min_pic:".min",
+			big_prev:".prev1",
+			big_next:".next1",
+			min_prev:".prev2",
+			min_next:".next2",
+			autoplay:true,	//是否自动播放
+			interTime:4000,	//图片自动切换间隔
+			delayTime:400,	//切换一张图片时间
+			order:0,	//当前显示的图片（从0开始）
+			min_num:5, //小图显示数量
+		});
+	})
+	</script>
+<script>
+ ;!function(){
+//laydate.skin('molv');
+laydate({
+   elem: '#demo',
+   format: 'YYYY-MM-DD hh:mm:ss',
+   min: laydate.now(),
+   max: '2099-06-16 23:59:59',
+   istime: true,
+   istoday: false
+})
+}();
+</script>
+<script type="text/javascript">
+/*<![CDATA[*/
+$(document).ready(function(){
+	//页面外围宽度
+	var oBoxWidth=$(".box-title").width();
+//页面外围高度
+	var oBoxHeight=$(".box-title").height();
+//内部每个div宽度	
+	var oBoxSmWidth=$(".box-title").find("div").eq(0).width();
+//内部每个高度
+	var oBoxSmHeight=$(".box-title").find("div").eq(0).height();
+//内部div总数	
+	var boxSmLength=$(".box-title .box-title-sm").length;
+//内部div总宽度	
+	var allBoxWidth=boxSmLength*oBoxSmWidth;
+//每一排显示个数
+	var olNum=parseInt(oBoxWidth/oBoxSmWidth);
+//列数
+	var oliNum=boxSmLength/olNum
+	var oliNumInteger=parseInt(oliNum);
+//button外围div宽度
+	var oBoxBntWidth=$(".box-title-button").width();
+//当刚好排满时，外围div高度
+	var oBoxHeightN=oBoxHeight+oBoxSmHeight+10+"px";
+	var ex = /^\d+$/;
+	if(ex.test(oliNum)){
+		var overplusWidth=oBoxWidth-oBoxSmWidth*olNum;
+		if (overplusWidth>=oBoxBntWidth) {
+			var oTopButton=(oliNumInteger-1)*(oBoxSmHeight+10)+"px";
+			$(".box-title-button").css("top",oTopButton);
+		} else{
+			var oTopButton=oliNum*(oBoxSmHeight+10)+"px";
+			$(".box-title-button").css("top",oTopButton);
+			$(".box-title").css("height",oBoxHeightN)
+		}	
+	}else{
+		var oTopButton=oliNumInteger*(oBoxSmHeight+10)+"px";
+		$(".box-title-button").css("top",oTopButton);
+	}
+})
+	
+	var inputtl = $(".all-state-input").val();
+	if(inputtl=="空闲")
+		$(".all-state-input").css("color","#55b3ac");
+	if(inputtl=="离线")
+		$(".all-state-input").css("color","#bfbfbf");
+	if(inputtl=="充电中")
+		$(".all-state-input").css("color","#f8b62c");
+	if(inputtl=="检修")
+		$(".all-state-input").css("color","#e90716");
+	if(inputtl=="占用")
+		$(".all-state-input").css("color","#8080b0");
+	
+	var tdLength=$(".all-state").length;
+	for(var t=0;t<tdLength;t++){
+		var tdName=$(".all-state").eq(t).text();
+		if(tdName=="违规"){
+			$(".all-state").eq(t).css("color","#e90716");
+		}if(tdName=="挂失"){
+			$(".all-state").eq(t).css("color","#bfbfbf");
+		}if(tdName=="待处理"){
+			$(".all-state").eq(t).css("color","#f8b62c");
+		}if(tdName=="已发送"){
+			$(".all-state").eq(t).css("color","#40b050");
+		}if(tdName=="未支付"){
+			$(".all-state").eq(t).css("color","#e90716");
+		}if(tdName=="无效的"){
+			$(".all-state").eq(t).css("color","#e90716");
+		}if(tdName=="建设中"){
+			$(".all-state").eq(t).css("color","#13aef4");
+		}if(tdName=="有空闲"){
+			$(".all-state").eq(t).css("color","#55b3ac");
+		}if(tdName=="离线"){
+			$(".all-state").eq(t).css("color","#bfbfbf");
+		}if(tdName=="资料提交"){
+			$(".all-state").eq(t).css("color","#13aef4");
+		}if(tdName=="正常"){
+			$(".all-state").eq(t).css("color","#40b050");
+		}if(tdName=="确认"){
+			$(".all-state").eq(t).css("color","#55b3ac");
+		}if(tdName=="编辑"){
+			$(".all-state").eq(t).css("color","#13aef4");
+		}if(tdName=="已支付"){
+			$(".all-state").eq(t).css("color","#13aef4");
+		}if(tdName=="已投运"){
+			$(".all-state").eq(t).css("color","#40b050");
+		}if(tdName=="空闲"){
+			$(".all-state").eq(t).css("color","#55b3ac");
+		}if(tdName=="违规"){
+			$(".all-state").eq(t).css("color","#e90716");
+		}if(tdName=="违规"){
+			$(".all-state").eq(t).css("color","#e90716");
+		}if(tdName=="认证通过"){
+			$(".all-state").eq(t).css("color","#40b050");
+		}if(tdName=="销卡"){
+			$(".all-state").eq(t).css("color","#bfbfbf");
+		}if(tdName=="处理中"){
+			$(".all-state").eq(t).css("color","#13aef4");
+		}if(tdName=="其他"){
+			$(".all-state").eq(t).css("color","#13aef4");
+		}if(tdName=="已完成"){
+			$(".all-state").eq(t).css("color","#40b050");
+		}if(tdName=="规划中"){
+			$(".all-state").eq(t).css("color","#55b3ac");
+		}if(tdName=="充电中"){
+			$(".all-state").eq(t).css("color","#f8b62c");
+		}if(tdName=="检修"){
+			$(".all-state").eq(t).css("color","#e90716");
+		}if(tdName=="认证失败"){
+			$(".all-state").eq(t).css("color","#e90716");
+		}if(tdName=="已解决"){
+			$(".all-state").eq(t).css("color","#40b050");
+		}if(tdName=="故障"){
+			$(".all-state").eq(t).css("color","#e90716");
+		}if(tdName=="已关闭"){
+			$(".all-state").eq(t).css("color","#bfbfbf");
+		}if(tdName=="占用"){
+			$(".all-state").eq(t).css("color","#8080b0");
+		}if(tdName=="有效的"){
+			$(".all-state").eq(t).css("color","#40b050");
+		}if(tdName=="未下发"){
+			$(".all-state").eq(t).css("color","#bfbfbf");
+		}if(tdName=="已下发"){
+			$(".all-state").eq(t).css("color","#40b050");
+		}if(tdName=="未通过"){
+			$(".all-state").eq(t).css("color","#bfbfbf");
+		}if(tdName=="通过"){
+			$(".all-state").eq(t).css("color","#40b050");
+		}if(tdName=="有效"){
+			$(".all-state").eq(t).css("color","#40b050");
+		}if(tdName=="无效"){
+			$(".all-state").eq(t).css("color","#e90716");
+		}if(tdName=="失败" || tdName=="下线"){
+			$(".all-state").eq(t).css("color","#bfbfbf");
+		}if(tdName=="成功" || tdName=='上线'){
+			$(".all-state").eq(t).css("color","#40b050");
+		}if(tdName=="发布"){
+			$(".all-state").eq(t).css("color","#55b3ac");
+		}
+	}
+/*]]>*/
+</script>
+<div layout:fragment="javascript"></div>
+
+</body>
+
+</html>

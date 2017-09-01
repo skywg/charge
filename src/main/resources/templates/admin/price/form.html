@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>基本信息</h3>
+				<hr style="border: solid 1px #cccccc; margin:0px;padding:0px"/>
+			</div>
+	            <div class="form-group col-md-7">
+	                <label for="inputTitle"><span style="color:red">*</span>模板名称</label>
+	                <input type="text" th:field="*{name}" required="required" maxlength="20" class="form-control" id="inputTitle"
+	                       placeholder=""/>
+	            </div>
+	            <div class="form-group col-md-5">
+	                <label for="inputTitle"><span style="color:red">*</span>状态</label><br/>
+	                <span th:each="type : ${types}">
+                       <input type="radio" th:field="*{status}" th:value="${type.dictValue}" th:text="${type.descr}" style="margin-left:10px;"/>
+                    </span>
+	            </div>
+	            <div class="form-group col-md-12">
+	                <label for="inputTitle"><span style="color:red">*</span>模板说明</label>
+                        <textarea class="form-control" id="inputDescription" maxlength="500"
+                                  th:field="*{description}"  placeholder="最大输入文字长度为250字..."></textarea>
+	            </div>
+		</div>
+		
+		<!-- <div class="row section">
+			<div class="form-group col-md-12">
+				<label>电价信息</label>
+			</div>
+			 <div class="form-group col-md-12">
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>开始时间</th>
+							<th>结束时间</th>
+							<th>电价</th>
+							<th>服务费</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="price, priceItemIter : ${prices}" th:attr="data-id=${price.id}">
+							<td th:text="${priceItemIter.count}">#</td>
+							<td
+								th:text="${price.startAt}">开始时间</td>
+							<td
+								th:text="${price.endAt}">结束时间</td>
+							<td th:text="${price.price}">电价</td>
+							<td th:text="${price.fee}">服务费</td>
+							<td th:text="${price.remark}">备注</td>
+							
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		  -->
+		  
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>电价信息</h3>
+				<hr style="border: solid 1px #cccccc; margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-12">
+				<!--//Location-->
+				<table class="table table-striped table-bordered table-hover" id="tabProduct">
+					<thead>
+						<tr>
+							<td width="32" align="center" bgcolor="#EFEFEF" Name="Num"><input type="checkbox" name="checkbox" value="checkbox" /></td>
+							<td width="186" name="Num" EditType="TextBox">开始时间</td>
+							<td width="186" name="Num" EditType="TextBox">结束时间</td>
+							<td width="186" name="Amount" EditType="TextBox">电价(元/千瓦时))</td>
+							<td width="186" name="Price" EditType="TextBox">服务费(元)</td>
+							<td width="186" name="Price" EditType="TextBox">备注</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr  th:each="price, priceItemIter : ${prices}"   >
+						  <td width="32" align="center"><input type="checkbox" name="checkbox" value="checkbox" /></td>
+							<td ><input type="text" name="startAt" class="form-control Time" style="padding-left:10px" required="required" th:value="${price.startAt}" readonly="readonly" /></td>
+							<td	><input type="text" name="endAt" class="form-control Time" style="padding-left:10px" required="required" th:value="${price.endAt}" readonly="readonly" /></td>
+							<td ><input type="text" name="price" maxlength="10" class="form-control" required="required" th:value="${price.price}"/></td>
+							<td ><input type="text" name="fee" maxlength="10" class="form-control" required="required" th:value="${price.fee}"/></td>
+							<td ><input type="text" name="remark" maxlength="20" class="form-control" th:value="${price.remark}"/></td> 
+						</tr>
+					</tbody>
+					</table>
+				<input type="button" name="Submit" value="新增" onclick="AddRow(document.getElementById('tabProduct'),1)" />
+				<input type="button" name="Submit2" value="删除" onclick="DeleteRow(document.getElementById('tabProduct'),1)" />
+			</div>
+		</div>  
+		  
+		  <div class="form-group col-md-12" style="text-align:center; color:#ff0000;margin-bottom:0px">
+		    	<span th:text="${message}"></span>
+		    </div>
+		  
+		<div class="row section">
+			<div class="form-group col-md-12">
+			<br/>
+				<h3>其他信息</h3>
+				<hr style="border: solid 1px #cccccc; margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-6">
+				 <label for="inputCode"> 创建人： <span
+					th:text="*{creator}" ></span>
+				</label> 
+				
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputCode"> 创建时间： <span
+					th:text="*{#dates.format(createdAt,'yyyy-MM-dd HH:mm:ss')}" ></span>
+				</label> 
+				
+			</div>
+		</div>
+	</div>
+</body>
+</html>

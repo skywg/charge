@@ -1,0 +1,31 @@
+create procedure proc_updateorder()
+begin 
+  DECLARE _id BIGINT;
+  DECLARE _cardNo VARCHAR(16);
+  DECLARE _degree, _money, _t_money DECIMAL(10, 2);
+  DECLARE done int default 0; 
+  DECLARE cur1 CURSOR FOR select id, card_no, degree, money from orders where '2016-12-29'<=created_at and created_at<'2016-12-30';
+
+	DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1;
+
+	OPEN cur1;
+
+	FETCH cur1 INTO _id, _cardNo, _degree, _money;
+
+	WHILE done <> 1 do 
+		-- update orders set money=ROUND(degree * 1.21, 2) where id=_id;
+		update order_items set fee=0.55, price=0.66, money=ROUND(1.21 * degree, 2) where order_id=_id;
+		
+		select sum(money) into _t_money from order_items where order_id=_id;
+		
+		update orders set money=_t_money where id=_id;
+
+		update cards set money=money+(_money - _t_money) where card_no=_cardNo;
+			
+		FETCH cur1 INTO _id, _cardNo, _degree, _money;
+
+	END WHILE;
+
+  
+	CLOSE cur1;
+end

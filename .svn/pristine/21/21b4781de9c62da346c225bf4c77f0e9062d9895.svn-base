@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<style>
+p {
+	margin: 1px;
+	padding: 0;
+	padding-bottom: 2px;
+}
+</style>
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+		<div class="form-group col-md-12">
+				<h3>基本信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle">名称</label>
+	                <input type="text" th:field="*{name}" style="cursor:auto;" disabled="disabled" class="form-control"  required="required" maxlength="20" id="inputTitle"
+	                       placeholder=""/>
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle">类型</label>
+	               <input class="form-control" disabled="disabled" style="cursor:auto;" th:each="cs , csIter : ${types}" th:if="${paramSetting.paramType==cs.dictValue}" th:value="${cs.descr}"/>
+	            </div>
+	           <div class="form-group col-md-6">
+	                <label for="inputTitle">生效时间</label>
+	                <input type="text" th:field="*{effectiveTime}" required="required" maxlength="20" class="form-control" id="inputTitle"
+	                       placeholder="" disabled="disabled"  style="cursor:auto;"/>
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle">模板名称</label>
+	            	<input type="text" th:field="*{paramTemplate.name}" required="required" maxlength="20" class="form-control" id="inputTitle"
+	                       placeholder="" disabled="disabled"  style="cursor:auto;"/>
+	            </div>
+		</div>
+		
+		
+<script type="text/javascript">
+
+function gradeChange1(){
+	var objS  = document.getElementById("pid1");
+	var objS1 = document.getElementById("pid2");
+	var grade = objS.options[objS.selectedIndex].value;
+	var objSs = document.getElementById("chargerView2");
+	var bject = objSs.value;
+	//不包含
+	if(bject.indexOf(grade)==-1){
+		objSs.value += grade+','; 
+		}
+	
+	var obj = objS.options[objS.selectedIndex];
+	var selected = objS.options[objS.selectedIndex].selected;
+	objS.options.remove(objS.selectedIndex);
+	//清空选择
+	obj.selected = "";
+	//清除数据
+	var objSs1 = document.getElementById("chargerView1");
+	var object = objSs1.value;
+	if(selected){
+	//包含
+		if(object.indexOf(obj.value)!=-1){
+			objSs1.value=objSs1.value.replace(obj.value+",","");
+			}
+		}
+	
+		var op=document.createElement("option");
+		op.setAttribute("value",obj.value);
+		op.appendChild(document.createTextNode(obj.text));
+		objS1.appendChild(op);
+	
+	}
+	
+
+function gradeChange2(){
+	var objS  = document.getElementById("pid2");
+	var objS1 = document.getElementById("pid1");
+	var grade = objS.options[objS.selectedIndex].value;
+	var objSs = document.getElementById("chargerView1");
+	var bject = objSs.value;
+	//不包含
+	if(bject.indexOf(grade)==-1){
+		objSs.value += grade+','; 
+		}
+	
+	var obj = objS.options[objS.selectedIndex];
+	var selected = objS.options[objS.selectedIndex].selected;
+	objS.options.remove(objS.selectedIndex); 
+	//清空选择
+	obj.selected = "";
+	//清除数据
+	var objSs1 = document.getElementById("chargerView2");
+	var object = objSs1.value;
+	if(selected){
+	//包含
+		if(object.indexOf(obj.value)!=-1){
+			objSs1.value=objSs1.value.replace(obj.value+",","");
+			}
+		}
+	
+	var op=document.createElement("option");
+	op.setAttribute("value",obj.value);
+	op.appendChild(document.createTextNode(obj.text));
+	objS1.appendChild(op);
+	
+	}
+	
+
+</script>
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<br/>
+				<h3>选择电桩</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			 <div class="form-group col-md-12"><!--//description-->
+                        <textarea class="form-control" id="checkboxinput" th:field="*{chargersName}" disabled="disabled"
+                                   placeholder=""></textarea>
+            </div>
+			<!-- <div class="form-group col-md-6">
+   				<label for="inputDescription">待选充电桩</label>
+				<select id="pid1" class="form-control"  disabled="disabled" onchange="gradeChange1()"  multiple="multiple"  style="height:150px;cursor:auto;" th:field="*{charger}">
+                    <option th:each="t : ${paramSetting.chargers}"
+                            th:value="${t.id}"
+                            th:text="${t.codeAndName}">type
+                    </option>
+                </select>
+				<input id="chargerView1" type="hidden"  th:field="*{hiddenchargerNocheck}"   class="form-control"/>
+			</div>
+            <div class="form-group col-md-6">
+            	<label for="inputDescription">选中充电桩</label>
+				<select id="pid2" class="form-control"  disabled="disabled" onchange="gradeChange2()"  multiple="multiple"  style="height:150px;cursor:auto;" th:field="*{chargerY}">
+                    <option th:each="t : ${paramSetting.chargersY}"
+                            th:value="${t.id}"
+                            th:text="${t.codeAndName}">type
+                    </option>
+                </select>
+               	<input id="chargerView2" type="hidden"  th:field="*{hiddenchargerCheck}" class="form-control"/>
+            </div> -->
+		</div>
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<br/>
+				<h3>其他信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+            <div class="form-group col-md-12"><!--//description-->
+                <label for="inputDescription">备注</label>
+                        <textarea id="inputDescription" maxlength="500"
+                                  th:field="*{remark}"  disabled="disabled" style="cursor:auto;" class="form-control" placeholder=""></textarea>
+            </div>
+ 			<div class="form-group col-md-6">
+				<label for="inputCode"> 下发人： <span
+					th:text="${paramSetting.sender}"></span>
+				</label>
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputCode"> 下发时间： <span th:if="${paramSetting.sendTime} != null"
+					th:text="${#dates.format(paramSetting.sendTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+				</label>
+			</div> 
+		</div>
+	</div>
+</body>
+</html>

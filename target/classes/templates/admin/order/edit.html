@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>查看订单详情</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/orders/}">运营中心</a></li>
+        <li><a th:href="@{/admin/orders/}">订单管理</a></li>
+        <li class="active">查看订单详情</li>
+    </ol>
+
+    
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">查看订单详情</a></li>
+                </ul>
+            </div>
+            <form role="form" action="#" method="post">
+            <div class="panel-body" th:include="admin/order/form"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/orders/?flag=true}" style="padding-top:4px">返回</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            </form>
+        </div>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>编辑充电卡</title>
+</head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/cards/}">会员中心</a></li>
+        <li><a th:href="@{/admin/cards/}">充电卡管理</a></li>
+        <li class="active">编辑充电卡</li>
+    </ol>
+        <div class="panel" th:object="${card}">
+	        <div role="tabpanel" class="panel-tabs">
+	            <ul class="nav nav-tabs">
+					<li role="presentation" class="active"><a>编辑充电卡</a></li>
+	            </ul>
+	        </div>
+	        <form role="form" action="#" method="post" th:action="@{/admin/cards/update/{id}(id=${card.cardNo})}" th:object="${card}">
+            <div class="panel-body" th:include="admin/card/editform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html"
+                               th:href="@{/admin/cards/search}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+           </form>
+        </div>
+
+</div>
+<div layout:fragment="javascript">
+<script th:inline="javascript">//引用  
+   		$(function(){
+			   var start = {
+						  elem: '#start',
+						  format: 'YYYY-MM-DD',
+						  min: '2016-01-01 23:59:59', //设定最小日期为当前日期
+						  max: '2099-06-16 23:59:59', //最大日期
+						  istoday: false,
+						  choose: function(datas){
+						     end.min = datas; //开始日选好后，重置结束日的最小日期
+						     end.start = datas //将结束日的初始值设定为开始日
+						  }
+						};
+						
+						laydate(start);
+						 
+		});
+		
+		
+	 </script>
+</div>
+</body>
+</html>

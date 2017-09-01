@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>会员充值</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+       <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/accounts/}">会员中心</a></li>
+        <li><a th:href="@{/admin/accounts/}">会员管理</a></li>
+        <li class="active">会员充值</li>
+    </ol>
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a th:href="@{/admin/accounts/{id}(id=${account.id})}">会员充值</a></li>
+                </ul>
+            </div>
+           <form role="form" onsubmit="return check()" method="post" th:action="@{/admin/accounts/accoutDebit/{id}(id=${account.id})}" th:object="${account}">
+	            <div class="panel-body"  th:include="admin/account/debitform"></div>
+                        <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html"
+                               th:href="@{/admin/accounts/search}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit"  class="btn-query btn-primary remit-btn-id">充值</button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+            </form>
+        </div>   
+</div>
+<div layout:fragment="javascript">
+<script th:inline="javascript">
+/*<![CDATA[*/
+    $("#accountValue").hide();
+    $("#checkIdvalue").click(function(){
+    	$("#accountValue").show();
+    	$("#accountIda").hide();
+    	$("#accountId").hide();
+    	$("#cvs").attr("src","");
+    	$("#src").attr("value","");
+    });
+    $("#checkId").click(function(){
+    	$("#accountIda").show();
+    	$("#accountId").show();
+    	$("#accountValue").hide();
+    });
+	function check(){
+		var charger = $(".money").val();
+		var chargerNum=parseInt(charger);
+		var chargerLenght=String(chargerNum).length;
+		if(charger-1<0){
+    		alert("最低充值1元");
+    		return false;
+    	}
+    	if(charger[0]=="0"){
+    		alert("不能以0开头");
+    		return false;
+    	}
+    	if(isNaN(charger)){
+    		alert("请输入数字");
+    		return false;
+    	}
+    	if(chargerLenght>9){
+    		alert("金额过大，请重新输入");
+    		return false;
+    	}
+	    var src = document.getElementById("src").value;
+	    var checkIdvalue = document.getElementById("checkIdvalue").checked;
+	    if(checkIdvalue){
+	    	return true;
+	    }else{
+	    	if(src){
+		        return true;
+		    }else{
+		        document.getElementById("checkValue").innerText="交易凭证必须上传！"
+		            return false;
+		    }
+	    }
+	}
+/*]]>*/
+</script>
+</div>
+</body>
+</html>

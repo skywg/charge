@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="admin/layout">
+<head>
+<title>会员充电卡信息</title>
+</head>
+<body class="bg">
+	<div layout:fragment="content" id="content">
+		<ol class="breadcrumb">
+			<li><a th:href="@{/admin/}">首页</a></li>
+        	<li><a th:href="@{/admin/accounts/}">会员中心</a></li>
+        	<li><a th:href="@{/admin/accounts/}">会员管理</a></li>
+			<li class="active">会员充电卡信息</li>
+		</ol>
+
+		<div class="panel">
+			<div role="tabpanel" class="panel-tabs">
+				<ul class="nav nav-tabs" id="account-list">
+					<li role="presentation"><a
+						th:href="@{/admin/accounts/{id}(id=${account.id})}">会员信息</a></li>
+					<li role="presentation" class="active"><a
+						th:href="@{/admin/accounts/checkCard/{id}(id=${account.id})}">充电卡信息</a></li>
+					<li role="presentation"><a
+						th:href="@{/admin/accounts/checkCar/{id}(id=${account.id})}">车主信息</a></li>
+					<li role="presentation"><a
+						th:href="@{/admin/accounts/checkDeal/{id}(id=${account.id})}">交易记录</a></li>
+					<li role="presentation"><a
+						th:href="@{/admin/accounts/checkCharge/{id}(id=${account.id})}">充值记录</a></li>
+				</ul>
+			</div>
+
+			<div class="col-sm-12 col-md-12" th:if="${cards == null}"
+				style="text-align: center; height: 300px;background:#ffffff">
+				<img th:src="@{/images/card.png}"
+					style="width:317px;height:202px;margin-top: 20px;"/>
+				<p>
+					<span style="red: grey; font-size: 20px">未办理充电卡</span>
+				</p>
+			</div>
+			<div th:if="${cards!=null}">
+				<div class="form-group col-md-7" style="height:560px;overflow:auto;overflow-x:hidden;">
+					<div class="row section" id="card">
+						<div class="card-box">
+						<div class="cardno" th:each="card,cardIter:${cards}" th:attr="id=${card.cardNo}" style="background-size:100% auto;">
+							<span th:text="${card.cardNo}" style="display: none" class="cardN"></span>
+							<div class="card-number">111</div>
+							<div class="card-pep">持卡人：<span th:text="${card.owner}"></span></div>
+						</div>
+						<!-- <div class="col-md-6 cardno" style="padding:5px;cursor: pointer;"
+							th:each="card,cardIter:${cards}" th:attr="id=${card.cardNo}">
+							<span th:text="${card.cardNo}" style="display: none"></span>
+							<div class="form-group col-md-12 borderC"
+								style="border: 1px solid #000000; height: 160px;border-radius: 5px;">
+								<table border="0" cellspacing="0" cellpadding="0" width="100%"
+									height="100%">
+									<tr align="left" valign="middle">
+										<td colspan="2"><img th:src="@{/images/logo.png}"
+											style="width:130px; height: 45px;" /></td>
+										<td colspan="2" th:text="${card.cardType}"></td>
+									</tr>
+									<tr align="center" valign="middle">
+										<td colspan="4" th:text="${card.cardNo}" class="cardN"></td>
+									</tr>
+									<tr>
+										<td align="right" valign="middle">VALID<br />FROM
+										</td>
+										<td align="left" valign="middle"
+											th:text="${#dates.format(card.sendDate, 'MM/yy')}"></td>
+										<td align="right" valign="middle">VALID<br />THRU
+										</td>
+										<td align="left" valign="middle"
+											th:text="${#dates.format(card.expiredDate, 'MM/yy')}"></td>
+									</tr>
+									<tr align="center" valign="middle">
+										<td colspan="2" th:text="${card.owner}"></td>
+										<td colspan="2" th:text="${'￥' + card.money}"></td>
+									</tr>
+								</table>
+							</div>
+						</div> -->
+					</div>
+					</div>
+				</div>
+				<!-- 内嵌页面的引入 -->
+				<div class="form-group col-md-5" id="cardDateils">
+					<div class="col-md-12" th:include="admin/account/cardDetails"></div>
+				</div>
+
+			</div>
+			<div role="tabpanel" class="col-md-12" th:if="${cards!=null}">
+				<ul class="nav nav-tabs">
+					<li role="presentation" class="active" id="cards-recharge"><a>充值记录</a></li>
+					<li role="presentation" id="cards-charge"><a>充电记录</a></li>
+				</ul>
+			</div>
+			<div class="panel-body" th:if="${cards!=null}">
+				<div class="col-md-12" th:include="admin/account/cardRechargeRecord"></div>
+				<div class="col-md-12" th:include="admin/account/chargeRecord"></div>
+			</div>
+			<div class="panel-footer">
+				<nav class="navbar navbar-default" role="navigation">
+					<div class="container-fluid">
+						<div class="navbar-right" style="margin-top: 10px;">
+							<a class="btn btn-query btn-primary back-btn-id" href="index.html"
+								th:href="@{/admin/accounts/search}" style="padding-top:4px">返回</a>
+						</div>
+					</div>
+
+				</nav>
+			</div>
+		</div>
+	   <script th:inline="javascript">
+         
+        </script>
+	</div>
+	<div layout:fragment="javascript">
+	    <script th:inline="javascript">
+	    /*<![CDATA[*/
+		    $(function(){
+		        $(".cardno").click(function(){
+		          window.location = "/admin/accounts/checkCard/" + [[${account.id}]] + "?cardNo=" + $(this).attr("id");
+		        });
+		        
+		        $("#cards-recharge").click(function(){
+		            $("#cards-recharge-record").show();
+		            $("#cards-charge-record").hide();
+		            $("#cards-recharge").addClass("active");
+		            $("#cards-charge").removeClass("active");
+		        });
+		        
+		        $("#cards-charge").click(function(){
+		            $("#cards-charge-record").show();
+		            $("#cards-recharge-record").hide();
+		            $("#cards-charge").addClass("active");
+		            $("#cards-recharge").removeClass("active");
+		        });
+ 		        var cardNum=$("#cardNumber").val();
+				var lengthNum=$("#card").find(".cardN").length;
+				for (var k=0;k<lengthNum;k++) {
+					var upon=$("#card").find(".cardN").eq(k).html();
+					if(upon==cardNum){
+						$("#card").find(".cardno").eq(k).css({"background":"url(/images/cards-2.png) no-repeat","background-size":"100% auto"})
+					}
+				}
+				var cardLength=$(".cardno").length;
+				for(var l=0;l<cardLength;l++){
+					var cardgg;
+					var cardbb=$(".cardno").eq(l).find("span").text();
+					var cardcc=cardbb.substring(0,4);
+					var carddd=cardbb.substring(4,8);
+					var cardee=cardbb.substring(8,12);
+					var cardff=cardbb.substring(12,16);
+					cardgg=cardcc+"   "+carddd+"   "+cardee+"   "+cardff;
+					$(".cardno").eq(l).find(".card-number").html(cardgg);
+				}
+		   });
+		    /*]]>*/
+	    </script>
+    </div>
+</body>
+</html>

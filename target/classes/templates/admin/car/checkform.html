@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="col-md-12">
+				<div class="form-group col-md-3" style="font-size:18px;margin:0px;padding:5px;">基本信息</div>
+				<div class="form-group col-md-9" style="text-align:right;">状态：<span th:text="${car.carIdentifyStatus.title}" style="font-size:14px"></span></div><br/>
+			</div>
+			<div class="col-md-12">
+                 <hr class="xian-color"/>
+             </div>
+			<div class="form-group col-md-12">
+				<div class="form-group col-md-5" style="text-align:center;" >
+					 <label for="inputTitle" style="display:block;"><span>行驶证照片</span></label>
+					<img  th:if="${drivingLicensePhoto==null}" th:src="@{/images/drivingLicensePhoto.png}" style="width:300px;height:200px;"/>
+					<img  th:if="${drivingLicensePhoto!=null}" th:src="@{${drivingLicensePhoto}}" style="width:300px;height:200px;"/>
+				</div>
+				<div class="form-group col-md-6">
+					<div class="form-group col-md-6">
+		                <label for="inputTitle"><span style="color:red"></span>品牌</label>
+		                <input type="text" th:field="*{carBrand}" required="required" maxlength="20" class="form-control" id="inputTitle"
+		                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+		            </div>
+		            <div class="form-group col-md-6">
+		                <label for="inputTitle"><span style="color:red"></span>型号</label>
+		                <input type="text" th:field="*{carType}" required="required" maxlength="20" class="form-control" id="inputTitle"
+		                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+		            </div>
+		            <div class="form-group col-md-6">
+		                <label for="inputTitle"><span style="color:red"></span>车架号码</label>
+		                <input type="text" th:field="*{frameNumber}" required="required" maxlength="20" class="form-control" id="inputTitle"
+		                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+		            </div>
+		            <div class="form-group col-md-6">
+		                <label for="inputTitle"><span style="color:red"></span>发动机号码</label>
+		                <input type="text" th:field="*{engineNumber}" required="required" maxlength="20" class="form-control" id="inputTitle"
+		                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+		            </div>
+		            <div class="form-group col-md-6">
+		                <label for="inputTitle"><span style="color:red"></span>车牌号</label>
+		                <input type="text" th:field="*{plateNumber}" required="required" maxlength="20" class="form-control" id="inputTitle"
+		                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+		            </div>
+		            <div class="form-group col-md-6">
+		                <label for="inputTitle"><span style="color:red"></span>车辆vin码</label>
+		                <input type="text" th:field="*{vinNumber}" required="required" maxlength="20" class="form-control" id="inputTitle"
+		                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+		            </div>
+				</div>
+			</div>
+		</div>
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>认证信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-4">
+				<label for="inputCode">时间： <span th:text="*{#dates.format(account.createdAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+				</label>
+			</div>
+			<div class="form-group col-md-4">
+				<label for="inputCode">申请人： <span th:text="*{account.realName}"></span>
+				</label>
+			</div>
+			<div class="form-group col-md-4">
+				<label for="inputCode">状态： <span th:text="资料提交"></span>
+				</label>
+			</div>
+			<div class="form-group col-md-12">
+				<label for="inputTitle"><span style="color:red"></span>内容</label>
+				<textarea class="form-control" id="inputDescription" maxlength="500" style="cursor:auto;" disabled="disabled"
+  placeholder=""></textarea>
+			</div>
+			<div th:each="carAuditLog ,carAuditLogIter : ${car.carAuditLogList}" th:attr="data-id=${carAuditLog.id}">
+				<div class="form-group col-md-4">
+					<label for="inputCode">时间： <span th:text="${#dates.format(carAuditLog.auditTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+					</label>
+				</div>
+				<div class="form-group col-md-4">
+					<label for="inputCode">审核人： <span th:text="${carAuditLog.auditor}"></span>
+					</label>
+				</div>
+				<div class="form-group col-md-4">
+					<label for="inputCode">状态： 
+					<span th:if="${carAuditLog.result} == false" th:text="审核失败"></span>
+					<span th:if="${carAuditLog.result} == true" th:text="审核通过"></span>
+					</label>
+				</div>
+				<div class="form-group col-md-12">
+					<label for="inputTitle">内容</label>
+					<textarea class="form-control" id="inputDescription" maxlength="500" style="cursor:auto;" disabled="disabled"
+	th:text="${carAuditLog.remark}"  placeholder=""></textarea>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+</html>

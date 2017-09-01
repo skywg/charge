@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>充电桩列表</title>
+<script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script> 
+<script type="text/javascript">
+/*<![CDATA[*/
+	$(document).ready(function(){
+			$("#outToExcle").click(function(){
+					var name=$("#name").val();
+					var stationId=$("#stationId").val();
+					var ctype=$("#ctype").val();
+					//var cif=$("#cif").val()
+					var cif="";
+					window.location.href="/admin/chargers/excle_output?name="+name+"&stationId="+stationId+"&ctype="+ctype+"&cif="+cif;
+				})
+			})
+	
+/*]]>*/
+</script>
+
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/chargers/}">设备中心</a></li>
+        <li class="active">充电桩</li>
+    </ol>
+    <div class="panel border">
+        <div class="panel-tabs" role="tabpanel">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="#">充电桩列表</a></li>
+<!--                 <li class="pull-right" style="margin-right:0">
+                    <a name="addCharger" class="btn btn-primary" href="add.html" th:href="@{/admin/chargers/add}" style="margin-right:0;display: none">添加</a>
+                </li> -->
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive" style="margin-top: 1px">
+                <div class="box-title">
+                    <form role="form" action="/admin/chargers/search/" method="get">
+                        <div class="box-title-sm">
+                            <label for="name" class="form-control-label">充电桩名称</label>
+                            <input type="text" class="form-control-input-charger" maxlength="20" name="name" id="name" th:value="${charger.name}" placeholder=""/>
+                        </div>
+                        <!-- <div class="form-group custom-input col-md-2">
+                            <label for="inputOperater">运营商</label>
+			                <select class="form-control" id="inputOperater"  name="operator">
+			                    <option value="" selected="selected">全部</option>
+			                    <option th:each="o : ${operators}"
+			                            th:value="${o.id}"
+			                            th:text="${o.codeAndName}">Type
+			                    </option>
+			                </select>
+                        </div> -->
+                        <div class="box-title-sm">
+			                <label for="inputStation" class="form-control-label">充电站</label>
+			                <input type="hidden" th:if="${charger.station} != null"  id="inputHiddenStation" th:value="${charger.station.id}" />
+			              	<select class="form-control-input-charger" id="stationId"  name="station"  >
+			                     <option value="" selected="selected">全部</option>
+			                    <option th:each="s : ${stations}"
+			                            th:value="${s.id}"
+			                            th:text="${s.codeAndName}">Type
+			                    </option>
+			                </select>
+                        </div>
+                        <div class="box-title-sm">
+                            <label for="inputType" class="form-control-label">充电桩类型</label>
+                            <input type="hidden"  id="inputHiddenType" th:value="${charger.type}" />
+			                <select class="form-control-input-charger" id="ctype" name="type" >
+			                    <option value="" selected="selected">全部</option>
+			                    <option th:each="t : ${types}"
+			                            th:value="${t.dictValue}"
+			                            th:text="${t.descr}">Type
+			                    </option>
+			                </select>
+                        </div>
+                        <!-- <div class="box-title-sm">
+						<label for="inputType1" class="form-control-label">接口类型</label>
+						<input type="hidden"  id="inputHiddenchargeIf" th:value="${charger.chargeIf}" />
+			                <select class="form-control-input-charger" id="cif" name="chargeIf">
+			                    <option value="" selected="selected">全部</option>
+			                    <option th:each="t : ${chargeIfs}"
+			                            th:value="${t.dictValue}"
+			                            th:text="${t.descr}">Type
+			                    </option>
+			                </select>
+                        </div> -->
+                        <div class="box-title-button"><!--//title-->
+                            <button name="searchCharger" style="display: none;" type="submit" class="btn-query btn-primary query-btn-id">查询</button>
+                            <button type="button" name="exportCharger" style="display: none;" id="outToExcle" class="btn-query btn-primary export-btn-id">导出</button>
+                            <a name="addCharger" class="btn btn-query btn-primary add-btn-id" href="add.html" th:href="@{/admin/chargers/add}" style="padding-top:5px;display: none;">添加</a>
+                        </div>
+                        <input type="hidden"  name="flag" value="1" />
+                    </form>
+                </div>
+				<div class="col-md-12 navbar-xian">
+                            <hr class="xian-color"/>
+               </div>
+<script type="text/javascript">
+/*<![CDATA[*/
+          /*  var data = [[${charger}]];
+			var station =data.station;
+			var type =data.type;
+			var chargeIf =data.chargeIf; */
+			var  station =document.getElementById("inputHiddenStation");
+			var inputstations = document.getElementById("stationId").options;
+			if(inputstations){
+				if(station){
+					for(var i=0;i<inputstations.length;i++){
+	    				 var stationId = inputstations[i].value;
+	    				 if(station.value==stationId){
+	    					 inputstations[i].selected="selected";
+	    					 break;
+	    				 }
+	    			}
+				}
+    		}
+			var  type =document.getElementById("inputHiddenType");
+			var inputTypes = document.getElementById("ctype").options;
+			if(inputTypes){
+				if(type){
+					for(var i=0;i<inputTypes.length;i++){
+	    				 var typeId = inputTypes[i].value;
+	    				 if(type.value==typeId){
+	    					 inputTypes[i].selected="selected";
+	    					 break;
+	    				 }
+	    			}
+				}
+    		}
+			var  chargeIf =document.getElementById("inputHiddenchargeIf");
+			var cif = document.getElementById("cif").options;
+			if(cif){
+				if(chargeIf){
+					for(var i=0;i<cif.length;i++){
+						var chargeIfId = cif[i].value;
+	    				 if(chargeIf.value==chargeIfId){
+	    					 cif[i].selected="selected";
+	    					 break;
+	    				 }
+	    			}
+				}
+    		}
+			/*]]>*/
+</script>
+                <table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th style="width:32px;">#</th>
+				        <th style="width:152px;">充电桩编号</th>
+		                <th>充电桩名称</th>
+		                <th>所属运营商</th>
+		                <th>所属充电站</th>
+		                <th style="width:108px;">充电桩类型</th>
+		                <th style="width:108px;">充电桩厂家</th>
+		                <th style="width:108px;">电桩型号</th>
+		                <!-- <th style="width:64px;">状态</th> -->
+		                <th style="width:108px;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="charger,chargerIter : ${page.content}" th:attr="data-id=${charger.id}">
+                        <td th:text="${chargerIter.count}">1</td>
+						<td th:attr="title=${charger.code}" th:text="${charger.code}">充电桩编号</td>
+		                <td th:attr="title=${charger.name}" th:text="${charger.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;"></td>
+		                <td th:text="${charger.operator.name}"></td>
+		                <td th:attr="title=${charger.station.name}" th:text="${charger.station.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;"></td>
+		                <td th:each="cs , csIter : ${types}" th:if="${charger.type==cs.dictValue}" th:text="${cs.descr}"></td>
+		                <td th:text="${charger.manufacturer}">充电桩厂家</td>
+		                <td ><div th:each="cs , csIter : ${chargeModels}" th:if="${charger.chargerModel==cs.dictValue}" th:text="${cs.descr}"></div></td>
+		                <td class="all-icon">
+		                <a href="check.html" name="checkCharger" style="display: none;"  th:href="@{/admin/chargers/check/{id}(id=${charger.id})}" class="lock" title="查看"></a>
+		                <a href="edit.html" name="editCharger" style="display: none;"  th:href="@{/admin/chargers/edit/{id}(id=${charger.id})}" class="edit-id" title="编辑"></a>
+		                <a data-toggle="modal"  name="delCharger" style="display:none;" th:attr="data-target='#myModal'+ ${chargerIter.count}" class="delete-id" title="删除"></a>
+		               <!--  <a data-toggle="modal"  name="fa-qrcode" style="display:none;"  class="fa-qrcode"  id="bt"  title="二维码"></a> -->
+		               <!--  <div style="visibility: hidden;" class="qrcodeid"><span th:text="${charger.qrcode}"></span></div> -->
+						<div class="modal fade"  th:attr="id='myModal'+ ${chargerIter.count}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-dialog" >
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-question-circle fa-lg" style="padding-right:10px"></i>删除充电桩</h4>
+						      </div>
+						      <div class="modal-body text-center" style="padding-top:50px;padding-bottom:50px;">
+						        	<p style="font-size:16px">是否确认删除所选项？删除后不可恢复。</p>
+						      </div>
+						      <div class="modal-footer">
+						        <a type="button" class="btn btn-query btn-primary sure-btn-id" href="#" th:href="@{/admin/chargers/del/{id}(id=${charger.id})}" style="padding-top:4px">确定</a>
+						        <button type="button" class="btn-query btn-primary cancel-btn-id" data-dismiss="modal">取消</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+		                </td>         
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script> 
+		<script>
+				
+			$(document).ready(function(){
+				$(".abc").hover(function(e){
+					var aa =$(this).html();
+					$(this).attr("title",aa)
+				});
+				
+			})
+			
+		</script>
+        <div class="panel-footer">
+            <div th:replace="element/pagination"></div>
+        </div>
+    </div>
+
+    <!-- /.row -->
+
+</div>
+<script>
+    $(document).ready(function() {
+        $('.custom-input input').phAnim();
+    })
+</script>
+</body>
+
+</html>
+

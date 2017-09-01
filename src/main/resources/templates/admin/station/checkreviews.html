@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>查看本站评论</title>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/stations/}">设备中心</a></li>
+        <li><a th:href="@{/admin/stations/}">充电站</a></li>
+        <li class="active">查看本站评论</li>
+    </ol>
+    <div class="panel border">
+        <div class="panel-tabs" role="tabpanel">
+            <ul class="nav nav-tabs">
+  					<li role="presentation"><a th:href="@{/admin/stations/check/{id}(id=${station.id})}">基本信息</a></li>
+					<li role="presentation"><a th:href="@{/admin/stations/check/images/{id}(id=${station.id})}">图片</a></li>
+                    <li role="presentation" ><a th:href="@{/admin/stations/check/chargers/{id}(id=${station.id})}">电桩</a></li>
+            		<li role="presentation" class="active"><a th:href="@{/admin/stations/check/reviews/{id}(id=${station.id})}">评论</a></li>
+            </ul>
+        </div>
+        <div class="panel-body">
+	        <div class="table-responsive" style="margin-top: 1px">
+	            <table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+	                <thead>
+	                    <tr>
+	                        <th style="width:32px;">#</th>
+	                        <th style="width:160px;">评价时间</th>
+	                        <th>充电站名称</th>
+	                        <th style="width:120px;">评价人</th>
+	                        <th style="width:110px;">手机号 </th>
+	                        <th>评价内容 </th>
+	                        <th style="width:150px;">评分 </th>
+	                        <th style="width:80px;">状态</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr th:if="${review.account}!=null" th:each="review, reviewIter : ${page.content}" th:attr="data-id=${review.id}" >
+	                        <td th:text="${reviewIter.count}">
+	                            1
+	                        </td>
+	                     
+	                        <td th:text="${#dates.format(review.updatedAt,'yyyy-MM-dd HH:mm:ss')}">
+	                           		 评价时间
+	                        </td>
+	                        <td th:text="${review.station.name}" th:attr="title=${review.station.name}"  style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">
+	                          		  充电站名称
+	                        </td>
+	                        <td th:text="${review.account.realName}">
+	                           		 评价人
+	                        </td>
+	                        <td th:text="${review.account.phone}">
+	                          		  手机号
+	                        </td>
+	                        <td th:text="${review.content}" th:attr="title=${review.content}"  style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">
+	                         		   评价内容
+	                        </td>
+	                      
+	                        <td th:if="${review.rating.total==1}">
+	                     		<img th:src="@{/images/start/stars2.png}" height="14"/>
+	                   		    <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/> 		
+	                        </td>
+	                        <td th:if="${review.rating.total==2}">
+	                     		<img th:src="@{/images/start/stars2.png}" height="14"/>
+	                   		    <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/> 		
+	                        </td>
+	                        <td th:if="${review.rating.total==3}">
+	                     		<img th:src="@{/images/start/stars2.png}" height="14"/>
+	                   		    <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/> 		
+	                        </td>
+	                        <td th:if="${review.rating.total==4}">
+	                     		<img th:src="@{/images/start/stars2.png}" height="14"/>
+	                   		    <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stark2.png}" height="14"/> 		
+	                        </td>
+	                        <td th:if="${review.rating.total==5}">
+	                     		<img th:src="@{/images/start/stars2.png}" height="14"/>
+	                   		    <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/>
+	                            <img th:src="@{/images/start/stars2.png}" height="14"/> 		
+	                        </td>
+	                        <td th:if="${review.status==-1}" th:text="未审核" class="all-state">
+	                         		   状态
+	                        </td>
+	                        <td th:if="${review.status==0}" th:text="未通过" class="all-state">
+	                         		   状态
+	                        </td>
+	                        <td th:if="${review.status==1}" th:text="通过" class="all-state">
+	               				               状态
+	                        </td>	      
+	                    </tr>
+	                </tbody>
+	            </table>
+	        </div>
+	        <div class="navbar-right" style="margin-top:10px;margin-right:10px">
+ 				<div th:replace="element/pagination"></div>
+           </div>
+	    </div>
+        <div class="panel-footer">
+   			<nav class="navbar navbar-default" role="navigation">
+				<div class="container-fluid">
+                     <div class="navbar-right">
+                     	<a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                                th:href="@{/admin/stations/search}" style="padding-top:4px">返回</a>
+                     </div>
+                     
+                 </div>
+             </nav>
+        </div>
+    </div>
+    <!-- /.row -->
+</div>
+<script>
+    $(document).ready(function() {
+        $('.custom-input input').phAnim();
+    })
+</script>
+</body>
+</html>

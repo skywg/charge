@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>查看充电卡</title>
+</head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/cards/}">会员中心</a></li>
+        <li><a th:href="@{/admin/cards/}">充电卡管理</a></li>
+        <li class="active">查看充电卡</li>
+    </ol>
+        <div class="panel" th:object="${card}">
+	        <div role="tabpanel" class="panel-tabs">
+	            <ul class="nav nav-tabs">
+					<li role="presentation" class="active"><a>查看充电卡</a></li>
+	            </ul>
+	        </div>
+            <div class="form-group col-md-4">
+                <div class="row section">
+                <div class="row section" id="card">
+						<div class="card-box" style="width:320px">
+						<div class="cardno" style="background-size:100% auto;">
+							<span th:text="${card.cardNo}" style="display: none" class="cardN"></span>
+							<div class="card-number">111</div>
+							<div class="card-pep">持卡人：<span th:text="${card.owner}"></span></div>
+						</div>
+					</div>
+					</div>
+ <!--                    <div class="form-group col-md-7" style="padding:5px;">
+                        <div class="form-group col-md-12" style="border:1px solid #000000;height:150px">
+                            <table border="0" cellspacing="0" cellpadding="0" width="100%" height="100%" >
+                                <tr align="center" valign="middle">
+                                    <td colspan="2"><img th:src="@{/images/logo.png}" style="width: 130px; height: 45px;" /></td>
+                                    <td colspan="2" th:text="${card.CardType}"></td>
+                                </tr>
+                                <tr align="center" valign="middle">
+                                    <td colspan="4" th:text="${card.cardNo}"></td>
+                                </tr>
+                                <tr>
+                                    <td align="right" valign="middle">VALID<br/>FROM</td>
+                                    <td align="left" valign="middle" th:text="${#dates.format(card.sendDate, 'MM/yy')}" th:if="${card.sendDate != null}"></td>
+                                    <td align="right" valign="middle">VALID<br/>THRU</td>
+                                    <td align="left" valign="middle" th:text="${#dates.format(card.expiredDate, 'MM/yy')}" th:if="${card.expiredDate != null}"></td>
+                                </tr>
+                                <tr align="center" valign="middle">
+                                    <td colspan="2" th:text="${card.owner}"></td>
+                                    <td colspan="2" th:text="${'￥' + card.money}"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+             <div class="form-group col-md-8">
+                <div class="col-md-12" th:include="admin/card/cardDetails"></div>
+            </div>
+        
+            <div role="tabpanel" class="">
+                <ul class="nav nav-tabs">
+                <li role="presentation" class="active" id="cards-recharge"><a>划账记录</a></li>
+                <li role="presentation" id="cards-charge"><a>充电记录</a></li>
+            </ul>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12" id="panel-body-cardRecharger" th:include="admin/card/cardRechargeRecord"></div>
+                <div class="col-md-12" id="panel-body-charger" th:include="admin/card/chargeRecord"></div>
+            </div> 
+
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/cards/search}" style="padding-top:4px">返回</a>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+        </div>
+
+</div>
+<div layout:fragment="javascript">
+<script src="../../static/js/jqPaginator.min.js" th:src="@{/js/jqPaginator.min.js}"></script>
+    <script type="text/javascript">
+    /*<![CDATA[*/
+  	$(document).ready(function(){
+    	$("#pageA").show();
+    	$("#pageB").hide();
+    	var pageNum=$(".table_bodyA tr").length;
+    	if(pageNum>0){
+    		$("#noPageD").hide();
+    	}if(pageNum==0){
+    		$("#noPageD").show();
+    		$("#pageB").hide();
+    		$("#pageA").hide();
+    	}
+    	var inputLength=$("#card-check-info input").length;
+    	var inputSate=$("#card-check-state").val();
+    	if(inputSate=="销卡"){
+    		for(var l=0;l<inputLength;l++){
+    			$("#card-check-info input").eq(l).css("color","#bfbfbf");
+    			$("#card-check-info select").css("color","#bfbfbf");
+    		}
+    	}
+    })
+        $("#cards-recharge").click(function(){
+            $("#cards-recharge-record").show();
+            $("#cards-charge-record").hide();
+            $("#cards-recharge").addClass("active");
+            $("#cards-charge").removeClass("active");
+        	var pageNum=$(".table_bodyA tr").length;
+        	if(pageNum>0){
+        		$("#noPageD").hide();
+        		$("#pageA").show();
+            	$("#pageB").hide();
+        	}if(pageNum==0){
+        		$("#noPageD").show();
+        		$("#pageB").hide();
+        		$("#pageA").hide();
+        	}
+        });
+        $("#cards-charge").click(function(){
+            $("#cards-charge-record").show();
+            $("#cards-recharge-record").hide(); 
+            $("#cards-charge").addClass("active");
+            $("#cards-recharge").removeClass("active");
+        	var pageNum=$(".table_bodyB tr").length;
+        	if(pageNum>0){
+        		$("#noPageD").hide();
+        		$("#pageA").hide();
+            	$("#pageB").show();
+        	}if(pageNum==0){
+        		$("#noPageD").show();
+        		$("#pageB").hide();
+        		$("#pageA").hide();
+        	}
+        });
+        var cardLength=$(".cardno").length;
+		for(var l=0;l<cardLength;l++){
+			var cardgg;
+			var cardbb=$(".cardno").eq(l).find("span").text();
+			var cardcc=cardbb.substring(0,4);
+			var carddd=cardbb.substring(4,8);
+			var cardee=cardbb.substring(8,12);
+			var cardff=cardbb.substring(12,16);
+			cardgg=cardcc+"   "+carddd+"   "+cardee+"   "+cardff;
+			$(".cardno").eq(l).find(".card-number").html(cardgg);
+		}
+        /*]]>*/
+	</script>
+
+</div>
+</body>
+</html>

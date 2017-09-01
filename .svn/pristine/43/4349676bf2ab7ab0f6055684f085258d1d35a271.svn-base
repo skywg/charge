@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="form-group col-md-12">
+    <div class="row section">
+        <div class="col-md-6 form-group">
+            <label for="inputTitle"><span style="color:red">*</span>会员名称</label>
+            <select class="form-control" id="accountName" style="cursor:auto;" th:field="*{id}">
+                <option th:each="t:${accounts}"
+                        th:value="${t.id}"
+                        th:text="${t.realName}">
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">会员号</label>
+            <input type="text" th:field="*{phone}" id="phoneNumber" style="cursor:auto;" disabled="disabled" required="required" class="form-control" placeholder=""/>
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="inputTitle">状态</label>
+            <input type="text" th:field="*{status.title}" id="accountStatus" style="cursor:auto;" disabled="disabled" required="required" class="form-control" placeholder=""/>
+            <!-- <select class="form-control" id="inputCardType" style="cursor:auto;" disabled="disabled" th:field="${card.cardType}">
+                <option th:each="t:${cardTypes}"
+                        th:value="${t.code}"
+                        th:text="${t.name}">
+                </option>
+            </select> -->
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">余额(元)</label>
+            <input type="text" th:field="*{money}" id="money" style="cursor:auto;" disabled="disabled" required="required" class="form-control" placeholder="" pattern="^(([0-9]+//.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*//.[0-9]+)|([0-9]*[1-9][0-9]*))$"/>
+        </div>
+
+       
+         <div class="form-group col-md-6">
+            <label for="inputTitle">有效卡张数</label>
+            <input type="text" th:value="${valid_number}" id="valid_number" style="cursor:auto;" disabled="disabled" required="required" class="form-control" placeholder=""/>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">无效卡张数</label>
+            <input type="text" th:value="${invalid_number}" id="invalid_number" style="cursor:auto;" disabled="disabled" required="required" class="form-control" placeholder=""/>
+        </div> 
+		<div class="form-group col-md-6">
+   				<label for="inputDescription"><span style="color:red"></span>可选充电卡(默认为全选)</label>
+				<select id="pid1" class="form-control"  onchange="gradeChange1()" multiple="multiple"  style="height:150px">
+                    <option th:each="t : ${validCards}"
+                            th:value="${t.cardNo}"
+                            th:text="${t.cardNo+'('+ t.owner +')'}">type
+                    </option> 
+                </select>
+				<input id="chargerView1" type="hidden"  class="form-control"/>
+			</div>
+        <div class="form-group col-md-6">
+            	<label for="inputDescription"><span style="color:red"></span>所选充电卡</label>
+				<select id="pid2" class="form-control"  onchange="gradeChange2()"  multiple="multiple"  style="height:150px">
+                   <!-- <option th:each="t : ${paramSetting.chargersY}"
+                            th:value="${t.id}"
+                            th:text="${t.codeAndName}">type
+                    </option> -->
+                </select>
+               	<input id="chargerView2" type="hidden" name="selectedCards"  class="form-control"/>
+        </div>
+		 
+        <div class="form-group col-md-12">
+            <label for="inputTitle"><span style="color:red">*</span>转账金额(元)</label>
+            <input type="text" required="required" class="form-control" name="chargerNumber" placeholder="" pattern="^[0-9]+(.[0-9]{2})?$" id="chargerNumber" onkeyup="value=value.replace(/[^\d.]/g,'')"/>
+        </div>
+         <div class="form-group col-md-12">
+        	<div class="col-md-1"><!--//title-->
+                <button type="button" id="one" class="btn btn-primary num">100</button>
+            </div>
+            <div class="col-md-1"><!--//title-->
+                <button type="button" id="two" class="btn btn-primary num">200</button>
+            </div>
+            <div class="col-md-1"><!--//title-->
+                <button type="button" id="five" class="btn btn-primary num">500</button>
+            </div>
+            <div class="col-md-1"><!--//title-->
+                <button type="button" id="thou" class="btn btn-primary num">1000</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

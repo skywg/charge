@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>编辑运营商</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/operators/}">会员中心</a></li>
+        <li><a th:href="@{/admin/operators/}">运营商管理</a></li>
+        <li class="active">编辑运营商</li>
+    </ol>
+	<script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        /*]]>*/
+    </script>
+    
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">编辑运营商</a></li>
+                </ul>
+            </div>
+		<form role="form" action="#" method="post"
+          th:action="@{/admin/operators/{id}(id=${operator.id})}" th:object="${operator}">
+            <div class="panel-body" th:include="admin/operator/form"></div>
+
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html"
+                               th:href="@{/admin/operators/search}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+            </form>
+        </div>
+    
+
+</div>
+</body>
+</html>

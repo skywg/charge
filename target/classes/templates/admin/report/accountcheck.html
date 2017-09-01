@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="admin/layout">
+<head>
+<title>查看会员消费</title>
+</head>
+<body class="bg">
+	<div layout:fragment="content" id="content">
+		<ol class="breadcrumb">
+			<li><a th:href="@{/admin/}">首页</a></li>
+			<li><a th:href="@{/admin/car/}">分析中心</a></li>
+			<li><a th:href="@{/admin/car/}">会员消费</a></li>
+			<li class="active">查看会员消费</li>
+		</ol>
+		<form role="form" action="#" method="post" th:object="${userBillData}">
+
+			<div class="panel">
+				<div role="tabpanel" class="panel-tabs">
+					<ul class="nav nav-tabs">
+						<li role="presentation" class="active"><a href="#">查看会员消费</a></li>
+					</ul>
+				</div>
+				<div class="panel-body">
+					<table style="width:100%;line-height:36px;" border="1" cellspacing="0" cellpadding="0" bordercolor="black">
+						<tr>
+							<td colspan="6" align="center" style="font-size:16px;color:black">江苏亨通新能源智控科技有限公司</td>
+						</tr>
+						<tr>
+							<td colspan="6" style="padding-left:10px;color:red;">充电单位名称：<span
+								th:text="${userBillData.account.realName}"></span></td>
+						</tr>
+						<tr align="center">
+							<td style="width:50px">序号</td>
+							<td>起始-截止日期</td>
+							<td>单价</td>
+							<td>充电总量(kw/h)</td>
+							<td>充电金额(元)</td>
+							<td>备注</td>
+						</tr>
+						<tr align="center">
+							<td>1</td>
+							<td id="td4" th:text="${userBillData.month}" style="padding-left:10px;color:red;">十二月</td>
+							<td id="td3" style="padding-left:10px;color:red;">1.21</td>
+							<td id="td1" th:text="${userBillData.totalElectricity}" style="padding-left:10px;color:red;"></td>
+							<td id="td2" th:text="${userBillData.totalMoney}" style="padding-left:10px;color:red;"></td>
+							<td>期始金额</td>
+						</tr>
+						<tr align="center">
+							<td>2</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td th:text="${userBillData.startBalance}" style="padding-left:10px;color:red;">0</td>
+						</tr>
+						<tr align="center">
+							<td>3</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>本月入账金额</td>
+						</tr>
+						<tr align="center">
+							<td>4</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td th:text="${userBillData.totalRecharge}" style="padding-left:10px;color:red;">0</td>
+						</tr>
+						<tr align="center">
+							<td>5</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>本月充电金额</td>
+						</tr>
+						<tr align="center">
+							<td >6</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td th:text="${userBillData.totalMoney}" style="padding-left:10px;color:red;"></td>
+						</tr>
+						<tr align="center">
+							<td>7</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>月末余额</td>
+						</tr>
+						<tr align="center">
+							<td>8</td>
+							<td>小计</td>
+							<td></td>
+							<td th:text="${userBillData.totalElectricity}" style="padding-left:10px;color:red;"></td>
+							<td th:text="${userBillData.totalMoney}" style="padding-left:10px;color:red;"></td>
+							<td th:text="${userBillData.endBalance}" style="padding-left:10px;color:red;"></td>
+						</tr>
+						<tr align="center">
+							<td colspan="3">合计</td>
+							<td th:text="${userBillData.totalElectricity}" style="padding-left:10px;color:red;">10</td>
+							<td th:text="${userBillData.totalMoney}" style="padding-left:10px;color:red;">12.1</td>
+							<td rowspan="3" id="td6" style="padding-left:10px;color:red;" th:text="${totalElectricity}">11月份充电量</td>
+						</tr>
+						<tr align="center">
+							<td colspan="4">实际结算金额</td>
+							<td th:text="${userBillData.totalMoney}" style="padding-left:10px;color:red;">12.1</td>
+						</tr>
+						<tr align="center">
+							<td colspan="2">实际结算金额(大写)</td>
+							<td colspan="3" id="td" th:text="${userBillData.totalMoney}" style="padding-left:10px;color:red;">12.1</td>
+						</tr>
+					</table>
+				</div>
+				<div class="panel-footer">
+					<nav class="navbar navbar-default" role="navigation">
+						<div class="container-fluid">
+							<div class="navbar-right">
+								<a class="btn btn-query btn-primary back-btn-id"
+									href="index.html" th:href="@{/admin/reports/accountDataCount/?flag=true}"
+									style="padding-top: 4px">返回</a>
+							</div>
+						</div>
+						<!-- /.container-fluid -->
+					</nav>
+				</div>
+
+			</div>
+		</form>
+
+	</div>
+</body>
+<div layout:fragment="javascript">
+	<script th:inline="javascript">
+/*<![CDATA[*/
+	$(function(){
+		var date =$("#td4").html();
+		var b = date.split("-");
+		var t =$("#td6").html();
+		$("#td4").html(d(b[1])+"月份");
+		$("#td6").html((b[1]-1)+"月份充电总量："+t+"kw/h");
+		
+		
+		var num = $("#td").html();
+		var ret =upDigit(num);
+		$("#td").html(ret);
+	})
+	function d(num){
+		var digit = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十','十一','十二'];
+		 if(num==01){
+			return digit[0];
+		} 
+		 if(num==02){
+			return digit[1];
+		}
+		 if(num==03){
+			return digit[2];
+		}
+		if(num==04){
+			return digit[3];
+		}
+		if(num==05){
+			return digit[4];
+		}
+		if(num==06){
+			return digit[5];
+		}
+		 if(num==07){
+			return digit[6];
+		}
+		if(num==08){
+			return digit[7];
+		}
+		 if(num==09){
+			return digit[8];
+		}
+		 if(num==10){
+			return digit[9];
+		}
+		 if(num==11){
+			return digit[10];
+		}
+		 if(num==12){
+			return digit[11];
+		}
+		
+	}
+ 	function upDigit(n)   {  
+    var fraction = ['角', '分'];  
+    var digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];  
+    var unit = [ ['元', '万', '亿'], ['', '拾', '佰', '仟']  ];  
+    var head = n < 0? '欠': '';  
+    n = Math.abs(n);  
+
+    var s = '';  
+
+    for (var i = 0; i < fraction.length; i++)   
+    {  
+        s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');  
+    }  
+    s = s || '整';  
+    n = Math.floor(n);  
+
+    for (var i = 0; i < unit[0].length && n > 0; i++)   
+    {  
+        var p = '';  
+        for (var j = 0; j < unit[1].length && n > 0; j++)   
+        {  
+            p = digit[n % 10] + unit[1][j] + p;  
+            n = Math.floor(n / 10);  
+        }  
+        s = p.replace(/(零.)*零$/, '').replace(/^$/, '零')  + unit[0][i] + s;  
+    }  
+    return head + s.replace(/(零.)*零元/, '元').replace(/(零.)+/g, '零').replace(/^整$/, '零元整');  
+} 
+	/*]]>*/
+</script>
+</div>
+</html>

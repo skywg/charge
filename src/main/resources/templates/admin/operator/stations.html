@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>添加运营商</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/operators/}">会员中心</a></li>
+        <li class="active">运营商管理</li>
+    </ol>
+
+    <form role="form" action="#" method="post"
+          th:action="@{/admin/operators/{id}(id=${operator.id})}" th:object="${operator}">
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation"><a href="#">基本信息</a></li>
+                    <li role="presentation"><a href="#">图片</a></li>
+                    <li role="presentation">
+                        <a th:href="@{/admin/operators/{id}/chargers/(id=${operator.id})}" href="#">电桩</a>
+                    </li>
+                    <li role="presentation" class="active">
+                        <a th:href="@{/admin/operators/{id}/stations/(id=${operator.id})}" href="#">电站</a>
+                    </li>
+                    <li role="presentation"><a href="#">评价</a></li>
+                    <li role="presentation"><a href="#">充电记录</a></li>
+                    <li class="pull-right">
+                        <a class="btn btn-primary" href="add.html"
+                           th:href="@{/admin/stations/add/{id}(id=${operator.id})}">添加电站</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox"/></th>
+                            <th>#</th>
+                            <th>编码</th>
+                            <th>名称</th>
+                            <th>类型</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="station : ${page.content}" th:attr="data-id=${station.id}">
+                            <td><input type="checkbox"/></td>
+                            <td th:text="${station.id}">1</td>
+                            <td th:text="${station.code}">101018291</td>
+                            <td th:text="${station.name}">上地软件园充电站</td>
+                            <td th:text="${station.type.title}">1</td>
+                            <td><a href="edit.html" th:href="@{/admin/stations/{id}(id=${station.id})}">查看</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="data-table-info" role="status">当前显示第 1 至 10 项结果, 共 57 项</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="data-table-pagination">
+                            <ul class="pagination">
+                                <li class="previous disabled" tabindex="0"><a href="#">上一页</a></li>
+                                <li class="active" tabindex="0"><a href="#">1</a>
+                                </li>
+                                <li tabindex="0"><a href="#">2</a></li>
+                                <li tabindex="0"><a href="#">3</a></li>
+                                <li tabindex="0"><a href="#">4</a></li>
+                                <li tabindex="0"><a href="#">5</a></li>
+                                <li tabindex="0"><a href="#">6</a></li>
+                                <li class="next" tabindex="0"><a href="#">下一页</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

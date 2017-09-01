@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Pagination Bar -->
+<div th:fragment="pagination" class="data-table-pagination">
+     <ul class="pagination">
+        <li>
+            <a th:href="@{${page.url}(page=0,size=${page.size})}"
+               title='首页'>首页</a>
+        </li>
+        <li th:class="${page.hasPreviousPage}">
+            <a th:if="${not page.hasPreviousPage}"
+               th:href="@{${page.url}(page=0,size=${page.size})}"
+               title='上一页'>上一页</a>
+            <a th:if="${page.hasPreviousPage}"
+               th:href="@{${page.url}(page=${page.number-1},size=${page.size})}"
+               title='上一页'>上一页</a>
+        </li>
+        <li th:each="item : ${page.items}" th:class="${item.current}? 'active' : ''">
+            <span th:if="${item.current}" th:text="${item.number+1}">1</span>
+            <a th:if="${not item.current}"
+               th:href="@{${page.url}(page=${item.number},size=${page.size})}">
+                <span th:text="${item.number+1}">1</span></a>
+        </li>
+        <li th:class="${page.hasNextPage}">
+            <a th:if="${not page.hasNextPage}"
+               th:href="@{${page.url}(page=${page.totalPages-1},size=${page.size})}"
+               title="下一页">下一页</a>
+            <a th:if="${page.hasNextPage}"
+               th:href="@{${page.url}(page=${page.number+1},size=${page.size})}"
+               title="下一页">下一页</a>
+        </li>
+        <li>
+            <a th:href="@{${page.url}(page=${page.totalPages-1},size=${page.size})}"
+               title='尾页'>尾页</a>
+        </li>
+        
+        <div style="display:inline; height:35px; line-height:35px; padding-left:10px;">
+                                总计：<span th:text="${page.total}"></span>
+        </div> 
+    </ul> 
+    
+</div>
+</body>
+</html>

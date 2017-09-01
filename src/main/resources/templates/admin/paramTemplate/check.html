@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>查看参数模板</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/paramTemplates/}">设备中心</a></li>
+        <li><a th:href="@{/admin/paramTemplates/}">充电桩设置</a></li>
+        <li><a th:href="@{/admin/paramTemplates/}">参数模板</a></li>
+        <li class="active">查看参数模板</li>
+    </ol>
+    <form role="form" action="#" method="post"
+           th:object="${paramTemplate}">
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">查看参数模板</a></li>
+                </ul>
+            </div>
+            <div class="panel-body" th:include="admin/paramTemplate/checkform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/paramTemplates/query}" style="padding-top:4px">返回</a>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+
+        </div>
+    </form>
+</div>
+<div layout:fragment="javascript">
+    <script type="text/javascript">
+    $(function(){
+    	var status= $("#inputHiddenStatus");
+    	var type =status.val(); 
+    	if(type=='VALID'){
+    		$("#input1").attr("checked","checked");
+    		$("#input2").attr("disabled","disabled");
+    	}else{
+    		$("#input2").attr("checked","checked");
+    		$("#input1").attr("disabled","disabled");
+    	}
+    	var types= $("#inputHiddenType");
+    	var type =types.val(); 
+    	if(type=='PARAM'){
+    		$("#type1").attr("checked","checked");
+    		$("#type2").attr("disabled","disabled");
+    		$("#type3").attr("disabled","disabled");
+    	}else if(type=='PRICE'){
+    		$("#type2").attr("checked","checked");
+    		$("#type1").attr("disabled","disabled");
+    		$("#type3").attr("disabled","disabled");
+    	}else if(type=='UPDATE'){
+    		$("#type3").attr("checked","checked");
+    		$("#type1").attr("disabled","disabled");
+    		$("#type2").attr("disabled","disabled");
+    	}
+    	if(type=='PARAM'){
+    		
+			$("#div1").show();
+			$("#div2").hide();
+			$("#div3").hide();
+		}if(type=='PRICE'){
+			
+			$("#div2").show();
+			$("#div1").hide();
+			$("#div3").hide();
+		}if(type=='UPDATE'){
+		
+			$("#div3").show();
+			$("#div2").hide();
+			$("#div1").hide();
+		}
+		
+    })
+    $(document).ready(function() {   
+        $("#aa-a").addClass("active");
+		$("#aa-a1").addClass("in").attr("aria-expanded","true");
+		$("#aa-b").addClass("active");
+		$("#aa-b1").addClass("in").attr("aria-expanded","true");
+		$("#aa-c2").addClass("active");
+		$('.custom-input input').phAnim();
+    })
+    
+	</script>
+</div>
+</body>
+</html>

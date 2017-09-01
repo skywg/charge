@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+            <div class="form-group col-md-6">
+                <label for="inputTitle">故障码</label>
+                <input type="text" th:field="*{code}"  required="required" maxlength="20"  disabled="disabled" class="form-control" id="inputTitle" style="cursor:auto;"  placeholder=""/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red">*</span>故障描述</label>
+                <input type="text" th:field="*{decription}" required="required" disabled="disabled"   maxlength="20" class="form-control" id="inputTitle"
+                       style="cursor:auto;"  placeholder=""/>
+            </div>
+             <div class="form-group custom-input col-md-3">
+                 <label for="inputStatus1" class="form-control-label">告警级别</label>
+                 <input class="form-control" id="eventLevel"  name="eventLevel" disabled="disabled" style="cursor:auto;" th:each="et:${eventTypes}" th:if="${eventCode.eventType==et.dictValue}" th:value="${et.descr}"/>
+             </div>
+             <div class="form-group custom-input col-md-3">
+                 <label for="inputStatus1" class="form-control-label">告警类型</label>
+                 <input class="form-control" id="inputStatus1"  name="eventType" disabled="disabled" th:each="et:${eventLevels}" th:if="${eventCode.eventLevel==et.dictValue}" th:value="${et.descr}" style="cursor:auto;"/>
+             </div>         
+             			
+                   
+            <div class="form-group col-md-12" id="content-checked">
+            	<input type="hidden" id="inputHiddenStatus" th:value="${eventCode.isActive()}" />
+                <label for="inputTitle">状态</label>
+				<input  value="1" name="isActive" type="radio" id="input1"  style="margin-left:5px;margin-right:5px;cursor:auto;" />有效
+				<input  value="0" name="isActive" type="radio" id="input2"  style="margin-left:20px;margin-right:5px;cursor:auto;;"/>无效   
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputTitle"><span style="color:red"></span>备注</label>
+                <textarea class="form-control" th:field="*{remark}"  id="inputDescription" maxlength="500" style="cursor:auto;" disabled="disabled"
+         				placeholder=""></textarea>
+            </div>
+		</div>
+	</div>
+	
+</body>
+
+		  
+</html>

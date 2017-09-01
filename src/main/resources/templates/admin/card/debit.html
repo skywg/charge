@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>充电卡批量划账</title>
+<script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>  
+<script th:inline="javascript">
+        /*<![CDATA[*/
+                  
+        $(document).ready(function(){
+            $("#one").bind("click",function(){
+            	$("#chargerNumber").val(100);
+            });
+            $("#two").bind("click",function(){
+            	$("#chargerNumber").val(200);
+            });
+            $("#five").bind("click",function(){
+            	$("#chargerNumber").val(500);
+            });
+            $("#thou").bind("click",function(){
+            	$("#chargerNumber").val(1000);
+            });
+            
+        	
+        	$("#accountName").bind("change",function(){
+        		var id = $("#accountName").val();
+        		$.ajax({   
+        		    url:'/admin/cards/toBatchCharging_ajax',   
+        		    type:'GET',   
+        		    data:'id='+id,   
+        		    error:function(){   
+        		       alert('error');   
+        		    },   
+        		    success:function(data){
+        		       var jsonStr = data;
+        		       var jsonData = JSON.parse(jsonStr);
+        		       //alert(jsonData.valid_number);
+        		      // alert(jsonData[0].phone);
+        		       $("#phoneNumber").val(jsonData.phone);
+        		       $("#accountStatus").val(jsonData.status);
+        		       $("#money").val(jsonData.money);
+        		       $("#valid_number").val(jsonData.valid_number);
+        		       $("#invalid_number").val(jsonData.invalid_number);
+        		       var no = jsonData.cardNos;
+        		       if(no.length>0){
+        		    	   $("#pid1").html("");
+        		    	   $("#pid2").html("");
+        		    	   for(var i = 0 ; i < no.length ; i++){
+        		    		   html = '<option value=\''+no[i]+'\'>'+no[i]+'</option>';
+        		    		   $("#pid1").append(html);
+        		    	   }
+        		       }else{
+        		    	   $("#pid1").html("");
+        		    	   $("#pid2").html("");
+        		       }
+        		    }
+        		});
+        	})
+        })
+        
+        function check(){
+            	var balance = $("#money").val();
+            	var charger = $("#chargerNumber").val();
+            	var status = $("#accountStatus").val();
+            	var cards = $("#chargerView2").val();
+            	var chargerNum=parseInt(charger);
+        		var chargerLenght=String(chargerNum).length;
+            	if(status == "违规"){
+            		alert("此卡处于异常状态，无法转账");
+            		return false;
+            	}
+            	if($("#valid_number").val()<1){
+            		alert("此会员没有持有正常状态充电卡");
+            		return false;
+            	}
+            	if(isNaN(charger)){
+            		alert("请输入数字");
+            		return false;
+            	}
+            	if(charger-1<0){
+            		alert("最低充值1元");
+            		return false;
+            	}
+            	if(chargerLenght>9){
+            		alert("金额过大，请重新输入");
+            		return false;
+            	}
+            	if(charger[0]=="0"){
+            		alert("不能以0开头");
+            		return false;
+            	}
+            	if(cards!=null&&cards.trim()!=""){
+            		var number = cards.split(",");
+            		if(balance-charger*(number.length-1)<0){
+            			alert("余额不足");
+            			return false;
+            		}
+            	}else{
+            		var allCharger = charger*($("#valid_number").val());
+                	if((balance-allCharger)<0){
+                		alert("余额不足");
+                		return false;
+                	}
+            	}
+            	return true;
+            }
+        
+        function gradeChange1(){
+        	var objS  = document.getElementById("pid1");
+        	var objS1 = document.getElementById("pid2");
+        	var grade = objS.options[objS.selectedIndex].value;
+        	var objSs = document.getElementById("chargerView2");
+        	var bject = objSs.value;
+        	//不包含
+        	if(bject.indexOf(grade)==-1){
+        		objSs.value += grade+','; 
+        		}
+        	
+        	var obj = objS.options[objS.selectedIndex];
+        	var selected = objS.options[objS.selectedIndex].selected;
+        	objS.options.remove(objS.selectedIndex);
+        	//清空选择
+        	obj.selected = "";
+        	//清除数据
+        	var objSs1 = document.getElementById("chargerView1");
+        	var object = objSs1.value;
+        	if(selected){
+        	//包含
+        		if(object.indexOf(obj.value)!=-1){
+        			objSs1.value=objSs1.value.replace(obj.value+",","");
+        			}
+        		}
+        	
+        		var op=document.createElement("option");
+        		op.setAttribute("value",obj.value);
+        		op.appendChild(document.createTextNode(obj.text));
+        		objS1.appendChild(op);
+        		
+        }
+        	
+
+        function gradeChange2(){
+        	var objS  = document.getElementById("pid2");
+        	var objS1 = document.getElementById("pid1");
+        	var grade = objS.options[objS.selectedIndex].value;
+        	var objSs = document.getElementById("chargerView1");
+        	var bject = objSs.value;
+        	//不包含
+        	if(bject.indexOf(grade)==-1){
+        		objSs.value += grade+','; 
+        		}
+        	
+        	var obj = objS.options[objS.selectedIndex];
+        	var selected = objS.options[objS.selectedIndex].selected;
+        	objS.options.remove(objS.selectedIndex); 
+        	//清空选择
+        	obj.selected = "";
+        	//清除数据
+        	var objSs1 = document.getElementById("chargerView2");
+        	var object = objSs1.value;
+        	if(selected){
+        	//包含
+        		if(object.indexOf(obj.value)!=-1){
+        			objSs1.value=objSs1.value.replace(obj.value+",","");
+        			}
+        		}
+        	
+        	var op=document.createElement("option");
+        	op.setAttribute("value",obj.value);
+        	op.appendChild(document.createTextNode(obj.text));
+        	objS1.appendChild(op);
+        }
+        	
+        
+        
+	    /*]]>*/
+</script>
+</head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/cards/}">会员中心</a></li>
+        <li><a th:href="@{/admin/cards/}">充电卡管理</a></li>
+        <li class="active">充电卡批量划账</li>
+    </ol>
+        <div class="panel" >
+	        <div role="tabpanel" class="panel-tabs">
+	            <ul class="nav nav-tabs">
+					<li role="presentation" class="active"><a>充电卡批量划账详情</a></li>
+	            </ul>
+	        </div>
+	        <form role="form" method="post" th:action="@{/admin/cards/batchCharging}" th:object="${account}">
+            <div class="panel-body" th:include="admin/card/debitform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">  
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html"
+                               th:href="@{/admin/cards/search}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary remit-btn-id" onclick="return check()">划账</button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+            </form>
+        </div>
+</div>
+</body>
+</html>

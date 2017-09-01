@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>添加充电桩</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/stations/}">设备中心</a></li>
+        <li class="active">充电桩</li>
+    </ol>
+
+    <div class="panel">
+        <div role="tabpanel" class="panel-tabs">
+            <ul class="nav nav-tabs">
+                <li role="presentation"><a th:href="@{/admin/stations/edit/{id}(id=${station.id})}">基本信息</a></li>
+					<li role="presentation"  class="active"><a th:href="@{/admin/stations/edit/images/{id}(id=${station.id})}">图片</a></li>
+                    <li role="presentation"><a th:href="@{/admin/stations/edit/chargers/{id}(id=${station.id})}">电桩</a></li>
+            </ul>
+        </div>
+		<div class="panel-body">
+        	<div class="row">
+            	<input type="hidden" th:value="${station.id}" id="station-id"/>
+            	<div id="sortable" class="row placeholders" th:if="${station.images.size()>0}">
+                	<div class="col-xs-3 col-sm-3 image-cell"
+                     	th:each="photo, iteration : ${station.images}" th:attr="data-image-index=${iteration.index}">
+                    	<img class="img-responsive"
+                         	th:src="*{'http://youetong.b0.upaiyun.com'+photo.src}"/>
+                   		<ul class="list-inline">
+                        	<li><a class="action-delete-image" href="#">删除</a></li>
+                    	</ul>
+                	</div>
+            	</div>
+            	<div class="col-xs-3 col-sm-3">
+                	<div class="uploader" data-directory="brands">
+                    	<div class="brand-logo-container uploader-preview-container">
+                        	<img class="img-responsive uploader-preview"
+                            	 th:src="@{/images/plus_.png}" style="margin:30px;width:180px;height:180px"/>
+                        	<div class="btn btn-default" style="margin-bottom: 15px;">
+                        		<input class="uploader-file" type="file" autocomplete="off"/><span>选择图片...</span>
+                   	 			<input type="hidden" class="brand-logo uploader-holder"/>
+                    		</div>
+                    	</div>
+                	</div>
+              	</div>
+
+			</div>
+		</div>
+		<div class="panel-footer">
+			<form role="form" action="#" method="post"
+                      th:action="@{/admin/stations/images/{id}(id=${station.id})}" th:object="${image}">
+				<input type="hidden" id="station-images" th:field="*{src}" th:value="*{src}"/>
+				<nav class="navbar navbar-default" role="navigation">
+					<div class="container-fluid">
+                        <div class="navbar-right">
+                        	<a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                                   th:href="@{/admin/stations/search}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-left:10px">
+							<button type="submit" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div>
+                       </div>
+                   </nav>
+            </form>
+		</div>
+	</div>
+</div>
+
+<div layout:fragment="javascript">
+    <script>
+        $(document).on('change', '.uploader :file', function (e) {
+            var file = this.files[0];
+            var uploader = $(this).closest('.uploader');
+            var directory = uploader.data('directory');
+
+            $.getJSON("/ajax/photo-storage-settings", {directory: directory}, function (settings) {
+                var data = new FormData();
+
+                data.append('policy', settings.policy);
+                data.append('signature', settings.signature);
+                data.append('file', file);
+
+                var request = new XMLHttpRequest();
+                request.open('POST', settings.endpoint);
+
+                request.onload = function (e) {
+                    var data = jQuery.parseJSON(request.response);
+                    if (data.code == 200) {
+                    	console.info(data.url);
+                        uploader.find('.uploader-preview').attr('src', "http://youetong.b0.upaiyun.com" + data.url);
+                        document.getElementById('station-images').value = data.url;
+                    } else {
+                        alert(data.message);
+                    }
+                };
+
+                request.send(data);
+            });
+        });
+
+        $(document).on("click", ".action-delete-image", function () {
+            var image = $(this).closest(".image-cell");
+            var stationId = document.getElementById("station-id").value;
+            var imageIndex = image.data("image-index");
+
+            if (confirm("你确认要删除此图片吗？")) {
+
+                $.get("/ajax/stations/images/" + stationId + "/" + imageIndex + "/actions/delete", function (result) {
+                    if (result == "SUCCESS") {
+                        image.remove();
+                    } else {
+                        alert("删除时发生意外，请重试或联系程序员哥哥帮忙解决 :)");
+                    }
+                });
+            }
+            return false;
+        });
+
+        $(function () {
+            var sortableElement = $("#sortable");
+            sortableElement.sortable({
+                        containment: "parent",
+                        cursor: "move",
+                        items: "> .image-cell",
+                        update: function (event, ui) {
+                            var sorted = sortableElement.sortable("toArray", {attribute: "data-image-index"}).toString();
+                            var stationId = document.getElementById("station-id").value;
+                            var url = "/ajax/stations/" + stationId + "/images/position";
+                            $.post(url, {sorted: sorted}).fail(function () {
+                                alert("更新时发生意外，请重试或联系程序员哥哥帮忙解决 :)");
+                            });
+                        }
+                    }
+            );
+            sortableElement.disableSelection();
+        });
+    </script>
+</div>
+</body>
+</html>

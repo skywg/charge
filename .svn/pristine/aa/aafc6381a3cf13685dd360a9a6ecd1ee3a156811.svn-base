@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>添加内容</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/contents/}">内容中心</a></li>
+        <li><a th:href="@{/admin/contents/}">内容管理</a></li>
+        <li class="active">添加内容</li>
+    </ol>
+     <script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        
+        /*]]>*/
+    </script>
+    
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">添加内容</a></li>
+                </ul>
+            </div>
+		<form role="form" action="#" method="post" th:action="@{/admin/contents/addcontent}" th:object="${content}">
+            <div class="panel-body" th:include="admin/content/addform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html"  th:href="@{/admin/contents/?flag=true}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" onclick="return bc()" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+           </form> 
+        </div>
+</div>
+<div layout:fragment="javascript">
+<!--富文本插件 -->
+<script src="../../static/js/contact/js/froala_editor.min.js" th:src="@{/js/contact/js/froala_editor.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/colors.min.js" th:src="@{/js/contact/js/plugins/colors.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/font_family.min.js" th:src="@{/js/contact/js/plugins/font_family.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/font_size.min.js" th:src="@{/js/contact/js/plugins/font_size.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/font_size.min.js" th:src="@{/js/contact/js/langs/zh_cn.js}"></script>
+<script th:inline="javascript">//引用  
+		function bc(){
+			var start=$("#start").val();
+			var end=$("#end").val();
+			if(start==""||end==""){
+				alert("时间必须填写");
+				return false;
+			}
+			return true;
+		}
+   		$(function(){
+   			 $('#edit2').editable({
+   					inlineMode: false,
+   					alwaysBlank: true,
+   			   		language: "zh_cn",
+   				}); 
+   			   var i = $("input[type='radio']").eq(1);
+   			   i.attr("checked","checked");
+			   var index =i.val();
+			   check(index);
+			   $("#wrap input").click(function(){
+					var index=$(this).val();
+					check(index);
+			  });
+			   var start = {
+						  elem: '#start',
+						  format: 'YYYY-MM-DD',
+						  min: '2016-01-01 23:59:59', //设定最小日期为当前日期
+						  max: '2099-06-16 23:59:59', //最大日期
+						  istoday: false,
+						  choose: function(datas){
+						     end.min = datas; //开始日选好后，重置结束日的最小日期
+						     end.start = datas //将结束日的初始值设定为开始日
+						  }
+						};
+						var end = {
+						  elem: '#end',
+						  format: 'YYYY-MM-DD',
+						  min: laydate.now(),
+						  max: '2099-06-16 23:59:59',
+						  istoday: false,
+						  choose: function(datas){
+						    start.max = datas; //结束日选好后，重置开始日的最大日期
+						  }
+						};
+						laydate(start);
+						laydate(end); 
+		});
+		function check(index){
+			if(index=='IMAGE'){
+				$("#content-checked-b").hide();
+				$("#content-checked-c").show();
+				$("#content-checked-a").show();
+			}if(index=='TEXT'){
+				$("#content-checked-b").show();
+				$("#content-checked-a").show();
+				$("#content-checked-c").hide();
+			}if(index=='URL'){
+				$("#content-checked-c").show();
+				$("#content-checked-a").hide();
+				$("#content-checked-b").hide();
+			}
+		}
+		//获取上传按钮
+		var input1 = document.getElementById("uploada"); 
+		 
+		if(typeof FileReader==='undefined'){ 
+		     //result.innerHTML = "抱歉，你的浏览器不支持 FileReader"; 
+		     input1.setAttribute('disabled','disabled'); 
+		}else{ 
+		     input1.addEventListener('change',readFile,false); 
+		     /*input1.addEventListener('change',function (e){
+		     	console.log(this.files);//上传的文件列表
+		     },false); */
+		}
+		function readFile(){ 
+			var file = this.files[0];//获取上传文件列表中第一个文件
+			if(!/image\/\w+/.test(file.type)){
+			//图片文件的type值为image/png或image/jpg
+				alert("文件必须为图片！");
+				return false; 
+			} 
+			 $.ajax({
+				 type:"post",
+				 async: false,
+				 url:"/ajax/photo-storage-settings",
+				 data:{"directory":"brands"},
+				 dataType:"json",
+				 success:function(settings){
+			   	         var data = new FormData();
+			             data.append('policy', settings.policy);
+			             data.append('signature', settings.signature);
+			             data.append('file', file);
+			             var request = new XMLHttpRequest();
+			             request.open('POST', settings.endpoint,false);	
+			             request.onload = function (e) {
+			                 var data = jQuery.parseJSON(request.response);
+			                 	if (data.code == 200) {
+			                 		console.info(data);
+			                 		var image = "http://youetong.b0.upaiyun.com"+data.url;;
+			                 		document.getElementById("cvs").src=image;
+			                 		document.getElementById("image").value=image;
+			                 		//uploader.find('.uploader-preview').attr('src', "http://youetong.b0.upaiyun.com" + data.url);
+			                    	 //console.log(data.url);
+			                    	// imagesSrc += data.url+",";
+			                    	// document.getElementById("station-images").value=imagesSrc;
+			                	 } else {
+			                 		var mes = data.message;
+			                 		if(mes!="need file"){
+			                 			alert(data.message);
+			                 		}
+			                	 }
+			            	};
+			             request.send(data);
+			   	        }
+				 	   })
+			
+		};
+	 </script>
+</div>
+
+</body>
+</html>

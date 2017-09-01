@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+	  window.onload=function(){
+		   var supportCar = document.getElementById("supportCar").value;
+		   //var supportCar = "比亚迪,别克,力帆,宝马,其它";
+		   var supports = document.getElementsByName("supportCars");
+		   var supportCarList = null;
+		   if(supportCar != null){
+				supportCarList = supportCar.split(",");	
+			}
+		   if(supportCarList != null){
+			   for(var i=0; i<supports.length; i++) {
+		   	   		for(var j=0; j<supportCarList.length; j++ ){
+		   	   			if(supportCarList[j] == supports[i].value){
+		   	   				supports[i].setAttribute("checked","checked");
+		   	   			}
+		   	   		}
+			   }
+		   } 
+	  }
+	  /*]]>*/
+    </script>
+    
+<div class="row">
+    <div class="col-sm-9 col-md-9">
+        <div class="row section">  
+            <div class="form-group col-md-6"><!--//title-->
+                <label for="inputCode">充电桩编号</label>
+                <input type="text" th:field="*{code}" maxlength="20" class="form-control" required="required" id="inputCode"
+                       style="cursor:auto;" disabled="disabled" />
+            </div>
+            <div class="form-group col-md-6"><!--//title-->
+                <label for="inputTitle">充电桩名称</label>
+                <input type="text" th:field="*{name}" maxlength="20" class="form-control" required="required" id="inputTitle"
+                       style="cursor:auto;" disabled="disabled" />
+            </div>
+            <div class="form-group col-md-6"><!--//title-->
+                <label for="inputTitle">车位号</label>
+                <input type="text" th:field="*{parkNo}" maxlength="20" class="form-control" id="inputTitle"
+                       style="cursor:auto;" disabled="disabled" />
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputArea">充电桩厂家</label>
+                <input class="form-control"  style="cursor:auto;" disabled="disabled" required="required" th:field="*{manufacturer}"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputType">充电桩类型</label>
+                <input class="form-control" id="inputType" style="cursor:auto;" disabled="disabled" required="required" th:each="cs , csIter : ${types}" th:if="${charger.type==cs.dictValue}" th:value="${cs.descr}"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputType">充电接口</label>
+                <input class="form-control" id="inputType1" style="cursor:auto;" disabled="disabled" required="required" th:each="cs , csIter : ${chargeIfs}" th:if="${charger.chargeIf==cs.dictValue}" th:value="${cs.descr}"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputType">联网方式</label>
+                <input class="form-control" id="inputType1" style="cursor:auto;" disabled="disabled" required="required" th:if="${charger.netingWorkModel=='WIFI'}" th:value="WIFI"/>
+                <input class="form-control" id="inputType1" style="cursor:auto;" disabled="disabled" required="required" th:if="${charger.netingWorkModel=='THREEG'}" th:value="3G"/>
+                <input class="form-control" id="inputType1" style="cursor:auto;" disabled="disabled" required="required" th:if="${charger.netingWorkModel=='FOURG'}" th:value="4G"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputType">电桩型号</label>
+                <input class="form-control" id="inputType1" style="cursor:auto;" disabled="disabled" required="required" th:if="${charger.chargerModel=='DD'}" th:value="双枪双充"/>
+                <input class="form-control" id="inputType1" style="cursor:auto;" disabled="disabled" required="required" th:if="${charger.chargerModel=='DF'}" th:value="双枪分配"/>
+                <input class="form-control" id="inputType1" style="cursor:auto;" disabled="disabled" required="required" th:if="${charger.chargerModel=='DQ'}" th:value="双枪切换"/>
+                <input class="form-control" id="inputType1" style="cursor:auto;" disabled="disabled" required="required" th:if="${charger.chargerModel=='DS'}" th:value="单枪"/>
+            </div>
+        </div>
+        <script type="text/javascript">
+		        function dbChange(){
+		        	var objS = document.getElementById("pid");
+		        	var obj = objS.options[objS.selectedIndex];
+		        	 var selected = objS.options[objS.selectedIndex].selected;
+		        	//清空选择
+		        	obj.selected = "";
+		        	//清除数据
+		        	var objSs = document.getElementById("realSupportCar");
+			         var object = objSs.value;
+		        	if(selected){
+			        	 //包含
+				         if(object.indexOf(obj.value)!=-1){
+				        	 objSs.value=objSs.value.replace(obj.value+",","");
+				         }
+		        	}
+		        }
+        
+		       function gradeChange(){
+		        var objS = document.getElementById("pid");
+		        var grade = objS.options[objS.selectedIndex].value;
+		         var objSs = document.getElementById("realSupportCar");
+		         var bject = objSs.value;
+		      	 //不包含
+		         if(bject.indexOf(grade)==-1){
+		        	 objSs.value += grade+','; 
+		         }
+		       }
+		</script>
+        <div class="row section">
+            <div class="form-group col-md-12"><!--//description-->
+                <label for="inputDescription">支持厂家</label><br/>
+                <!--  
+                  <select id="pid" class="form-control" size="2" disabled="disabled" ondblclick="dbChange()" onchange="gradeChange()"  multiple="multiple">
+				       <option value="比亚迪" >比亚迪</option>
+				       <option value="特斯拉" >特斯拉</option>
+				       <option value="奇瑞" >奇瑞</option>
+				</select> -->
+				<div style="border:1px solid #AAAAAA;padding:10px" >
+				 	<label th:each="cars,carsIter : ${carssupports}">
+				 		<input type="checkbox" name="supportCars"  th:value="${cars.dictValue}"  th:text="${cars.dictValue}" style="margin-right:10px;" disabled="disabled"/>
+				 	</label>
+				</div>
+				<input type="hidden" id = "supportCar" th:field="*{supportCars}"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-3 col-md-3">
+
+		<div class="row section">
+             <div class="form-group col-md-12"><!--//Location-->
+                <label for="inputStation">所属充电站</label>
+                <input class="form-control" style="cursor:auto;" id="inputStation" disabled="disabled" required="required" th:value="${charger.station.name}"/>
+            </div>
+            <div class="form-group col-md-12"><!--//Location-->
+                <label>所属运营商</label>
+                <input type="text" readonly="readonly" id="tran" th:value="*{operator.codeAndName}" class="form-control"/>
+                <input type="hidden" readonly="readonly" id="tranReal" th:field="*{operator}" class="form-control"/>
+            </div>
+        </div>
+        <div class="row section">
+             <div class="form-group col-md-6"><!--//Location-->
+                <label>额定电压</label>
+                <input type="text" th:field="*{voltage}" maxlength="20" style="cursor:auto;" disabled="disabled" class="form-control" placeholder="220v"/>
+            </div>
+             <div class="form-group col-md-6"><!--//Location-->
+                <label>额定电流</label>
+                <input type="text" th:field="*{electricity}" maxlength="20" style="cursor:auto;" disabled="disabled" required="required" class="form-control" placeholder=""/>
+            </div>
+        </div>
+        
+        <div class="row section">
+             <div class="form-group col-md-6"><!--//Location-->
+                <label>额定功率</label>
+                <input type="text" th:field="*{power}" maxlength="20" disabled="disabled" style="cursor:auto;" required="required" class="form-control" placeholder=""/>
+            </div>
+             <div class="form-group col-md-6"><!--//Location-->
+                <label>是否支持预约</label>
+                <input class="form-control" required="required" id="inputOnorder" style="cursor:auto;" disabled="disabled" th:if="${charger.onorder==true}" th:value="是"/>
+                <input class="form-control" required="required" id="inputOnorder" style="cursor:auto;" disabled="disabled" th:if="${charger.onorder==false}" th:value="否"/>
+            </div>
+        </div>
+
+        <div class="row section">
+            <div class="form-group col-md-6">
+                <label for="inputArea">认证状态</label>
+                <input class="form-control" required="required" id="inputOnlined" style="cursor:auto;" disabled="disabled" th:if="${charger.onlined==true}" th:value="是"/>
+                <input class="form-control" required="required" id="inputOnlined" style="cursor:auto;" disabled="disabled" th:if="${charger.onlined==false}" th:value="否"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputArea">联网状态</label>
+                <input class="form-control" required="required" id="inputCertified" style="cursor:auto;" disabled="disabled" th:if="${charger.certified==true}" th:value="是"/>
+                <input class="form-control" required="required" id="inputCertified" style="cursor:auto;" disabled="disabled" th:if="${charger.certified==false}" th:value="否"/>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

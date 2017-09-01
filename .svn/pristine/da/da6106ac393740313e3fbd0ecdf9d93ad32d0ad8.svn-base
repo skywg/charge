@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>充电消费分析</title>
+<style>
+/*分页*/
+#page_navigation{
+	padding: 10px 0;
+	text-align: right;
+}
+.previous_link span,.next_link span,#page_navigation span{
+	width: 16px;
+	height: 16px;
+	min-width: 16px;
+	background: url(../static/images/pagination_icons.png) no-repeat;
+}
+#page_navigation span{
+	background: none;
+	padding:3px;
+	margin:2px 3px;
+}
+#page_navigation span:first-of-type:before{
+	content: "";
+	padding: 0 5px;
+	border-left: 1px solid #CCCCCC;
+}
+#page_navigation span:last-of-type:after{
+	content: "";
+	padding: 0 5px;
+	border-right: 1px solid #CCCCCC;
+}
+#page_navigation a{
+	padding:3px;
+	margin:2px;
+	text-decoration:none;
+	box-sizing: border-box;
+}
+.active_page{
+	background:#1395ed;
+	color:white !important;
+}
+/*页码*/
+.num_box{
+	height: 17px;width: 30px;
+	display: inline-block;
+	text-align: center;
+	border: 1px solid #CCCCCC;
+	padding: 1px 0 2px 0;
+	margin: -1px 3px 0 3px ;
+	border-radius: 0px;
+}
+	
+</style>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a href="#">首页</a></li>
+        <li><a href="#">数据分析</a></li>
+        <li class="active">充电消费分析</li>
+    </ol>
+    <div class="panel border">
+        <div class="panel-tabs" role="tabpanel">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="#">用户增长分析</a></li>
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive" style="margin-top: 1px">
+                <div class="col-sm-12 col-md-12">
+                    <form role="form" action="/admin/events/search" method="get" style="margin-left:-15px">
+                    	<div class="form-group custom-input col-md-3">
+                            <label class="form-control-label">统计粒度</label>
+                            <input type="radio" name="1" id="" value="年" style="margin-left:10px;"/><span>年</span>
+    						<input type="radio" name="1" id="" value="月" style="margin-left:10px;"/><span>月</span>
+    						<input type="radio" name="1" id="" value="日" style="margin-left:10px;"/><span>日</span>
+                        </div>
+                        <div class="form-group custom-input col-md-5">
+                            <label for="inputStatus" class="form-control-label">统计粒度</label>
+                            <input type="radio" name="2" id="" value="全部"/><span>全部</span>
+    						<input type="radio" name="2" id="" value="省" style="margin-left:10px;"/><span>省</span>
+    						<input type="radio" name="2" id="" value="市" style="margin-left:10px;"/><span>市</span>
+    						<input type="radio" name="2" id="" value="行政区" style="margin-left:10px;"/><span>行政区</span>
+    						<input type="radio" name="2" id="" value="充电站" style="margin-left:10px;"/><span>充电站</span>
+                        </div>
+                        <div class="form-group custom-input col-md-4">
+                            <label for="inputStatus" class="form-control-label">统计粒度</label>
+                            <input type="radio" name="3" id="" value="金额" style="margin-left:10px;"/><span>金额</span>
+    						<input type="radio" name="3" id="" value="电量" style="margin-left:10px;"/><span>电量</span>
+    						<input type="radio" name="3" id="" value="次数" style="margin-left:10px;"/><span>次数</span>
+                        </div>
+                        <div class="form-group custom-input col-md-3">
+                            <label for="inputStartAt" class="form-control-label">开始时间</label>
+                            <input type="text" class="form-control-input laydate-icon" id="start" name="startAt" placeholder=""/>
+                        </div>
+                        <div class="form-group custom-input col-md-3">
+                            <label for="inputEndAt" class="form-control-label">结束时间</label>
+                            <input type="text" class="form-control-input laydate-icon" id="end" name="updatedAt" placeholder=""/>
+                        </div>
+                        <div class="pull-right col-md-2 col-md-offset-1" style="padding-left:50px"><!--//title-->
+                            <button type="submit" class="btn-query btn-primary navbar-btn" style="margin-top:-1px">查询</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-12 navbar-xian">
+                	<div th:text="${message}" style="text-align:center; color:#ff0000"></div>
+                    <hr class="xian-color"/>
+                </div>
+                <div class="col-sm-4 col-md-4">
+                	<div class="panel-body" style="padding: 5px;">
+			            <div id="main2" style="width: 100%;height:400px;"></div>
+			        </div>
+                </div>
+                <div class="col-sm-8 col-md-8">
+                	<div class="panel-body" style="padding: 5px;">
+			            <div id="main1" style="width: 100%;height:400px;"></div>
+			        </div>
+                </div>
+                <div class="col-md-12 navbar-xian">
+                        	<div th:text="${message}" style="text-align:center; color:#ff0000"></div>
+                            <hr class="xian-color"/>
+                </div>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>时间</th>
+                        <th>维度</th>
+                        <th>交流</th>
+                        <th>直流</th>
+                        <th>APP</th>
+                        <th>刷卡</th>
+                        <th>总数</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table_body">
+                    <tr th:each="event, eventIter : ${page.content}" th:attr="data-id=${event.id}">
+                        <td th:text="${eventIter.count}">1</td>
+                        <td th:text="${#dates.format(event.createdAt,'yyyy-MM-dd HH:mm:ss')}">时间</td>
+                        <td th:text="${event.station}">维度</td>
+                        <td th:text="${event.charger.name}">交流</td>
+                        <td th:text="${event.eventCode.eventLevel.name}">直流</td>
+                        <td th:text="${event.eventCode.eventLevel.name}">APP</td>
+                        <td th:text="${event.eventCode.eventLevel.name}">刷卡</td>
+                        <td th:text="${event.eventCode.eventLevel.name}">总数</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div id="page_navigation"></div>
+        </div>
+    </div>
+</div>    
+<div layout:fragment="javascript">
+<script src="../../static/js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>
+<script src="../../static/js/laydate/laydate.js" th:src="@{/js/laydate/laydate.js}"></script>    
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // 基于准备好的dom，初始化echarts实例
+    var myChart1 = echarts.init(document.getElementById('main1'));
+    option1 = {
+    	    tooltip : {
+    	        trigger: 'axis'
+    	    },
+    	    legend: {
+    	        data:['用户增长']
+    	    },
+    	    calculable : true,
+    	    xAxis : [
+    	        {
+    	            type : 'category',
+    	            boundaryGap : false,
+    	            data :["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+    	        }
+    	    ],
+    	    yAxis : [
+    	        {
+    	            type : 'value'
+    	        }
+    	    ],
+    	    series : [
+    	        {
+    	            name:'用户增长',
+    	            type:'line',
+    	            stack: '总量',
+    	            data:[120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90]
+    	        }
+    	    ]
+    	};
+    myChart1.setOption(option1);
+    var myChart2 = echarts.init(document.getElementById('main2'));
+    option2 = {
+    	    tooltip : {
+    	        trigger: 'item',
+    	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    	    },
+    	    legend: {
+    	        orient : 'vertical',
+    	        x : 'left',
+    	        data:['直流','交流']
+    	    },
+    	    calculable : true,
+    	    series : [
+    	        {
+    	            name:'访问来源',
+    	            type:'pie',
+    	            radius : '55%',
+    	            center: ['50%', '60%'],
+    	            data:[
+    	                {value:335, name:'直流'},
+    	                {value:310, name:'交流'},
+    	            ]
+    	        }
+    	    ]
+    	};
+    myChart2.setOption(option2);
+    /*]]>*/
+</script>
+ <script type="text/javascript">
+ /*<![CDATA[*/
+	 var start = {
+	  elem: '#start',
+	  format: 'YYYY-MM-DD',
+	  min: '2014-01-01 23:59:59', //设定最小日期为当前日期
+	  max: '2016-12-31 23:59:59', //最大日期
+	  istoday: false,
+	  choose: function(datas){
+	     end.min = datas; //开始日选好后，重置结束日的最小日期
+	     end.start = datas //将结束日的初始值设定为开始日
+	  }
+	};
+	var end = {
+	  elem: '#end',
+	  format: 'YYYY-MM-DD',
+/*	  min: laydate.now(), */
+	  max: '2016-12-31 23:59:59',
+	  istoday: false,
+	  choose: function(datas){
+	    start.max = datas; //结束日选好后，重置开始日的最大日期
+	  }
+	};
+	laydate(start);
+	laydate(end); 
+/*]]>*/
+</script>
+<script>
+	$(document).ready(function(){
+		$(".abc").hover(function(e){
+			var aa =$(this).html();
+			$(this).attr("title",aa)
+		});
+	})
+</script>
+<script src="../../static/js/table.js" th:src="@{/js/table.js}"></script>
+<script src="../../static/js/jquery.page.js" th:src="@{/js/jquery.page.js}"></script>
+<script>
+/*<![CDATA[*/
+	$(document).ready(function(){
+		$(document).PaginBar('page_navigation','table_body',6);
+	})
+/*]]>*/	
+</script>
+</div>
+</body>
+</html>

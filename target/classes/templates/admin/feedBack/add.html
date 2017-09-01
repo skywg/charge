@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>添加客服反馈</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/feedBacks/}">客服中心</a></li>
+        <li><a th:href="@{/admin/feedBacks/}">客服记录</a></li>
+        <li class="active">添加客服反馈</li>
+    </ol>
+     <script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        
+        /*]]>*/
+    </script>
+    
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">添加客服反馈</a></li>
+                </ul>
+            </div>
+		<form role="form" action="#" method="post" th:action="@{/admin/feedBacks/addfeedBack}" th:object="${feedBack}">
+            <div class="panel-body" th:include="admin/feedBack/addform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html"  th:href="@{/admin/feedBacks/?flag=true}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" onclick="return bc()" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+           </form> 
+        </div>
+</div>
+<div layout:fragment="javascript">
+<script th:inline="javascript">//引用  
+function bc(){
+	var start=$("#start").val();
+	if(start==""){
+		alert("时间必须填写");
+		return false;
+	}
+	return true;
+}
+   		$(function(){
+   			
+			   var start = {
+						  elem: '#start',
+						  format: 'YYYY-MM-DD',
+						  min: '2016-01-01 23:59:59', //设定最小日期为当前日期
+						  max: '2099-06-16 23:59:59', //最大日期
+						  istoday: false,
+						  choose: function(datas){
+						     end.min = datas; //开始日选好后，重置结束日的最小日期
+						     end.start = datas //将结束日的初始值设定为开始日
+						  }
+						};
+						var end = {
+						  elem: '#end',
+						  format: 'YYYY-MM-DD',
+						  min: laydate.now(),
+						  max: '2099-06-16 23:59:59',
+						  istoday: false,
+						  choose: function(datas){
+						    start.max = datas; //结束日选好后，重置开始日的最大日期
+						  }
+						};
+						laydate(start);
+						laydate(end); 
+		});
+		
+	 </script>
+</div>
+
+</body>
+</html>

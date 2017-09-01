@@ -1,0 +1,227 @@
+ 
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>设备参数下发</title>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/paramSettings/}">设备中心</a></li>
+        <li><a th:href="@{/admin/paramSettings/}">充电桩设置</a></li>
+        <li class="active">设备参数下发</li>
+    </ol>
+    <div class="panel border">
+        <div class="panel-tabs" role="tabpanel">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="#">设备参数下发</a></li>
+<!--                 <li class="pull-right" style="margin-right:0">
+                    <a class="btn btn-primary" name="addParamSetting" href="add.html" th:href="@{/admin/paramSettings/add}" style="margin-right:0;display: none;"><i class="fa fa-plus fa-fw all-tubiao"></i>添加</a>
+                </li> -->
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive" style="margin-top: 1px">
+                <div class="box-title">
+                    <form role="form" action="/admin/paramSettings/search/" method="get">
+                        <div class="box-title-sm">
+                            <label for="paramType" class="form-control-label">类型</label>
+                            <input type="hidden"  id="inputHiddenparamType" th:value="${paramSetting.paramType}" />
+                            <select class="form-control-input" id="paramType" name="paramType">
+                            <option value="" selected="selected">全部</option>
+                             <option th:each="t : ${types}"
+	                            th:value="${t.dictValue}"
+	                            th:text="${t.descr}">Type
+	                            </option> 
+                            </select>
+                        </div>
+						<div class="box-title-sm">
+                            <label for="paramStatus" class="form-control-label">状态</label>
+                            <input type="hidden"  id="inputHiddensendFlag" th:value="${paramSetting.sendFlag}" />
+                            <select class="form-control-input" id="sendFlag" name="sendFlag">
+                            	<option value="" selected="selected">全部</option>
+                            	<option value="true">已下发</option>
+                            	<option value="false">未下发</option>
+                            </select>
+                        </div>
+                        <div class="box-title-button"><!--//title-->
+                            <button type="submit" style="display: none;" name="searchParamSetting" class="btn-query btn-primary query-btn-id">查询</button>
+                            <a class="btn btn-query btn-primary add-btn-id" name="addParamSetting" href="add.html" th:href="@{/admin/paramSettings/add}" style="padding-top:5px;display: none;">添加</a>
+                            <!-- <a type="btn" class="btn btn-primary navbar-btn" href="result.html" th:href="@{/admin/paramSettingResults/}" style="margin-top: 25px;width: 140px">查看全部下发结果</a> -->
+                        </div>
+                         <input type="hidden"  name="flag" value="1" />
+                    </form>
+                </div>
+                <div class="col-md-12 navbar-xian">
+                            <hr class="xian-color"/>
+                </div>
+<script type="text/javascript">
+/*<![CDATA[*/
+			var  station =document.getElementById("inputHiddenparamType").value;
+			var inputstations = document.getElementById("paramType").options;
+			if(inputstations){
+    			for(var i=0;i<inputstations.length;i++){
+    				 var stationId = inputstations[i].value;
+    				 if(station==stationId){
+    					 inputstations[i].selected="selected";
+    					 break;
+    				 }
+    			}
+    		}
+			var  type =document.getElementById("inputHiddensendFlag").value;
+			var inputTypes = document.getElementById("sendFlag").options;
+			if(inputTypes){
+    			for(var i=0;i<inputTypes.length;i++){
+    				 var typeId = inputTypes[i].value;
+    				 if(type==typeId){
+    					 inputTypes[i].selected="selected";
+    					 break;
+    				 }
+    			}
+    		}
+			/*]]>*/
+</script>
+                <table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th style="width:32px;">#</th>
+		                <th>名称</th>
+		                <th style="width:80px;">设置类型</th>
+		                <th>模板名称</th>
+		                <th>设置电桩</th>
+		                <th style="width:160px;">生效时间</th>
+		                <th style="width:160px;">下发时间</th>
+  		                <th style="width:80px;">下发结果</th>
+  		                <th style="width:70px;">状态</th>
+		                <th style="width:130px;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="paramSetting, paramSettingIter : ${page.content}" th:attr="data-id=${paramSetting.id}">
+                        <td th:text="${paramSettingIter.count}"></td>
+		                <td th:attr="title=${paramSetting.name}" th:text="${paramSetting.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">名称</td>
+						<td th:each="cs , csIter : ${types}" th:if="${paramSetting.paramType==cs.dictValue}" th:text="${cs.descr}"></td>
+		                <td th:if="${paramSetting.paramTemplate}!=null" th:attr="title=${paramSetting.paramTemplate.name}" th:text="${paramSetting.paramTemplate.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">模板名称</td>
+		                <td th:if="${paramSetting.paramTemplate}==null" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;"></td>
+		                <td th:attr="title=${paramSetting.chargersName}" th:text="${paramSetting.chargersName}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;"></td>
+		                <td th:if="${paramSetting.effectiveTime} == null">
+		                </td>
+		                <td th:if="${paramSetting.effectiveTime} != null" th:text="${#dates.format(paramSetting.effectiveTime,'yyyy-MM-dd HH:mm:ss')}">生效时间</td>
+		                <td th:if="${paramSetting.sendTime} == null">
+		                </td>
+		                <td th:if="${paramSetting.sendTime} != null" th:text="${#dates.format(paramSetting.sendTime,'yyyy-MM-dd HH:mm:ss')}">下发时间</td>
+						<td th:if="${paramSetting.sendFlag} == '已下发'">
+		                	<a data-toggle="modal"  th:attr="data-target='#myResult'+ ${paramSettingIter.count}">查看结果</a>
+							<div class="modal fade bs-example-modal-lg"  th:attr="id='myResult'+ ${paramSettingIter.count}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top:7%">
+							  <div class="modal-dialog modal-lg">
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+							        <h4 class="modal-title text-center" id="myModalLabel">下发结果</h4>
+							      </div>
+							      <div class="modal-body">
+							            <div class="table-responsive" style="margin-top: 1px;max-height: 300px;">
+							                <table class="table table-striped table-bordered table-hover">
+							                    <thead>
+							                    <tr>
+							                        <th>#</th>
+											        <th>充电站</th>
+									                <th>充电桩</th>
+									                <th>电桩反馈时间</th>
+									                <th>状态</th>
+									                <th>操作</th>
+							                    </tr>
+							                    </thead>
+							                    <tbody>
+							                    <tr th:each="paramSettingResult, paramSettingIter : ${paramSetting.settingResult}" th:attr="data-id=${paramSettingResult.id}">
+							                        <td th:text="${paramSettingIter.count}"></td>
+													<td ><div th:text="${paramSettingResult.stationName}" class="abc" style="width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div></td>
+									                <td ><div th:text="${paramSettingResult.charger.name}" class="abc" style="width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div></td>
+									               <td th:if="${paramSettingResult.createdAt} == null">
+									               </td>
+									                <td th:if="${paramSettingResult.createdAt} != null" th:text="${#dates.format(paramSettingResult.createdAt,'yyyy-MM-dd HH:mm:ss')}">电桩反馈时间</td>
+									                <td th:if="${paramSettingResult.result} != false" th:text="${paramSettingResult.resultName}" style="color:#40b050">下发成功</td>
+									                <td th:if="${paramSettingResult.result} == false" th:text="${paramSettingResult.resultName}" style="color:#bfbfbf">下发失败</td>
+									                <td th:if="${paramSettingResult.result} == false">
+									                	<a th:href="@{/admin/paramSettings/send/{paramSettingId}/{id}/{createdAt}/{paramTemplateId}/{chargerIds}(paramSettingId=${paramSetting.id},id=${paramSettingResult.id},createdAt=${paramSettingResult.createdAt},paramTemplateId=${paramSetting.paramTemplate.id},chargerIds=${paramSettingResult.charger.id})}">重新下发</a></td>
+							                    	<td th:if="${paramSettingResult.result} != false">
+									                	</td> 
+							                    </tr> 
+							                    </tbody>
+							                </table>
+							            </div>
+							        </div>
+							      </div>
+							    </div>
+							  </div>
+		                </td>
+						<td th:if="${paramSetting.sendFlag} == '未下发'">
+						</td>
+						<td th:text="${paramSetting.sendFlag}" class="all-state">状态</td>
+		                <td class="all-icon">
+						<a href="check.html" name="checkParamSetting" style="display: none;" th:href="@{/admin/paramSettings/check/{id}(id=${paramSetting.id})}" class="lock" title="查看"></a>
+						<a th:if="${paramSetting.sendFlag} == '未下发'" name="sendParamSetting" style="display: none;" th:href="@{/admin/paramSettings/sendParam/{id}(id=${paramSetting.id})}" class="issued-id" title="下发"></a>
+		                <a th:if="${paramSetting.sendFlag} == '未下发'" name="editParamSetting" style="display: none;" href="edit.html" th:href="@{/admin/paramSettings/edit/{id}(id=${paramSetting.id})}" class="edit-id" title="编辑"></a>
+						<a th:if="${paramSetting.sendFlag} == '未下发'" name="delParamSetting" style="display: none;"  data-toggle="modal"  th:attr="data-target='#myModal'+ ${paramSettingIter.count}" class="delete-id" title="删除"></a>
+						<div class="modal fade"  th:attr="id='myModal'+ ${paramSettingIter.count}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-dialog">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-question-circle fa-lg" style="padding-right:10px"></i>删除设备参数</h4>
+						      </div>
+						      <div class="modal-body text-center" style="padding-top:50px;padding-bottom:50px;">
+						        	<p style="font-size:16px">是否确认删除所选项？删除后不可恢复。</p>
+						      </div>
+						      <div class="modal-footer">
+						        <a type="button" class="btn btn-query btn-primary sure-btn-id" href="#" th:href="@{/admin/paramSettings/del/{id}(id=${paramSetting.id})}" style="padding-top:4px">确定</a>
+						        <button type="button" class="btn-query btn-primary cancel-btn-id" data-dismiss="modal">取消</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+	            		</td>    
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>   
+        <div class="panel-footer">
+            <div th:replace="element/pagination"></div>
+        </div>
+<script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+ <script>
+    $(document).ready(function() {
+        $("#aa-a").addClass("active");
+		$("#aa-a1").addClass("in").attr("aria-expanded","true");
+		$("#aa-b").addClass("active");
+		$("#aa-b1").addClass("in").attr("aria-expanded","true");
+		$("#aa-c1").addClass("active");
+    })
+</script>
+<script>
+	$(document).ready(function(){
+		$(".abc").hover(function(e){
+			var aa =$(this).html();
+			$(this).attr("title",aa)
+		});
+	})
+</script>
+    </div>
+<script>
+  /*   $(document).ready(function() {
+        $('.custom-input input').phAnim();
+    }) */
+</script>
+
+</div>
+
+
+</body>
+
+</html>
+
+ 

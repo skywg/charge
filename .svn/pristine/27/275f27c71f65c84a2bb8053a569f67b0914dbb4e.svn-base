@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+	<style>
+	  	 #noPageD ul,#pageB ul li{
+	  	 	list-style: none;
+	  	 }
+	  	 #noPageD{
+	  	 	padding-right:85px;
+	  	 	position: relative;
+	  	 	margin: 0;
+		    white-space: nowrap;
+		    text-align: right;
+	  	 }
+	  	 #noPageD ul{
+	  	    display: inline-block;
+		    padding-left: 0;
+		    margin: 20px 0;
+		    border-radius: 4px;
+	  	 }
+	  	 #noPageD ul li{
+	  	 	display: inline;
+	  	 }
+	  	 #noPageD>ul>li>a{
+  	 	    position: relative;
+		    float: left;
+		    padding: 6px 12px;
+		    margin-left: -1px;
+		    line-height: 1.42857143;
+		    color: #337ab7;
+		    text-decoration: none;
+		    background-color: #fff;
+		    border: 1px solid #ddd;
+	  	 }
+	  	 #noPageD>ul>li>a, #noPageD>ul>li>a:focus, #noPageD>ul>li>a:hover{
+	  	 	color: #777;
+	  	 	text-decoration: none;
+	    	cursor: not-allowed;
+	   		background-color: #fff;
+	    	border-color: #ddd;
+	  	 }   
+	  </style>
+<body id="chargeR">
+	<div class="table-responsive" style="margin-top: 1px; display: none"
+		id="cards-charge-record">
+		<!-- <form role="form" th:action="@{/admin/cards/searchRecord/{id}(id=card.cardNo)}" method="get">
+         <input type="hidden"  name="days" id="days"/>-->
+		<div class=" form-group col-md-4">
+			<button type="submit" id="week" class="btn-query btn-primary"
+				onclick="chargeRecordSearch(7);" style="padding-left:8px">一周</button>
+			<button type="submit" class="btn-query btn-primary"
+				onclick="chargeRecordSearch(30);" style="padding-left:8px">一个月</button>
+			<button type="submit" class="btn-query btn-primary"
+				onclick="chargeRecordSearch(90);" style="padding-left:8px">三个月</button>
+			<button type="submit" class="btn-query btn-primary"
+				onclick="chargeRecordSearch(365);" style="padding-left:8px">一年</button>
+		</div>
+		<!--</form>
+    <form role="form" action="/admin/cards/search/" method="get">-->
+		<input type="hidden" th:value="${timeIntervalB}" id="timeIntervalB"/>
+		<!--</form>
+    <form role="form" action="/admin/cards/search/" method="get">-->
+		<!--</form>
+    <form role="form" action="/admin/cards/search/" method="get">-->
+		<!--</form>-->
+		<div class="col-md-12" id="tableB">
+			<table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+				<thead>
+					<tr>
+						<th style="width:32px;">#</th>
+		                <th style="width:160px;">交易时间</th>
+		                <th>充电站名称</th>
+		                <th>充电桩名称</th>
+		                <th style="width:80px;">接口</th>
+		                <th style="width:80px;">支付</th>
+		                <th style="width:160px;">卡号|手机号</th>
+		                <th style="width:80px;">时长</th>
+		                <th style="width:80px;">电量/Kwh</th>
+		                <th style="width:80px;">金额/元</th>
+		                <th style="width:80px;">状态</th>
+					</tr>
+				</thead>
+				<tbody class="table_bodyB">
+					<tr th:each="order, orderIter : ${chargeRecordPages.content}"
+						th:attr="data-id=${order.id}">
+						<td th:text="${orderIter.count}">1</td>
+                        <td th:text="${#dates.format(order.createdAt,'yyyy-MM-dd HH:mm:ss')}">交易时间</td>
+                        <td th:text="${order.charger.station.name}" th:attr="title=${order.charger.station.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">充电站名称</td>
+                        <td th:text="${order.charger.name}" th:attr="title=${order.charger.station.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">充电桩名称</td>
+                        <td th:text="${order.ifName == '10' ? 'A枪' : 'B枪'}">充电接口</td>
+                        <td><div th:each="pf : ${paidFroms}" th:if="${order.paidFrom==pf.dictValue}" th:text="${pf.descr}"></div></td>
+                        <td th:if="${order.paidFrom == 'CARD'}" th:alt-title="${order.card.cardNo}" th:text="${order.card.cardNo}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">卡号|手机号 </td>
+                        <td th:if="${order.paidFrom != 'CARD'}" th:alt-title="${order.account.phone}"  th:text="${order.account.phone}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">卡号|手机号</td>
+                        <td th:text="${order.formatChargingTime()}">充电时长</td>
+                        <td th:text="${order.degree}">充电电量</td>
+                        <td th:text="${order.money}">充电金额(元)</td>
+                        <td th:text="${order.status.title}" class="all-state">状态</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<!-- <div th:fragment="pagination" class="data-table-pagination" style="margin-top:10px">
+				<ul class="pagination">
+					<li><a
+						th:attr="onclick='javascript:gotoPage(0, ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title='首页'>首页</a></li>
+					<li th:class="${chargeRecordPage.hasPreviousPage}"><a
+						th:if="${not chargeRecordPage.hasPreviousPage}"
+						th:attr="onclick='javascript:gotoPage2(0, ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title='上一页'>上一页</a> <a th:if="${chargeRecordPage.hasPreviousPage}"
+						th:href="@{${chargeRecordPage.url}(page=${chargeRecordPage.number-1},size=${chargeRecordPage.size})}"
+						th:attr="onclick='javascript:gotoPage2(' + ${chargeRecordPage.number-1} + ', ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title='上一页'>上一页</a></li>
+					<li th:each="item : ${chargeRecordPage.items}"
+						th:class="${item.current}? 'active' : ''"><span
+						th:if="${item.current}" th:text="${item.number+1}">1</span> <a
+						th:if="${not item.current}"
+						th:attr="onclick='javascript:gotoPage2(' + ${item.number} + ', ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'">
+					       <span th:text="${item.number+1}">1</span>
+					</a></li>
+					<li th:class="${chargeRecordPage.hasNextPage}"><a
+						th:if="${not chargeRecordPage.hasNextPage}"
+						th:attr="onclick='javascript:gotoPage2(' + ${chargeRecordPage.totalPages-1} + ', ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title="下一页">下一页</a> <a th:if="${chargeRecordPage.hasNextPage}"
+						th:attr="onclick='javascript:gotoPage2(' + ${chargeRecordPage.number+1} + ', ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title="下一页">下一页</a></li>
+					<li><a
+						th:attr="onclick='javascript:gotoPage2(' + ${chargeRecordPage.totalPages-1} + ', ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+						title='尾页'>尾页</a></li>
+
+					<div
+						style="display: inline; height: 35px; line-height: 35px; padding-left: 10px;">
+						总计：<span th:text="${chargeRecordPage.total}"></span>
+					</div>
+				</ul>
+			</div> -->
+		</div>
+	</div>
+	<div id="noPageD" style="background-color:#ffffff;border:0px;">
+		<ul>
+			<li><a style="border-top-left-radius:4px;border-bottom-left-radius:4px;">首页</a></li>
+			<li><a>上一页</a></li>
+			<li><a style="background-color:#337ab7;color:#ffffff">1</a></li>
+			<li><a>下一页</a></li>
+			<li><a style="border-top-right-radius:4px;border-bottom-right-radius:4px;">尾页</a></li>
+		</ul>
+		<div style="display:inline;position:absolute;right:30px;bottom:30px;color:#798C9C">&nbsp;&nbsp;总计：<span>0</span>
+		</div> 
+	</div>
+<div class="panel-footer" id="pageB" style="background-color:#ffffff;border:0px;">
+            <form id="form2" runat="server" style="font-size:14px;">
+			    <div class="data-table-pagination" style="padding-right:70px;position: relative;">
+			        <ul class="pagination" id="paginationB">
+			        </ul>
+			         <div style="display:inline;position:absolute;right:15px;bottom:15px;color:#798C9C">
+			         <span>总计:</span> <span class="zonggongB"></span>
+			    	</div> 
+ 			        <input type="hidden" id="PageCountB" runat="server" th:value="${PageCountB}"/>
+			        <input type="hidden" id="PageSizeB"  runat="server" value="15" />
+			        <input type="hidden" id="countindexB" runat="server" value="7"/>
+			        <input type="hidden" id="visiblePagesB" runat="server" value="5" />
+			        <input type="hidden" id="currentPageB" runat="server"  />
+			    </div>
+		    </form>
+	</div>
+<script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>  
+<script th:inline="javascript">
+	/*<![CDATA[*/
+ function loadDataB(num) {
+        var oLeng=$(".table_bodyB tr").length;
+        for (var i=0;i<oLeng;i++) {
+        	$(".table_bodyB tr").eq(i).hide();
+        }
+        for (var j=num*2-2;j<num*15;j++) {
+        	$(".table_bodyB tr").eq(j).show();
+        } 
+        $(".zonggongB").text($("#PageCountB").val());
+        return $("#PageCountB").val();
+    }
+    
+	function exeDataB(num, type) {
+	    loadDataB(num);
+	    loadpageB();
+	}
+	 function loadpageB() {
+	    var myPageCount = parseInt($("#PageCountB").val());
+	    var myPageSize = parseInt($("#PageSizeB").val());
+	    var countindex = myPageCount % myPageSize > 0 ? (myPageCount / myPageSize) + 1 : (myPageCount / myPageSize);
+	    $("#countindexB").val(countindex);
+	    var index = $("#countindexB").val();
+	    var max = parseInt(index.substring(0,index.lastIndexOf(".")))-1;
+	    $.jqPaginator('#paginationB', {
+	        totalPages: parseInt($("#countindexB").val()),
+	        visiblePages: parseInt($("#visiblePagesB").val()),
+	        currentPage: 1,
+	        first: '<li class="first"><a href="javascript:;" onclick="javascript:gotoPage2(0,15)">首页</a></li>',
+	        prev: '<li class="prev"><a href="javascript:;"onclick="javascript:gotoPage2('+[[${currentPage-1}]]+',15)">上一页</a></li>',
+	        next: '<li class="next"><a href="javascript:;"onclick="javascript:gotoPage2('+[[${currentPage+1}]]+',15)">下一页</a></li>',
+	        last: '<li class="last"><a href="javascript:;"onclick="javascript:gotoPage2('+max+',15)">尾页</a></li>',
+	        page: '<li class="page"><a href="javascript:;" onclick="javascript:gotoPage2({{page}}-1,15)">{{page}}</a></li>',
+	        onPageChange: function (num, type) {
+	            if (type == "change") {
+	                exeDataB(num, type);
+	            }
+	        }
+	    });
+	} 
+	$(function () {
+	    loadDataB(1);
+	    if(loadDataB(1)<1){
+  	    	return ;
+  	    } 
+	    loadpageB();
+	}); 
+	
+	    function chargeRecordSearch(timeInterval) {
+	        $.ajax({
+	            url: "/admin/cards/chargeRecordSearch",
+	            data: {
+	                cardNo:[[${card.cardNo}]],
+	                timeInterval:timeInterval
+	            	},
+	            type: 'get',//提交方式
+	            dataType:'json',//返回数据的类型
+	            success: function (data,stats) {//后台处理数据成功后的回调函数
+	                if(stats == "success") {
+	                	console.info(data);
+	                	$("#PageCountB").val(data.PageCount);
+	                	$("#timeIntervalB").val(data.timeIntervalB);
+	                	$(".table_bodyB").html('');
+	                	$("#currentPageB").val(0);
+	                	var lists = data.rechargers;
+	                	for(var i = 0 ; i < lists.length ; i++){
+	                		var start = lists[i].startAt;
+	                		start = start.substring(0,start.lastIndexOf("."));
+	                		var tmp='<tr>'
+	                					+'<td>'+(i+1)+'</td>'
+	                					+'<td>'+start+'</td>'
+	                					+'<td style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">'+lists[i].stationName+'</td>'
+	                					+'<td style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">'+lists[i].chargerName+'</td>'
+	                					+'<td>'+lists[i].chargerIf+'</td>'
+	                					+'<td>'+lists[i].payStatus+'</td>'
+	                					+'<td style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">'+lists[i].cardNoOrPhoneNum+'</td>'
+	                					+'<td>'+lists[i].chargeTime+'</td>'
+	                					+'<td>'+lists[i].degree+'</td>'
+	                					+'<td>'+lists[i].money+'</td>'
+	                					+'<td style="color:#13B5F6">'+lists[i].payMethod+'</td>'
+	                				+'</tr>';
+	                		$(".table_bodyB").append(tmp);
+	                	}
+	                	var pageNum=$(".table_bodyB tr").length;
+	                	if(pageNum>0){
+	                		$("#noPageD").hide();
+	                	}if(pageNum==0){
+	                		$("#noPageD").show();
+	                		$("#pageB").hide();
+	                		$("#pageA").hide();
+	                	}
+	                	$(function () {
+	                	    if(loadDataB(data.page+1)<1){
+	                	    	return;
+	                	    }
+	                	    loadDataB(data.page+1);
+	                	    loadpageB();
+	                	});
+	                }
+	            },
+	            error: function (data) {
+	                //后台处理数据失败后的回调函数
+	                alert("发送请求失败!");
+	            }
+	        });
+	    };
+	    function gotoPage2(page, pagesize) {
+	    	var pc = parseInt($("#PageCountB").val()/pagesize)+1;
+	    	if(page>=pc){
+	    		return ;
+	    	}
+	    	var timeInterval = $("#timeIntervalB").val();
+	    	$.ajax({
+                url: "/admin/cards/chargeRecordSearch",
+                data: {
+                    cardNo:[[${card.cardNo}]],
+                    timeInterval:timeInterval,
+                    page:page,
+                    size:pagesize
+                },
+                type: 'get',//提交方式
+                dataType:'json',//返回数据的类型
+                success: function (data,stats) {//后台处理数据成功后的回调函数
+                	if(stats == "success") {
+	                	console.info(data);
+	                	$("#PageCountB").val(data.PageCount);
+	                	$("#timeIntervalB").val(data.timeIntervalB);
+	                	$(".table_bodyB").html('');
+	                	var lists = data.rechargers;
+	                	for(var i = 0 ; i < lists.length ; i++){
+	                		var start = lists[i].startAt;
+	                		start = start.substring(0,start.lastIndexOf("."));
+	                		var tmp='<tr>'
+		            					+'<td>'+(i+1)+'</td>'
+		            					+'<td>'+start+'</td>'
+		            					+'<td style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">'+lists[i].stationName+'</td>'
+		            					+'<td style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">'+lists[i].chargerName+'</td>'
+		            					+'<td>'+lists[i].chargerIf+'</td>'
+		            					+'<td>'+lists[i].payStatus+'</td>'
+		            					+'<td style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">'+lists[i].cardNoOrPhoneNum+'</td>'
+		            					+'<td>'+lists[i].chargeTime+'</td>'
+		            					+'<td>'+lists[i].degree+'</td>'
+		            					+'<td>'+lists[i].money+'</td>'
+		            					+'<td style="color:#13B5F6">'+lists[i].payMethod+'</td>'
+	                				+'</tr>';
+	                		$(".table_bodyB").append(tmp);
+	                	}
+	                	var pageNum=$(".table_bodyB tr").length;
+	                	if(pageNum>0){
+	                		$("#noPageD").hide();
+	                	}if(pageNum==0){
+	                		$("#noPageD").show();
+	                		$("#pageB").hide();
+	                		$("#pageA").hide();
+	                	}
+	                }
+                },
+                error: function (data) {
+                    //后台处理数据失败后的回调函数
+                	alert("发送请求失败!");
+                }
+            });
+	    }
+	    /*]]>*/
+    </script>
+
+
+</body>
+</html>

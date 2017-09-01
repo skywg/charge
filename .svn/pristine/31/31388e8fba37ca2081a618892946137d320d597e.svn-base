@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<title>添加消息</title>
+<head>
+	<script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>    
+     <script th:inline="javascript">
+        /*<![CDATA[*/
+        var temp_sms_list = [[${temp_sms}]];
+        var temp_smtp_list = [[${temp_smtp}]];
+        var sendObj = [[${sendObj}]];
+        var st = [[${sType}]];
+        var edit = [[${edit}]];
+        var regexStr = "过滤条件";
+        if(sendObj==null){
+        	sendObj="";
+        }
+        $("#sendObj").val(sendObj);
+        function formTable(str){
+        	$("#result").html("");
+        	if(str!=null&&str.length>0){
+        		var elements =  str.split(",");
+        		for(var i = 0 ; i < elements.length ; i++){
+        			 var trHTML =   '<tr>'
+		      				+	'<td>'+elements[i]+'</td>'
+		      				+	'<td><a onclick='+'\"deletePhone('+elements[i]+')\"'+'>删除</a></td>'
+		      				+'</tr>'
+		      				$("#result").append(trHTML);
+        		}
+        	}
+        }
+        function closeImg(){
+        	$("#imgDiv").css("display", "none");
+        }
+        $(document).ready(function(){
+        	if(edit!=null&&edit.trim()!=""){
+        		$(document).attr("title",edit);
+        		$("#title-a").html(edit);
+        		$("#title-b").html(edit);
+        	}
+        	$("#checkObj").bind("click",function(){
+                $("#imgDiv").css("display", "");
+            });
+        	$("#mail_temp").bind('change',function(){
+        		var invokeName = $("#mail_temp").val();
+        		if(invokeName == ''){
+        			 $("#message-content").val('');
+        			 $("#message-title").val('');
+        			 $("#for_mailcontent_show").html('');
+        			 $("#message-content").show();
+        			 $("#for_mailcontent_show").hide();
+        			return ;
+        		}
+        		$.ajax({
+        			url:'/admin/notify/ajax_mail_content?invokeName='+invokeName,   
+        		    type:'GET',  
+        		    dataType: 'JSON',
+        			error:function(){   
+        		       //alert('error');   
+        		    },   
+        		    success:function(data){
+        		      var jsonStr = data;
+        		      $("#message-content").html("");
+        		      $("#message-title").val(jsonStr[0].subject);
+        		      $("#message-content").val(jsonStr[0].html);
+        		      $("#message-content").attr("style","display:none");
+        		      $("#for_mailcontent_show").html(jsonStr[0].html);
+        		      $("#for_mailcontent_show").show();
+        		    }
+        		})
+        	});
+        });
+        function check(actionCode){
+        	var obj = $("#sendObj").val();
+        	var sendType=$("#sendType").val();
+        	if(obj==null||obj.trim()==""){
+        		alert("请选择发送对象");
+        		return false;
+        	}
+        	$("#actionCode").val(actionCode);
+        	if(sendType==null||sendType==""){
+        		alert("请选择发送类型");
+        		return false;
+        	}
+        	if(sendType=='APPNOT'){
+        		if($("#message-title").val()==null||$("#message-title").val().trim()==""){
+        			alert("标题不能为空");
+        			return false;
+        		}else{
+        			if($("#message-title").val().length>16){
+        				alert("标题不得大于16个字");
+            			return false;
+        			}
+        		}
+        		if($("#ticker").val()==null||$("#ticker").val().trim()==""){
+        			alert("通知栏提示文字不能为空");
+        			return false;
+        		}else{
+        			if($("#ticker").val().length>16){
+        				alert("通知栏提示文字不得大于16个字");
+            			return false;
+        			}
+        		}
+        		if($("#message-content").val().length>64){
+        			alert("内容长度需小于64个字");
+        			return false;
+        		}
+        	}else if(sendType=='APPMSG'||sendType=='MAIL'){
+        		if($("#message-title").val()==null||$("#message-title").val().trim()==""){
+        			alert("标题不能为空");
+        			return false;
+        		}
+        		if(sendType=='APPMSG'){
+        			if($("#message-content").val().length>160){
+            			alert("内容长度需小于160个字");
+            			return false;
+            		}
+        		}
+        		
+        	}else if(sendType='NOTE'){
+        		if($("#note_temp").val()==''){
+        			alert("请选择短信模板");
+        			return false;
+        		}
+        	}
+        	if(sendType!='NOTE'){
+        		if($("#message-content").val()==null||$("#message-content").val().trim()==""){
+        			alert("内容不能为空");
+        			return false;
+        		}
+        	}
+        	return true;
+        }
+        function sendBy(sendType){
+        	$("#sendType").val(sendType);
+        }
+        function seachByPhone(){
+/*         	var sex = $("[name='sex']").val();
+        	var age = $("[name='age']").val();
+        	var level = $("[name='level']").val(); */
+           	var phoneValue =$("#phone").val();
+        	if(phoneValue.trim()==""){
+        		alert("请输入手机号");
+        		return;
+        	}
+        	if(phoneValue.trim!=""){
+        		$.ajax({
+            		url:'/admin/notify/ajax_search?phone='+phoneValue,
+            		dataType:'text',
+            		type:'get',
+            		error:function(){   
+         		       //alert('error');   
+         		    },   
+         		    success:function(data){
+         		      var str = data;
+         		      if(str==""){
+         		    	  alert("没找到该手机号码对应的会员");
+         		      }else{
+         		    	 if(!checkPhone(data)){
+         		    		alert("该会员已经在发送列表中");
+         		    	 }else{
+         		    		var trHTML =   '<tr>'
+	  		      				+	'<td>'+data+'</td>'
+	  		      				+	'<td><a onclick='+'\"deletePhone('+data+')\"'+'>删除</a></td>'
+	  		      				+'</tr>'
+				  		      console.info(trHTML);
+				  		      $("#result").append(trHTML);
+				  		      sendObj=$("#sendObj").val();
+				  		      if(sendObj.length>0){
+				  		    	sendObj +=","+data;
+				  		      }else{
+				  		    	sendObj +=data
+				  		      }
+				  		      $("#sendObj").val(sendObj);
+         		    	 }
+         		      }
+         		    }
+            	})
+        	}
+        } 
+        function deletePhone(phoneNumber){
+        	var allObj = $("#sendObj").val().split(",");
+        	var i = 0;
+        	var afterDel="";
+        	for( i; i < allObj.length ; i++){
+        		if(allObj[i]==phoneNumber){
+        			break;
+        		}
+        	}
+        	for(var j = i ; j < allObj.length ; j++){
+        		allObj[j]=allObj[j+1];
+        	}
+        	afterDel=allObj.toString(); 
+        	afterDel = afterDel.substring(0,afterDel.lastIndexOf(",")-1);
+        	$("#sendObj").val(afterDel);
+        	formTable(afterDel);
+        	
+        }
+		function checkPhone(phoneNumber){
+			var allObj = $("#sendObj").val();
+			if(allObj==""){
+				return true
+			}else{
+				allObj = $("#sendObj").val().split(",");
+				for(var i = 0 ; i < allObj.length ; i++){
+	        		if(allObj[i]==phoneNumber){
+	        			return false;
+	        		}
+	        	}
+				return true;
+			}
+		}
+		/*]]>*/
+    </script>
+</head>
+<body class="bg">
+
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/notify/}">内容中心</a></li>
+        <li><a th:href="@{/admin/notify/}">消息中心</a></li>
+        <li class="active" id="title-a">添加消息</li>
+    </ol>
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#" id="title-b">添加消息</a></li>
+                </ul>
+            </div>
+		<form role="form" action="#" method="post"
+          th:action="@{/admin/notify/addnotify/}" th:object="${notification}">
+            <div class="panel-body" th:include="admin/news/addform"></div>
+
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">   	
+                    	<input type="hidden" name="actionCode" id="actionCode"/>
+                    	<div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html" th:href="@{/admin/notify/?flag=true}" style="padding-top:5px">取消</a>
+                        </div>
+                         <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary send-btn-id" onclick="return check('send')">发送</button>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary keep-btn-id" onclick="return check('save')">保存</button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+           </form> 
+        </div>
+    
+
+</div>
+</body>
+</html>

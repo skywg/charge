@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+    <head>
+       <title>充电桩通信日志</title>
+    </head>
+    <body>
+        <div layout:fragment="content" id="content">
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/}">首页</a></li>
+	            <li><a th:href="@{/admin/chargers/}">设备中心</a></li>
+	            <li><a th:href="@{/admin/chargers/}">充电桩</a></li>
+	            <li class="active">通信日志</li>
+            </ol>
+            <div class="panel border">
+                <div class="panel-tabs" role="tabpanel">
+                    <ul class="nav nav-tabs">
+                        <li role="presentation"><a th:href="@{/admin/chargers/check/{id}(id=${chargerId})}">基本信息</a></li>
+                        <li role="presentation"><a th:href="@{/admin/chargers/param/{id}(id=${chargerId})}">参数信息</a></li>
+                        <li role="presentation"><a th:href="@{/admin/chargers/checkDeal/{id}(id=${chargerId})}">订单信息</a></li>
+                        <li role="presentation" class="active"><a th:href="@{/admin/chargers/commLog/{id}(id=${chargerId})}">通信日志</a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive" style="margin-top: 1px">                      
+                    <form role="form" th:action="@{/admin/chargers/commLog/{id}(id=${chargerId})}" method="post">
+                        <input type="hidden" id="page" name="page" value="*{page}"/>
+                        <input type="hidden" id="size" name="size" value="*{size}"/>
+                        <div class="box-title">
+
+                            <div class="box-title-sm">
+                                <label for="time" class="form-control-label">开始日期</label>
+                                <input type="text" class="form-control-input Datee" id="startTime" name="startTime" placeholder="" th:value="${startTime != null ? #dates.format(startTime, 'yyyy-MM-dd') : ''}" readonly="readonly" style="background-color:#FFFFFF;"/> 
+                            </div>
+                            <div class="box-title-sm">
+                                <label for="time" class="form-control-label">结束日期</label>
+                                <input type="text" class="form-control-input Datee" id="endTime"   name="endTime"   placeholder="" th:value="${endTime != null ? #dates.format(endTime, 'yyyy-MM-dd') : ''}" readonly="readonly" style="background-color:#FFFFFF;"/>
+                            </div>
+                            <div class="box-title-button">
+                                <button type="submit" class="btn-query btn-primary query-btn-id" id="query" onclick="return check()">查询</button>
+                                <!-- <input type="submit" class="btn-query btn-primary" id="query" onclick="return check()" value="查询"/> -->
+                            </div>
+                      </div>
+                    </form>
+                    
+                    <div class="col-md-12 navbar-xian">
+                        <hr class="xian-color" />
+                    </div>
+                    
+                    <table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th style="width:32px;">#</th>
+                                <th style="width:100px;">充电桩编号</th>
+                                <th style="width:160px;">IP和端口</th>                               
+                                <th style="width:240px;">时间</th>
+                                <th style="width:100px;">状态</th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            <tr th:each="log, logIter: ${page.content}">
+                                <td th:text="${logIter.index+1}"></td>
+                                <td th:text="${log.chargerCode}"></td>
+                                <td th:text="${log.params}"></td>                                   
+                                <td th:text="${#dates.format(log.logTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                <td th:text="${log.logType.title}" class="all-state"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="data-table-pagination">
+                         <ul class="pagination">
+                            <li>
+                                <a th:href="'javascript:gotoPage(0,' + ${page.size} + ')'"
+                                   title='首页'>首页</a>
+                            </li>
+                            <li th:class="${page.hasPreviousPage}">
+                                <a th:if="${not page.hasPreviousPage}"
+                                   th:href="'javascript:gotoPage(0,' + ${page.size} + ')'"
+                                   title='上一页'>上一页</a>
+                                <a th:if="${page.hasPreviousPage}"
+                                   th:href="'javascript:gotoPage(' + ${page.number - 1} + ',' + ${page.size} + ')'"
+                                   title='上一页'>上一页</a>
+                            </li>
+                            <li th:each="item : ${page.items}" th:class="${item.current}? 'active' : ''">
+                                <span th:if="${item.current}" th:text="${item.number+1}">1</span>
+                                <a th:if="${not item.current}"
+                                   th:href="'javascript:gotoPage(' + ${item.number} + ',' + ${page.size} + ')'">
+                                    <span th:text="${item.number+1}">1</span></a>
+                            </li>
+                            <li th:class="${page.hasNextPage}">
+                                <a th:if="${not page.hasNextPage}"
+                                   th:href="'javascript:gotoPage(' + ${page.totalPages-1} + ',' + ${page.size} + ')'"
+                                   title="下一页">下一页</a>
+                                <a th:if="${page.hasNextPage}"
+                                   th:href="'javascript:gotoPage(' + ${page.number+1} + ',' + ${page.size} + ')'"
+                                   title="下一页">下一页</a>
+                            </li>
+                            <li>
+                                <a th:href="'javascript:gotoPage(' + ${page.totalPages-1} + ',' + ${page.size} + ')'"
+                                   title='尾页'>尾页</a>
+                            </li>
+                            
+                            <div style="display:inline; height:35px; line-height:35px; padding-left:10px;">
+                                                                                        总计：<span th:text="${page.total}"></span>
+                            </div> 
+                        </ul>                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout:fragment="javascript">
+          <script th:inline="javascript">
+          /*<![CDATA[*/
+            function gotoPage(page, size) {
+                $("#page").val(page);   
+                $("#size").val(size);
+                $("#query").click();
+            }
+            
+            function check() {
+                var startTime = $("#startTime").val(),
+                    entTime   = $("#endTime").val();
+                if(startTime && !entTime) {
+                    alert("结束时间不能为空!");
+                    return false;
+                } else if (!startTime && entTime) {
+                    alert("开始时间不能为空!");
+                    return false;
+                }
+                return true;
+            }
+            
+            $(function(){
+                var start = {
+                        elem: '#startTime',
+                        format: 'YYYY-MM-DD',
+                        istoday: false,
+                        choose: function(datas){
+                           end.min = datas; //开始日选好后，重置结束日的最小日期
+                           end.start = datas //将结束日的初始值设定为开始日
+                        }
+                    },
+                    end  = {
+                            elem: '#endTime',
+                            format: 'YYYY-MM-DD',
+                            istoday: false,
+                            choose: function(datas){
+                              start.max = datas; //结束日选好后，重置开始日的最大日期
+                            }   
+                        };              
+                laydate(start);
+                laydate(end);
+            });
+          /*]]>*/
+          </script>
+        </div>
+    </body>
+</html>
+

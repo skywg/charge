@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+
+<head><title>编辑充电站图片</title>
+<style type="text/css">
+*{ margin:0; padding:0; list-style:none;}
+img{ border:0;display:block;}
+
+#slide{width:640px;height:470px;margin:10px auto;padding:0;}
+#slide .big{width: 640px;height: 360px;overflow: hidden;border: 1px solid #ccc;position: relative;margin-bottom: 10px;}
+#slide .big .prev,#slide .big .next{position: absolute;top: 50%;margin-top: -25px;z-index: 99;}
+#slide .big .prev{left: 20px;}
+#slide .big .next{right: 20px;}
+#slide .big .ul-wrap{width: 640px;height: 360px;overflow: hidden;position: relative;}
+#slide .big ul{position: absolute;top: 0;}
+#slide .big li{float: left;width: 640px;}
+#slide .big li a{display: table-cell;width: 640px;height: 360px;text-align: center;vertical-align: middle;}
+#slide .big li img{max-width: 640px;max-height:360px;text-align: center;}
+#slide .min{width: 640px;height: 80px;position: relative;margin:0 auto;}
+#slide .min .prev,#slide .min .next{position: absolute;top: 50%;margin-top: -9px;}
+#slide .min .prev{left: 0;}
+#slide .min .next{right: 0;}
+#slide .min .ul-wrap{width:600px;height: 80px;margin:0 auto;position: relative;overflow: hidden;}
+#slide .min ul{position: absolute;top: 0;}
+#slide .min li{float: left;margin:0 5px;}
+#slide .min li a{display: table-cell;width:110px;height: 70px;text-align: center;vertical-align: middle;border: 1px solid #fff;}
+#slide .min li.on a{border-color:#f60;}
+#slide .min li img{max-width:1088px;max-height:68px;text-align: center;}
+</style>
+<style type="text/css">
+.button{
+    background: none repeat scroll 0 0 #00B7EE;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    font-size: 14px;
+    margin-left: 80%;
+    padding: 0 18px;
+    position: relative;
+    text-align: center;
+    line-height: 34px;
+    transition: background 0.2s;
+	-moz-transition: background 0.2s;
+	-webkit-transition: background 0.2s;
+	-o-transition: background 0.2s;
+}
+.button:hover{
+	background: none repeat scroll 0 0 #00A2D4;
+}
+</style>
+</head>
+
+<head><title>编辑充电站图片</title>
+	<style>
+		ul,li{list-style: none;padding:0px;}
+		.panel-tabs{
+			overflow: hidden;
+		}
+		.panel-tabs ul li{
+			float: left;	
+		}
+		.panel-tabs ul li a{
+			display: block;
+			padding:0 20px;
+			line-height:48px;
+			color:#36383c;
+		}
+		.panel-tabs ul li a:hover{
+			text-decoration: none;
+			color:#379cf8;
+		}
+		.activea a{
+			border-bottom: 2px solid #379cf8;
+		}
+	</style>
+</head>
+
+<head><title>编辑充电站图片</title></head>
+
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/stations/}">设备中心</a></li>
+        <li><a th:href="@{/admin/stations/}">充电站</a></li>
+        <li class="active">编辑充电站图片</li>
+    </ol>
+
+   <div class="panel">
+        <div role="tabpanel" class="panel-tabs">
+            <ul class="nav nav-tabs">
+					<li role="presentation"><a th:href="@{/admin/stations/edit/{id}(id=${station.id})}">基本信息</a></li>
+					<li role="presentation" class="active"><a th:href="@{/admin/stations/edit/images/{id}(id=${station.id})}">图片</a></li>
+                    <li role="presentation"><a th:href="@{/admin/stations/edit/chargers/{id}(id=${station.id})}">电桩</a></li>
+            </ul>
+        </div>
+		<div class="panel-body">
+     	<div class="row">
+         	<div class="button" id="loadid" style="" onclick="upload();" align="center">上传图片</div>
+        	<div class="button" id="cacelid" onclick="cacel();" style="display: none" align="center">取消上传</div>
+            <div class="panel-body" id="slide">
+         		<input type="hidden" th:value="${station.id}" id="station-id"/> 
+         		<div id="sortable" class="placeholders" th:if="${station.images.size()>0}">
+			 		<div class="big">
+						<a href="javascript:;" class="prev prev1"><img th:src="@{/images/pic_tab/index.png}" width="28" height="51"  alt=""/></a>
+						<a href="javascript:;" class="next next1"><img th:src="@{/images/pic_tab/index1.png}" width="28" height="51"  alt=""/></a>
+						<div class="ul-wrap" >
+							<ul>
+								<li class="image-cell" th:each="photo, iteration : ${station.images}" th:attr="data-image-index=${iteration.index}" style="text-align:right;position:relative;">
+									<span id="delete-pic" style="position:absolute;right:10px;top:5px;"><i class="fa fa-times-circle fa-2x"></i></span>
+									<a href="javascript:;">
+									<img class="img-responsive" style="width:640px;height:360px" 
+									th:src="*{'http://youetong.b0.upaiyun.com'+photo.src}"/></a>
+								</li>
+							</ul>
+						</div>		
+			    	</div>
+			    	 <div class="min" >
+						<a href="javascript:;" class="prev prev2"><img th:src="@{/images/pic_tab/index3.png}" width="9" height="18"  alt=""/></a>
+						<a href="javascript:;" class="next next2"><img th:src="@{/images/pic_tab/index4.png}" width="9" height="18"  alt=""/></a>
+						<div class="ul-wrap">
+							<ul>
+								<li class="cell" th:each="photo, iteration : ${station.images}" th:attr="data-image-index=${iteration.index}">
+									<a href="javascript:;"><img class="img-responsive" style="width:108px;height:68px"
+									th:src="*{'http://youetong.b0.upaiyun.com'+photo.src}"/></a>
+								</li>
+							</ul>
+						</div>		
+			    	</div> 
+				</div>
+				<div id="sortable" class="row placeholders" th:if="${station.images.size()==0}">
+		   			<div class="big">
+						<div class="ul-wrap">
+							<div>
+								<a href="javascript:;"><img th:src="@{/images/pic_tab/tab1.png}" width="640" height="360"  alt=""/></a>
+							</div>	
+						</div>		
+			 		</div>
+			 		<div class="min">
+						<div class="ul-wrap">
+							<div><h1 align="center">请上传图片</h1></div>
+						</div>		
+				 	</div>
+		  	 	</div>
+			</div> 
+		</div>
+		
+        <div id="upload" class="demo" style="display: none;"></div> 
+         <!-- 上传图片 -->
+         		<div class="col-xs-3 col-sm-3" id="uploadid" style="display: none">
+                	<div class="uploader" data-directory="brands">
+                    	<div class="brand-logo-container uploader-preview-container">
+                        	<img class="img-responsive uploader-preview"
+                            	 th:src="@{/images/plus_.png}" style="margin:30px;width:180px;height:180px"/>
+                        	<div class="btn btn-default" style="margin-bottom: 15px;" id="uploadDiv">
+                        		<input class="uploader-file" name="file" type="file" autocomplete="off"/><span>选择图片...</span>
+                   	 			<input type="hidden" class="brand-logo uploader-holder"/>
+                    		</div>	
+                    	</div>
+                	</div>
+              	</div>
+          
+	</div>
+		<div class="panel-footer">
+			<form role="form" action="#" method="post"
+                      th:action="@{/admin/stations/images/{id}(id=${station.id})}" th:object="${image}">
+				<input type="hidden" id="station-images" th:field="*{src}" th:value="*{src}"/>
+				<nav class="navbar navbar-default" role="navigation">
+					<div class="container-fluid">
+                        <div class="navbar-right">
+                          	<a class="btn btn-query btn-primary cancel-btn-id" href="index.html"
+                                     th:href="@{/admin/stations/search}" style="padding-top:5px">取消</a>
+                         </div>
+                         <div class="navbar-right" style="margin-right:10px">
+							<button type="submit" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div>
+                       </div>
+                   </nav>
+            </form>
+		</div>
+	</div>
+</div>
+
+<div layout:fragment="javascript">
+    <script>
+    	function upload(){
+    		document.getElementById("slide").style.display="none";//隐藏
+    		document.getElementById("upload").style.display="block";
+    		document.getElementById("loadid").style.display="none";
+    		document.getElementById("cacelid").style.display="block";
+    	}
+    	function cacel(){
+    		document.getElementById("slide").style.display="block";
+    		document.getElementById("upload").style.display="none";
+    		document.getElementById("loadid").style.display="block";
+    		document.getElementById("cacelid").style.display="none";	
+    	}
+    	 var imagesSrc = "";
+         $(document).on('click', '.upload_btn', function (e) {
+        	 var files =selectedFiles;
+        		 /*<![CDATA[*/ 
+        		  for(var i = 0; i < files.length;) {
+    				 var file = files[i];
+    	             var uploader = $(this).closest('.uploader');
+    				 var directory = "brands";
+    				 $.ajax({
+    					 type:"post",
+    					 async: false,
+    					 url:"/ajax/photo-storage-settings",
+    					 data:{"directory":directory},
+    					 dataType:"json",
+    					 success:function(settings){
+    						 var data = new FormData();
+        	                 data.append('policy', settings.policy);
+        	                 data.append('signature', settings.signature);
+        	                 data.append('file', file);
+        	                 var request = new XMLHttpRequest();
+        	                 request.open('POST', settings.endpoint,false);	
+        	                 request.onload = function (e) {
+        	                     var data = jQuery.parseJSON(request.response);
+        	                     	if (data.code == 200) {
+        	                        	 uploader.find('.uploader-preview').attr('src', "http://youetong.b0.upaiyun.com" + data.url);
+        	                        	 console.log(data.url);
+        	                        	 imagesSrc += data.url+",";
+        	                        	 document.getElementById("station-images").value=imagesSrc;
+        	                         	 i++;
+        	                    	 } else {
+        	                     		var mes = data.message;
+        	                     		if(mes!="need file"){
+        	                     			alert(data.message);
+        	                     		}
+        	                    	 }
+        	                	};
+        	                 request.send(data);
+    					 }
+    				  });
+    				}
+        		 /*]]>*/
+        	
+         }); 
+        $(document).on("click", "#delete-pic", function () {
+
+            var image = $(this).closest(".image-cell");
+            var image1 = $(this).closest(".cell");
+            var stationId = document.getElementById("station-id").value;
+            var imageIndex = image.data("image-index");
+            if (confirm("你确认要删除此图片吗？")) {
+                $.get("/ajax/stations/images/" + stationId + "/" + imageIndex + "/actions/delete", function (result) {
+                    if (result == "SUCCESS") {
+                        image.delete; 
+                        image1.delete;
+                        location.reload() ;
+                    } else {
+                        alert("删除时发生意外，请重试或联系程序员哥哥帮忙解决 :)");
+                    }
+                });
+            }
+            return false;
+        });
+        $(function(){
+    		var picLength=$(".ul-wrap ul li").length/2;
+    		if(picLength==3){
+    			$(".min").css("width","500px");
+    			$(".ul-wrap").eq(1).css("width","450px")
+    		}if(picLength==2){
+    			$(".min").css("width","350px");
+    			$(".ul-wrap").eq(1).css("width","300px")
+    		}if(picLength==1){
+    			$(".min").css("width","190px");
+    			$(".ul-wrap").eq(1).css("width","145px")
+    		}
+    	});
+        $(function () {
+            var sortableElement = $("#sortable");
+            sortableElement.sortable({
+                        containment: "parent",
+                        cursor: "move",
+                        items: "> #image-cell",
+                        update: function (event, ui) {
+                            var sorted = sortableElement.sortable("toArray", {attribute: "data-image-index"}).toString();
+                            var stationId = document.getElementById("station-id").value;
+                            var url = "/ajax/stations/" + stationId + "/images/position";
+                            $.post(url, {sorted: sorted}).fail(function () {
+                                alert("更新时发生意外，请重试或联系程序员哥哥帮忙解决 :)");
+                       ;     });
+                        }
+                    }
+            );
+            sortableElement.disableSelection();
+        });
+    </script>
+</div>
+</body>
+</html>

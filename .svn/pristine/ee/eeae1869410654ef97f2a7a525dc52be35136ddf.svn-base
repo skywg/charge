@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>系统角色列表</title>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+       	<li><a th:href="@{/admin/system/roles/}">系统管理</a></li>
+        <li class="active">角色分配</li>
+    </ol>
+    <div class="panel border">
+        <div class="panel-tabs" role="tabpanel">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="#">角色分配列表</a></li>
+<!--                 <li class="pull-right" style="margin-right:0">
+                </li> -->
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive" style="margin-top: 1px">
+            	<div class="col-md-12" style="padding-bottom:10px;padding-right:0px;">
+            		<a class="btn btn-query btn-primary pull-right add-btn-id" href="add.html" th:href="@{/admin/system/roles/add}" style="padding-top:5px">添加</a>
+            	</div>
+				<div class="col-md-12 navbar-xian">
+                            <hr class="xian-color"/>
+               </div>
+                <table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th style="width:32px;">#</th>
+                        <th>角色名称</th>
+		                <th>描述</th>
+		                <th style="width:50px;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="role,roleIter : ${page.content}" th:attr="data-id=${role.roleId}">
+                        <td th:text="${roleIter.count}">1</td>
+		                <th th:text="${role.roleName}" class="abc" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">角色名称</th>
+		                <td th:text="${role.roleDescr}" class="abc" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">描述</td>
+		                <td class="all-icon"><a th:href="@{/admin/system/roles/edit/{roleId}(roleId=${role.roleId})}" class="edit-id" title="编辑"></a></td>         
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div th:replace="element/pagination"></div>
+        </div>
+    </div>
+
+    <!-- /.row -->
+
+</div>
+<script>
+    $(document).ready(function() {
+        $('.custom-input input').phAnim();
+    })
+</script>
+</body>
+
+</html>
+

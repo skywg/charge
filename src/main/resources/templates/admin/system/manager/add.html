@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>添加系统用户</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/managers/}">系统管理</a></li>
+        <li><a th:href="@{/admin/managers/}">用户管理</a></li>
+        <li class="active">添加系统用户</li>
+    </ol>
+<script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        
+        /*]]>*/
+    </script>
+   
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">添加系统用户</a></li>
+                </ul>
+            </div>
+ 		<form role="form" action="#" method="post" th:action="@{/admin/managers/managerAdd}" th:object="${manager}">
+            <div class="panel-body" th:include="admin/system/manager/form"></div>
+
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html" th:href="@{/admin/managers/search}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary keep-btn-id" onclick="return check()">保存</button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+                
+            </div>
+            </form>
+        </div>
+       <div th:text="${message}" style="text-align:center; color:#ff0000"></div>
+    
+</div>
+</body>
+</html>

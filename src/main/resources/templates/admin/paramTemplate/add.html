@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>添加参数模板</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/paramTemplates/}">设备中心</a></li>
+        <li><a th:href="@{/admin/paramTemplates/}">充电桩设置</a></li>
+        <li><a th:href="@{/admin/paramTemplates/}">参数模板</a></li>
+        <li class="active">添加参数模板</li>
+    </ol>
+<script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        
+        /*]]>*/
+</script>
+<script type="text/javascript">   
+function save(){
+		var a = '00:00';
+		var b = '24:00';
+		var table = document.getElementById('tabProduct');
+		var k=table.rows.length - 1;
+		if(k > 1){
+			for(var k;k>1;k--){
+		    var nowStartAt  = table.rows[k].cells[1].firstChild;
+		    var nowEndAt    = table.rows[k].cells[2].firstChild;
+		    var Date1 = nowStartAt.value;
+		    var Date2 = nowEndAt.value;
+		    var strTimeArray1 =  Date1.split(':');  
+		    var intHour1  =  parseInt(strTimeArray1[0],10); 
+	        var intMin1   =  parseInt(strTimeArray1[1],10); 
+		    var strTimeArray2 =  Date2.split(':'); 
+		    var intHour2  =  parseInt(strTimeArray2[0],10); 
+	        var intMin2   =  parseInt(strTimeArray2[1],10); 
+		    var lastStartAt = table.rows[k-1].cells[1].firstChild;
+		    var lastEndAt   = table.rows[k-1].cells[2].firstChild;
+		    if(nowStartAt.value == nowEndAt.value){
+		    	document.getElementById('message').innerHTML = '表格中第'+ k + '行开始时间和结束时间不能为同一时刻！请修改后再次提交！';
+		    	return false;
+		    	}
+		    else if(nowStartAt.value != lastEndAt.value){
+		    	document.getElementById('message').innerHTML = '表格中第'+ k+ '行开始时间必须于上一行中结束时间闭合！请修改后重新提交！';
+		    	return false;
+		    	}
+		    else if(intHour1 >= intHour2){
+		    	document.getElementById('message').innerHTML = '表格中第'+ k+ '行开始时间必须早于结束时间！请修改后重新提交！';
+		    	return false;
+		    	}
+		    else if(intHour1 == intHour2){
+		    	if(intMin1 >= intMin2){
+		    		document.getElementById('message').innerHTML = '表格中第'+ k+ '行开始时间必须早于结束时间！请修改后重新提交！';
+			    	return false;
+		    		}
+		    	}
+		    
+		    document.getElementById('message').innerHTML = '';
+    	   }
+		}
+		
+		return true;
+	}
+</script>
+    
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">添加参数模板</a></li>
+                </ul>
+            </div>
+		<form role="form" id="commentForm" action="#" method="post" th:action="@{/admin/paramTemplates/addTemplate}" th:object="${paramTemplate}">
+            <div class="panel-body" th:include="admin/paramTemplate/addform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html"  th:href="@{/admin/paramTemplates/query}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" onclick="bc();" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+           </form> 
+        </div>
+</div>
+<div layout:fragment="javascript" id="javascript">
+    
+    <script src="../../static/js/material.min.js" th:src="@{/js/material.min.js}"></script>
+    <script src="../../static/js/moment-with-locales.min.js" th:src="@{/js/moment-with-locales.min.js}"></script>
+    <script src="../../static/js/bootstrap-material-datetimepicker.js" th:src="@{/js/bootstrap-material-datetimepicker.js}"></script>
+    
+    <script type="text/javascript">
+    	$(function(){
+    		   var j = $("#wrap1 input[type='radio']").eq(0);
+    		   j.attr("checked","checked");
+    		   var i = $("#wrap input[type='radio']").eq(0);
+ 			   i.attr("checked","checked");
+			   var index =i.val();
+			   check(index); 
+			   $("#wrap input").click(function(){
+					var index=$(this).val();
+					check(index);
+			  });
+		});
+    	function check(index){
+			if(index=='PARAM'){
+				$("#div1").show();
+				$("#div2").hide();
+				$("#div3").hide();
+			}if(index=='PRICE'){
+				$("#div2").show();
+				$("#div1").hide();
+				$("#div3").hide();
+			}if(index=='UPDATE'){
+				$("#div3").show();
+				$("#div2").hide();
+				$("#div1").hide();
+			}
+		}
+        $(document).ready(function(){
+            var table = document.getElementById('tabProduct');
+            var lastRow = table.rows[1];
+            var startAt = lastRow.cells[1].firstChild;
+            var endAt   = lastRow.cells[2].firstChild;
+            startAt.value = startAt.value == '' ? '00:00' : startAt.value;
+            endAt.value = endAt.value == '' ? '24:00' : endAt.value;
+            $('.Time').bootstrapMaterialDatePicker
+            ({
+                date: false,
+                shortTime: false,
+                format: 'HH:mm'
+            });
+            
+            $('.Datee').bootstrapMaterialDatePicker
+            ({
+                date: true,
+                time:false,
+                shortTime: true,
+                format: 'YYYY-MM-DD'
+            });
+            
+            $.material.init()
+        });
+        $("#aa-a").addClass("active");
+		$("#aa-a1").addClass("in").attr("aria-expanded","true");
+		$("#aa-b").addClass("active");
+		$("#aa-b1").addClass("in").attr("aria-expanded","true");
+		$("#aa-c").addClass("active");$("#aa-a").addClass("active");
+		$("#aa-a1").addClass("in").attr("aria-expanded","true");
+		$("#aa-b").addClass("active");
+		$("#aa-b1").addClass("in").attr("aria-expanded","true");
+		$("#aa-c").addClass("active");
+		function bc(){
+			var type = $('input[name="type"]:checked').val()
+			if(type=='PRICE'){
+				$(".price").prop("required","true");
+				$(".fee").prop("required","true");
+				$(".remark").prop("required","true");
+				$("#ip").removeAttr("required");
+				$("#port").removeAttr("required");
+				$("#interval").removeAttr("required");
+				return save();
+			}else if(type=='PARAM'){
+				$("#ip").attr("required","true");
+				$("#port").attr("required","true");
+				$("#interval").attr("required","true");
+				$(".price").removeAttr("required");
+				$(".fee").removeAttr("required");
+				$(".remark").removeAttr("required");
+
+
+				return true;
+			}
+			
+		}
+    </script>   
+
+
+	<script th:inline="javascript">//引用  
+		
+	 </script>
+
+	<script th:inline="javascript">
+		$(document).ready(function() {   
+	        $("#aa-a").addClass("active");
+			$("#aa-a1").addClass("in").attr("aria-expanded","true");
+			$("#aa-b").addClass("active");
+			$("#aa-b1").addClass("in").attr("aria-expanded","true");
+			$("#aa-c2").addClass("active");
+			$('.custom-input input').phAnim();
+	    })
+	 </script>
+
+</div>
+</body>
+</html>

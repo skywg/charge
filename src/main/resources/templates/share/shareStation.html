@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+<meta charset="utf-8"/>
+<meta name="author" content=""/>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, user-scalable=no width=device-width"/>
+<link href="../../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
+<link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="" th:src="@{/js/jquery.js}"></script>
+<script  th:src="@{/js/jquery.raty.js}"></script> 
+<script  th:src="@{/js/jquery.raty.min.js}"></script>    
+<script src="http://cache.amap.com/lbs/static/es5.min.js"></script>       
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&amp;key=a746dec348d188ad0b1d9d1d466b780f"></script>
+<style type="text/css">
+body, html {
+	margin: 0;
+	height: 100%;
+	font-size: 12px;
+}
+
+#mapContainer {
+	height: 100%
+}
+.bottom_steal {
+	position: relative;
+	
+}
+.bottom_steal>button
+.margingT {
+    margin-bottom: 80px;
+}
+.bottomAD {
+    -webkit-box-sizing: border-box;
+    height: 80px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 0 10px;
+    overflow: hidden;
+    width: 100%;
+    background: rgba(0, 0, 0, .8);
+}
+.bottom-pic {
+    position: absolute;
+    top: 10px;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+.bottom-pic img {
+    width: 100%;
+    height: 100%;
+}
+.bottom-text {
+    margin-left: 70px;
+    line-height: 25px;
+    font-size: 14px;
+    color: #fff;
+    margin-top:15px;
+}
+.bottom-btn {
+	margin-right:40px;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    background-color: #3E3A38;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 18px;
+    padding: 0 5px;
+    font-weight: bold;
+    border:1px solid #AEADAC;
+    
+}
+#panel {
+            position: fixed;
+            background-color: white;
+            max-height: 90%;
+            overflow-y: auto;
+            top: 10px;
+            right: 10px;
+            width: 280px;
+        }
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+	$(document).ready(function(){
+		var review = $("#review").val();
+		$(document).attr("title",$("#title").val());
+		$('#star').raty({ 
+			starHalf:'../../../images/star-half.png',
+			starOn:'../../../images/star-on.png',
+			starOff:'../../../images/star-off.png',
+			readOnly: true, 
+			score: review 
+		});
+	})
+/*]]>*/
+</script>
+</head>
+<body style="background: #ffffff">
+	<div style="height: 11%; margin-top: 0%;">
+		<table style="width: 100%; border: 0px solid red; margin-left: 20px">
+			<tr>
+				<td colspan="2" style="font-size: 14px;" th:text="${sname}"></td>
+				<td rowspan="3" width="22%;" style="padding-right: 20px"><button type="button"
+						class="btn btn-danger" style="float: right;margin-right: 10px;background-color: #fff;color: #d9534f;"
+						onclick="driving()"><img style="width: 17px; height: 20px; margin-right: 10px;" src="../../../images/daohang.png"/>导  航</button></td>
+			</tr>
+			<tr>
+				<td width="20%;"><div id="star"></div></td>
+				<td>(<span th:text="${#strings.startsWith(review,'0') ? '暂无评分' : review + '分'}"></span>)</td>
+			</tr>
+			<tr>
+				<td colspan="2" th:text="${station.address}" style="font-size: 14px;"></td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+	<div style="border: 1px solid #e6e6e6; height: 2%;">
+	</div>
+	<div style="height: 45%" id="mapContainer"></div>
+	<div id="panel" hidden="true"></div>
+	<div style="border: 1px solid #e6e6e6; height: 2%;">
+	</div>
+	<div style="height: 22%;">
+			<table  style="margin-left: 20px">
+				<tr>
+					<td style="font-size: 14px;">充电单价:<span th:text="${station.price}">暂无数据</span></td>
+				</tr>
+				<tr>
+					<td style="font-size: 14px;">停车费用：<span th:text="${station.fee}">暂无数据</span></td>
+				</tr>
+				<tr>
+					<td style="font-size: 14px;">营业时间:<span th:text="${station.openTime}">暂无数据</span></td>
+				</tr>
+				<tr>
+					<td style="font-size: 14px;">服务电话:<span th:text="${station.operator.telephone}">暂无数据</span></td>
+				</tr>
+			</table>
+		<div style="border: 1px solid #e6e6e6; height: 2%;">
+		</div >
+		<div style="font-size: 14px; margin-left: 20px">
+		车友评价
+		</div>
+		
+		<div>
+			<table style="font-size: 14px;margin-left: 20px">
+				<tr th:each="rs,rsIter:${reviews}">
+					<td th:if="${rsIter.size le 1}" th:text="${rsIter.size}"></td>
+					<td th:if="${rsIter.count le 4}" th:text="${rs.content}"></td>
+				</tr>
+			</table>
+		</div>			
+		<!-- <div class="bottom_steal">
+			<button type="button" class="btn btn-danger btn-lg"
+				style="width: 100%;  margin-top: 8px; border-radius:0;background:rgba(62,58,56,.5)"
+				onclick="downLoad()">立即下载充电大亨<span style='position:absolute;left:90%'>&times;</span></button>
+			
+		</div> -->
+		<div class="bottomAD" id="bottomAD">
+		    <div class="bottom-con">
+		        <div class="bottom-pic">
+		            <img src="../../../images/charger-log.png" width="60" height="60" alt="" />
+		        </div>
+		        <div class="bottom-text" id="bottomText">
+		        	<span style='font-size:16px'>充电大亨</span><br/>
+		        	<span style='font-size:13px'>只为方便您的出行</span>
+		        </div>
+		        <div class="bottom-btn" onclick="download()">立即下载</div>
+		        <!-- <div style='font-size:33px;color:#ffffff;position:absolute;top:17px;right:18px' onclick="close()">&times;</div> -->
+		    	<div style='position:absolute;top:17px;right:18px' onclick="closeDiv()"><img style="width:19px;margin-top:12px;"  src="../../../images/guanbi.png"/></div>
+		    </div>
+	</div>
+	</div>
+	<input hidden="true" id="title" th:value="${sname}"/>
+	<input hidden="true" id="longitude" th:value="${station.longitude}"/>
+	<input hidden="true" id="latitude" th:value="${station.latitude}"/>
+	<input hidden="true" id="address" th:value="${station.address}"/>
+	<input hidden="true" id="review" th:value="${review}"/>
+	<input hidden="true" id="city" th:value="${station.city}"/>
+	<input hidden="true" id="positionX" th:value="${positionX}"/>
+	<input hidden="true" id="positionY" th:value="${positionY}"/>
+
+		
+	<script type="text/javascript">
+	/*<![CDATA[*/
+	 /* var map = new AMap.Map('container', {
+        resizeEnable: true,
+        zoom:11,
+        center: [116.397428, 39.90923]
+        
+   	 }); */
+		var mapObj = new AMap.Map("mapContainer", {
+			resizeEnable: true,
+			level : 18
+		});
+ 		mapObj.setStatus({
+			dragEnable : true
+		});
+		var windowsArr = new Array();
+		var marker = new Array();
+		placeSearch_CallBack();
+		//回调函数
+		function placeSearch_CallBack() {
+			var resultStr = "";
+			var name = $("#title").val();
+			var address = $("#address").val();
+			resultStr += "<div id='divid"
+				+ "' onmouseover='openMarkerTipById1("
+				+ (0)
+				+ ",this)' onmouseout='onmouseout_MarkerStyle("
+				+ (1)
+				+ ",this)' style=\"font-size: 12px;cursor:pointer;padding:0px 0 4px 2px; border-bottom:1px solid #C1FFC1;\"><table><tr><td><img src=\"../../../images/map-sign.png\"></td>"
+				+ "<td><h3><font color=\"#00a6ac\">名称: "
+				+ name + "</font></h3>";
+			resultStr += TipContents(address) + "<br \/></div>";
+			//添加marker
+			console.info(resultStr);
+			var lngX = $("#longitude").val();
+			var latY = $("#latitude").val();
+			var markerOption = {
+				map : mapObj,
+				icon : "../../../images/map-sign.png",
+				position : new AMap.LngLat(lngX, latY)
+			};
+			var mar = new AMap.Marker(markerOption);
+			marker.push(new AMap.LngLat(lngX, latY));
+
+			//添加infowindow
+			var infoWindow = new AMap.InfoWindow({
+				content : "<h5><font color=\"#00a6ac\">"
+						+ address + "</font></h5>"
+						+ TipContents(address),
+				size : new AMap.Size(0, 0),
+				autoMove : false,
+				offset : {
+					x : 0,
+					y : -20
+				}
+			});
+			windowsArr.push(infoWindow);
+			mapObj.setCenter(mar.getPosition());
+			var aa = function(e) {
+				infoWindow.open(mapObj, mar.getPosition());
+			};
+			AMap.event.addListener(mar, "mouseover", aa);
+
+		}
+		function TipContents(address) { //信息窗体内容
+			console.log("at TipContents"+address);
+			if (address == "" || address == "undefined" || address == null
+					|| address == " undefined" || typeof address == "undefined") {
+				address = "暂无";
+			}
+			var str = "&nbsp;&nbsp;地址：" + address + "<br />";
+			return str;
+		}
+		function openMarkerTipById1(pointid, thiss) { //根据id打开搜索结果点tip  
+			console.log("at openMarkerTipById1");
+			thiss.style.background = '#CAE1FF';
+			windowsArr[pointid].open(mapObj, marker[pointid]);
+		}
+		function onmouseout_MarkerStyle(pointid, thiss) { //鼠标移开后点样式恢复  
+			console.log("out onmouseout_MarkerStyle");
+			thiss.style.background = "";
+		}
+		//显示路线
+		function driving(){
+			var lngX = $("#longitude").val();
+			var latY = $("#latitude").val();
+			var positionX = $("positionX").val();
+			var positionY = $("positionY").val();
+			//开车调用api形成路线
+			AMap.service('AMap.Driving',function(){//回调函数
+				var driving = new AMap.Driving({
+				    map: mapObj,
+				    panel: "panel"
+				});
+				driving.search([positionX, positionY],
+						[lngX, latY],function(status,result){
+					if(status!="complete"){
+						alert("定位失败");
+					}
+				});
+			});
+		}
+				
+		function download() {
+			var browserName=navigator.userAgent.toLowerCase();    
+	        if(/iphone/i.test(browserName)){  
+	        	location.href = 'https://itunes.apple.com/cn/app/chong-dian-da-heng/id1179240717?mt=8';   
+		    }else{
+		    	location.href = 'http://180.97.90.76:8300/app/charger_1.0.1.apk';
+		    } 
+		}
+		
+		function closeDiv(){
+			$("#bottomAD").hide();
+		}
+		/*]]>*/
+	</script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+2017-02-25 17:19:21.462 [main] INFO  com.iycharge.server.Application -Starting Application on AFODC-609182138 with PID 956 (D:\eclipseSpeace\charge-server\target\classes started by Administrator in D:\eclipseSpeace\charge-server)
+2017-02-25 17:19:21.658 [main] INFO  com.iycharge.server.Application -The following profiles are active: prod

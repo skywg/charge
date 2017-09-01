@@ -1,0 +1,4 @@
+2017-02-20 16:23:21.767 [main] INFO  com.iycharge.server.Application -Starting Application on AFODC-609182138 with PID 5468 (D:\eclipseSpeace\charge-server\target\classes started by Administrator in D:\eclipseSpeace\charge-server)
+2017-02-20 16:23:21.900 [main] INFO  com.iycharge.server.Application -The following profiles are active: prod
+2017-02-20 16:25:28.370 [main] INFO  com.iycharge.server.Application -Started Application in 131.054 seconds (JVM running for 134.233)
+2017-02-20 16:26:29.794 [main] INFO  c.iycharge.server.ccu.core.CCUServer -CCU Server has started success!

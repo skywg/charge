@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="admin/layout">
+<head>
+<title>会员消费分析</title>
+</head>
+<body>
+	<div layout:fragment="content" id="content">
+		<ol class="breadcrumb">
+			<li><a th:href="@{/admin/}">首页</a></li>
+			<li><a th:href="@{/admin/reports/accountDataCount}">分析中心</a></li>
+			<li class="active">会员消费分析</li>
+		</ol>
+		<div class="panel border">
+			<div class="panel-tabs" role="tabpanel">
+				<ul class="nav nav-tabs">
+					<li role="presentation" class="active"><a href="#">会员消费分析</a></li>
+				</ul>
+			</div>
+			<div class="panel-body">
+				<!-- <div class="table-responsive" style="margin-top: 1px"> -->
+				<div style="margin-top: 1px">
+					<div class="col-sm-12 col-md-12" style="padding-right: 0px">
+						<form role="form" action="/admin/reports/accountDataCount/search"
+							method="post">
+							<input type="hidden" id="page" name="page" value="*{page}" /> <input
+								type="hidden" id="size" name="size" value="*{size}" />
+							<div class="form-group custom-input box-title-sm"
+								style="display: inline-block; padding-right: 20px;">
+								<label class="form-control-label">统计粒度</label>
+								  <input
+									type="radio" name="datetype" value="week" id="week" checked="checked"/><span>近一周</span>
+									<input
+									type="radio" name="datetype" value="halfyear" id="halfyear" /><span>半年</span>
+									<input
+									type="radio" name="datetype" value="fiveyear" id="fiveyear" /><span>五年</span> 
+								 <input
+									type="radio" name="datetype" value="year" id="nian" /><span>年</span>
+								<input type="radio" name="datetype" value="month"
+									style="margin-left: 10px;" id="yue" /><span>月</span> <input
+									type="radio" name="datetype" value="day" 
+									style="margin-left: 10px;" id="ri" /><span>日</span>
+							</div>
+							<div id="nian-o" style="display: none">
+								<div class="form-group col-md-3 custom-input box-title-sm"
+									style="display: inline-block; width: 250px; padding: 0px; float: none;">
+									<label for="inputStartAt" class="form-control-label" style="font-weight: normal;">开始时间</label>
+									<input type="text" class="form-control-input laydate-icon"
+										id="datetimepicker1" name="yearstartdate" placeholder=""
+										style="width: 160px" />
+								</div>
+								<div class="form-group col-md-3 custom-input box-title-sm"
+									style="display: inline-block; width: 250px; padding: 0px; float: none;">
+									<label for="inputEndAt" class="form-control-label" style="font-weight: normal;">结束时间</label>
+									<input type="text" class="form-control-input laydate-icon"
+										id="datetimepicker2" name="yearenddate" placeholder=""
+										style="width: 160px" />
+								</div>
+							</div>
+							<div id="yue-o" style="display: none">
+								<div class="form-group col-md-3 custom-input box-title-sm"
+									style="display: inline-block; width: 250px; padding: 0px; float: none;">
+									<label for="inputStartAt" class="form-control-label" style="font-weight: normal;">开始时间</label>
+									<input type="text" class="form-control-input laydate-icon"
+										id="datetimepicker3" name="monthstartdate" placeholder=""
+										style="width: 160px" />
+								</div>
+								<div class="form-group col-md-3 custom-input box-title-sm"
+									style="display: inline-block; width: 250px; padding: 0px; float: none;">
+									<label for="inputEndAt" class="form-control-label" style="font-weight: normal;">结束时间</label>
+									<input type="text" class="form-control-input laydate-icon"
+										id="datetimepicker4" name="monthenddate" placeholder=""
+										style="width: 160px" />
+								</div>
+							</div>
+							<div id="ri-o" style="display: inline-block;">
+								<div class="form-group col-md-3 custom-input box-title-sm"
+									style="display: inline-block; width: 250px; padding: 0px; float: none;">
+									<label for="inputStartAt" class="form-control-label" style="font-weight: normal;">开始时间</label>
+									<input type="text" class="form-control-input laydate-icon"
+										id="datetimepicker5" name="daystartdate" placeholder=""
+										style="width: 160px" />
+								</div>
+								<div class="form-group col-md-3 custom-input box-title-sm"
+									style="display: inline-block; width: 250px; padding: 0px; float: none;">
+									<label for="inputEndAt" class="form-control-label" style="font-weight: normal;">结束时间</label>
+									<input type="text" class="form-control-input laydate-icon"
+										id="datetimepicker6" name="dayenddate" placeholder=""
+										style="width: 160px" />
+								</div>
+							</div>
+							<div class="form-group custom-input box-title-sm"
+								style="display: inline-block; width: 250px; padding: 0px; float: none;">
+								<label for="inputEndAt" class="form-control-label">统计会员</label>
+								<input type="text" data-toggle="modal" data-target="#myModal"
+									th:value="${queryParam.accounts}" readonly="readonly"
+									name="count" class="form-control-input laydate-icon" id="count"
+									placeholder="" style="width: 160px" />
+							</div>
+							<div class="form-group pull-right col-md-2"
+								style="text-align: right; padding-right: 0px">
+								<!--//title-->
+								<button type="submit" id="query"
+									class="btn-query btn-primary query-btn-id"
+									name="searchaccountDataCount"
+									style="margin-top: -1px; display: none;">查询</button>
+								<button type="button" id="export" name="accountexport" style="display: none;"
+									class="btn-query btn-primary export-btn-id">导出</button>
+							</div>
+						</form>
+					</div>
+					<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">
+										<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+									</button>
+									<h4 class="modal-title text-center" id="myModalLabel">会员详情</h4>
+								</div>
+								<div style="border-bottom: 1px solid #e5e5e5;padding:15px 15px 0px 15px">
+								<div class="row section">
+									<div class="col-md-12" style="text-align: left;padding:0px;">
+										<div class="form-group col-md-10" style="text-align: left;">
+											<label for="inputStartAt" class="form-control-label" style="color: #717171; padding-right: 5px;">姓名</label>
+											<input type="text" class="form-control-input laydate-icon"
+												maxlength="20" id="realName" placeholder=""
+												style="width:160px" />
+											<label for="inputEndAt" class="form-control-label" style="color: #717171; padding-right: 5px; padding-left: 20px;">电话</label>
+											<input type="text" class="form-control-input laydate-icon"
+												maxlength="11" id="phone" placeholder="" style="width: 160px" />	
+										</div>
+										<div class="form-group col-md-2" style="text-align:right;">
+											<input type="hidden" value="COMPANY" id="type" />
+											<button type="button"
+												class="btn-query btn-primary query-btn-id" onclick="query();"
+												style="margin-top: -1px;">查询</button>
+										</div>
+									</div>
+								</div>
+								</div>
+								<div class="modal-body">
+									<div style="max-height: 300px; overflow-y: auto;">
+										<table class="table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<td width="32" align="center" bgcolor="#EFEFEF" Name="Num"><input
+														type="checkbox" name="checkbox" onclick="check();"
+														value="checkbox" id="selectAll" /></td>
+													<th>姓名</th>
+													<th>昵称</th>
+													<th>电话</th>
+													<th>邮箱</th>
+												</tr>
+											</thead>
+											<tbody class="table_body" id="body1">
+												 <tr th:each="account, accountItemIter : ${accounts}">
+	                    	<td width="32" align="center"><input type="checkbox" name="checkbox1" th:value="${account.realName}" /></td>
+	                        <td th:text="${account.realName}">姓名</td>
+	                        <td th:text="${account.nickname}">昵称</td>
+	                        <td th:text="${account.phone}">电话</td>
+	                        <td th:text="${account.email}">邮箱</td>
+	                   	 	</tr> 
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<input type="hidden" id="hiddenid" />
+									<button type="button" class="btn-query btn-primary sure-btn-id" onclick="btn();"
+										data-dismiss="modal">确定</button>
+									<button type="button" class="btn-query btn-primary cancel-btn-id"
+										data-dismiss="modal">取消</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 navbar-xian">
+						<hr class="xian-color" />
+					</div>
+					<div class="col-md-12"
+						style="padding: 0px; overflow-y: auto; max-height: 300px;">
+						<table class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>时间</th>
+									<th>会员名称</th>
+									<th>会员号码</th>
+									<th>充电总量/kwh</th>
+									<th>充电金额</th>
+									<th>期初金额</th>
+									<th>本期入账金额</th>
+									<th>期末余额</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody class="table_body">
+								<tr th:each="userBillData, userBillDataIter : ${page.content}"
+									th:attr="data-id=${userBillData.id}">
+									<td th:text="${userBillDataIter.count}">1</td>
+									<td th:text="${#dates.format(userBillData.month,'yyyy-MM')}">时间</td>
+									<td th:text="${userBillData.account.realName}">会员名称</td>
+									<td th:text="${userBillData.account.phone}">会员号码</td>
+									<td th:text="${userBillData.totalElectricity}">充电总量/kwh</td>
+									<td th:text="${userBillData.totalMoney}">充电金额</td>
+									<td th:text="${userBillData.startBalance}">期初金额</td>
+									<td th:text="${userBillData.totalRecharge}">本期入账金额</td>
+									<td th:text="${userBillData.endBalance}">期末余额</td>
+									<td class="all-icon"><a
+										th:href="@{/admin/reports/accountDataCount/check/{id}(id=${userBillData.id})}"
+										name="checkUserBillData" style="display: none;" title="查看"
+										class="lock"></a></td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<div class="data-table-pagination">
+					<ul class="pagination">
+						<li><a
+							th:href="'javascript:gotoPage(0,' + ${page.size} + ')'"
+							title='首页'>首页</a></li>
+						<li th:class="${page.hasPreviousPage}"><a
+							th:if="${not page.hasPreviousPage}"
+							th:href="'javascript:gotoPage(0,' + ${page.size} + ')'"
+							title='上一页'>上一页</a> <a th:if="${page.hasPreviousPage}"
+							th:href="'javascript:gotoPage(' + ${page.number - 1} + ',' + ${page.size} + ')'"
+							title='上一页'>上一页</a></li>
+						<li th:each="item : ${page.items}"
+							th:class="${item.current}? 'active' : ''"><span
+							th:if="${item.current}" th:text="${item.number+1}">1</span> <a
+							th:if="${not item.current}"
+							th:href="'javascript:gotoPage(' + ${item.number} + ',' + ${page.size} + ')'">
+								<span th:text="${item.number+1}">1</span>
+						</a></li>
+						<li th:class="${page.hasNextPage}"><a
+							th:if="${not page.hasNextPage}"
+							th:href="'javascript:gotoPage(' + ${page.totalPages-1} + ',' + ${page.size} + ')'"
+							title="下一页">下一页</a> <a th:if="${page.hasNextPage}"
+							th:href="'javascript:gotoPage(' + ${page.number+1} + ',' + ${page.size} + ')'"
+							title="下一页">下一页</a></li>
+						<li><a
+							th:href="'javascript:gotoPage(' + ${page.totalPages-1} + ',' + ${page.size} + ')'"
+							title='尾页'>尾页</a></li>
+						<div
+							style="display: inline; height: 35px; line-height: 35px; padding-left: 10px;">
+							总计：<span th:text="${page.total}"></span>
+						</div>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div layout:fragment="javascript">
+		<script src="../../static/js/echarts.min.js"
+			th:src="@{/js/echarts.min.js}"></script>
+		<script th:inline="javascript">
+    /*<![CDATA[*/
+             
+             function query(){
+    				var  realName  =$("#realName").val().trim();
+    				var  phone  =$("#phone").val().trim();
+    				var  type   =$("#type").val().trim();
+    				$.ajax({
+    					url:"/admin/reports/accountDataCount/account/check",
+    					type:"post",
+    					data:{"realName":realName,"phone":phone,"type":type},
+    					dataType:"json",
+    					success:function(data){
+    						var obj=document.getElementsByName('checkbox1');
+    	     				var checked=new Array();
+    	     				//获取文本框中的值
+    	     				var inputValue =$("#count").val();  
+    	     				checked = inputValue.split(",");
+    						$("#body1").html("");
+    						var accounts =data;
+    						for(var i=0;i<data.length;i++){
+    							var flag = false;
+    							for(var j = 0 ; j < checked.length ; j++){
+    								if(checked[j]==data[i].realName){
+    									flag=true;
+    								}
+    							}
+    							if(flag){
+    								//如果被查询出来的值有以前被选中的,则设置被选中
+    								var trHTML =   '<tr>'
+        								+	'<td width="32" align="center"><input type="checkbox" name="checkbox1" value='+data[i].realName+' checked/></td>'
+        	  		      				+	'<td>'+data[i].realName+'</td>'
+        	  		      				+	'<td>'+data[i].nickname+'</td>'
+        	  		      				+	'<td>'+data[i].phone+'</td>'
+        	  		      				+	'<td>'+data[i].email+'</td>'
+        	  		      				+'</tr>';
+    							}else{
+    								var trHTML =   '<tr>'
+        								+	'<td width="32" align="center"><input type="checkbox" name="checkbox1" value='+data[i].realName+' /></td>'
+        	  		      				+	'<td>'+data[i].realName+'</td>'
+        	  		      				+	'<td>'+data[i].nickname+'</td>'
+        	  		      				+	'<td>'+data[i].phone+'</td>'
+        	  		      				+	'<td>'+data[i].email+'</td>'
+        	  		      				+'</tr>';
+    							}
+    	  		      			$("#body1").append($(trHTML));	
+    						}
+    						
+    					}
+    				})
+   				} 
+               
+            	function check(){
+            		var selectAll = document.getElementById("selectAll");
+            		var supportsCars = document.getElementsByName("checkbox1");
+            		if(selectAll.checked==false){
+            			for(var i = 0 ; i < supportsCars.length ; i++){
+            				supportsCars[i].checked=false;
+            			}
+            		}else{
+            			for(var i = 0 ; i < supportsCars.length ; i++){
+            				supportsCars[i].checked=true;
+            			}
+            		}
+    			}
+     			function btn(){
+     				//获取文本框中的初始值
+     				var lastValue=$("#count").val();
+     				$("#count").val("");
+     				var obj=document.getElementsByName('checkbox1');
+     				if(lastValue.length>0){
+     					lastValue+=",";
+     				}
+     				var s='';
+     				for(var i=0; i<obj.length; i++){
+     					if(obj[i].checked){ 
+     						s+=obj[i].value+','; //如果选中，将value添加到变量s中
+     					}else{
+     						//如果原文本框中的值被取消选中,则去掉对应的值
+     						lastValue = lastValue.replace(obj[i].value,',');
+     					}
+     				} 
+     				//获取文本框初始值和被选中的字段拼接成的字符串  转化成数组
+     				var currentValue = (lastValue+s).split(",");
+     				var tmp = new Array();
+     				//去掉重复的字符串
+     				var p = 0 ;
+     				for(var i = 0 ; i < currentValue.length ; i++){
+     					var flag = false;
+     					for(var j = 0 ; j < tmp.length ; j ++){
+     						if(tmp[j]==currentValue[i]){
+     							flag = true;
+     						}
+     					}
+     					if(currentValue[i]!=''&&!flag){
+     						tmp[p]=currentValue[i];
+     						p++;
+     					}
+     				}
+     				//用于显示在文本框中
+     				var forShow='';
+     				for(var i = 0 ; i < tmp.length ; i++){
+     					if(i == (tmp.length-1)){
+     						forShow +=tmp[i];
+     						break;
+     					}
+     					forShow+=tmp[i]+",";
+     				}
+     				
+     				$("#selectAll").attr("checked",false);
+     				$(count).val(forShow);
+     				
+     			}
+                
+                $("#export").click(function(){
+            	    var flag = false;
+					var obj=document.getElementsByName("datetype");
+				    for (var i=0;i<obj.length;i++){ //遍历Radio 
+				    	if(obj[i].checked){
+				    		if(obj[i].value=='day'){
+				    			 var datetimepicker5=document.getElementById("datetimepicker5").value;
+				            	 var datetimepicker6=document.getElementById("datetimepicker6").value;
+				            	 var count=document.getElementById("count").value;
+				            	 window.location.href="/admin/reports/exportaccountDataCount?daystartdate="+datetimepicker5+"&dayenddate="+datetimepicker6+"&count="+count+"&datetype="+obj[i].value;			            	 
+				            	 
+				    		}else if(obj[i].value=='month'){
+				    			 var datetimepicker3=document.getElementById("datetimepicker3").value;
+				            	 var datetimepicker4=document.getElementById("datetimepicker4").value;
+				            	 var count=document.getElementById("count").value;
+				            	 window.location.href="/admin/reports/exportaccountDataCount?monthstartdate="+datetimepicker3+"&monthenddate="+datetimepicker4+"&count="+count+"&datetype="+obj[i].value;			            	 
+				            	
+				    		}else if(obj[i].value=='year'){
+				    			 var datetimepicker1=document.getElementById("datetimepicker1").value;
+				            	 var datetimepicker2=document.getElementById("datetimepicker2").value;
+				            	 var count=document.getElementById("count").value;
+				            	 window.location.href="/admin/reports/exportaccountDataCount?yearstartdate="+datetimepicker1+"&yearenddate="+datetimepicker2+"&count="+count+"&datetype="+obj[i].value;			            	 
+				            	
+				    		}else if(obj[i].value=='week'||obj[i].value=='halfyear'||obj[i].value=='fiveyear'){
+				    			 var count=document.getElementById("count").value;
+				            	 window.location.href="/admin/reports/exportaccountDataCount?count="+count+"&datetype="+obj[i].value;
+					           }
+				   	 	}
+				  	}
+				    
+				})
+			   var form = [[${userBillData}]];
+               var datetype = form.datetype;
+               var obj=document.getElementsByName("datetype");
+               for (var i=0;i<obj.length;i++){ //遍历Radio 
+	               if(obj[i].value==datetype){ 
+	              	 	obj[i].checked = "checked";
+	              	} 
+               }  
+               if(datetype=="day"){
+            	   var datetimepicker5=document.getElementById("datetimepicker5");
+            	   datetimepicker5.value=form.daystartdate;
+            	   var datetimepicker6=document.getElementById("datetimepicker6");
+            	   datetimepicker6.value=form.dayenddate;
+            	    $("#ri-o").show().css("display","inline-block");
+          			$("#nian-o").hide();
+          			$("#yue-o").hide();
+               }else if(datetype=="month"){
+            	   var datetimepicker3=document.getElementById("datetimepicker3");
+            	   datetimepicker3.value=form.monthstartdate;
+            	   var datetimepicker4=document.getElementById("datetimepicker4");
+            	   datetimepicker4.value=form.monthenddate;
+            	    $("#yue-o").show().css("display","inline-block");
+	           		$("#nian-o").hide();
+	           		$("#ri-o").hide();
+               }else if(datetype=="year"){
+            	   var datetimepicker1=document.getElementById("datetimepicker1");
+            	   datetimepicker1.value=form.yearstartdate;
+            	   var datetimepicker2=document.getElementById("datetimepicker2");
+            	   datetimepicker2.value=form.yearenddate;
+            	    $("#nian-o").show().css("display","inline-block");
+              		$("#yue-o").hide();
+              		$("#ri-o").hide();
+               }
+          
+      /*]]>*/
+      </script>
+		<script src="../../static/js/time/js/moment-with-locales.js"
+			th:src="@{/js/time/js/moment-with-locales.js}"></script>
+		<script src="../../static/js/time/js/bootstrap-datetimepicker.js"
+			th:src="@{/js/time/js/bootstrap-datetimepicker.js}"></script>
+		<script type="text/javascript">
+ /*<![CDATA[*/
+$("#nian").click(function(){
+	$("#nian-o").show().css("display","inline-block");
+	$("#yue-o").hide();
+	$("#ri-o").hide();
+})
+$("#yue").click(function(){
+	$("#yue-o").show().css("display","inline-block");
+	$("#nian-o").hide();
+	$("#ri-o").hide();
+})
+$("#ri").click(function(){
+	$("#ri-o").show().css("display","inline-block");
+	$("#nian-o").hide();
+	$("#yue-o").hide();
+})
+$(function() {
+	$('#datetimepicker1').datetimepicker({
+		viewMode: 'years',
+          				format: 'YYYY'
+          				//minDate: '2014',
+          				//maxDate: '2016'
+	});
+	$('#datetimepicker2').datetimepicker({
+		viewMode: 'years',
+          				format: 'YYYY'
+          				//minDate: '2014',
+          				//maxDate: '2017'
+	});
+	$("#datetimepicker1").on("dp.change", function(e) {
+		$('#datetimepicker2').data("DateTimePicker").minDate(e.date);
+	});
+	$("#datetimepicker2").on("dp.change", function(e) {
+		$('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
+	});
+});
+$(function() {
+	$('#datetimepicker3').datetimepicker({
+		viewMode: 'years',
+			format: 'YYYY-MM'
+			//minDate: '2014',
+			//maxDate: '2017'
+	});
+	$('#datetimepicker4').datetimepicker({
+		viewMode: 'years',
+			format: 'YYYY-MM'
+			//minDate: '2014',
+			//maxDate: '2017'
+	});
+	$("#datetimepicker3").on("dp.change", function(e) {
+		$('#datetimepicker4').data("DateTimePicker").minDate(e.date);
+	});
+	$("#datetimepicker4").on("dp.change", function(e) {
+		$('#datetimepicker3').data("DateTimePicker").maxDate(e.date);
+	});
+});
+$(function() {
+	$('#datetimepicker5').datetimepicker({
+		viewMode: 'years',
+			format: 'YYYY-MM-DD'
+			//minDate: '01/01/2014',
+			//maxDate: '12/31/2016'
+	});
+	$('#datetimepicker6').datetimepicker({
+		viewMode: 'years',
+			format: 'YYYY-MM-DD'
+			//minDate: '01/01/2014',
+			//maxDate: '12/31/2016'
+	});
+	$("#datetimepicker5").on("dp.change", function(e) {
+		$('#datetimepicker6').data("DateTimePicker").minDate(e.date);
+	});
+	$("#datetimepicker6").on("dp.change", function(e) {
+		$('#datetimepicker5').data("DateTimePicker").maxDate(e.date);
+	});
+});
+/*]]>*/
+</script>
+		<script>
+	$(document).ready(function(){
+		$(".abc").hover(function(e){
+			var aa =$(this).html();
+			$(this).attr("title",aa)
+		});
+	})
+	function gotoPage(page, size) {
+		        $("#page").val(page);	
+		        $("#size").val(size);
+		        $("#query").click();
+		    }
+</script>
+
+	</div>
+</body>
+</html>

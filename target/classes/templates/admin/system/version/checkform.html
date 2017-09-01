@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>升级内容</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+	            <div class="form-group col-md-7">
+	                <label for="inputTitle">标题</label>
+	                <input type="text" th:field="*{title}" required="required" maxlength="20" class="form-control" id="inputTitle"
+	                       placeholder="" disabled="disabled" style="cursor:auto;"/>
+	            </div>
+	            <div class="form-group col-md-5">
+	                <label for="inputTitle">版本</label>
+	                <input type="text" th:field="*{version}" required="required" maxlength="20" class="form-control" id="inputTitle"
+	                       placeholder="" disabled="disabled" style="cursor:auto;"/>
+	            </div>
+<!-- 	        <div class="form-group col-md-5">
+	                <label for="inputTitle"><span style="color:red">*</span>版本</label>
+			        <select class="form-control" id="inputType1" name="status" disabled="disabled" style="cursor:auto;">
+	                   <option th:each="t : ${types}"
+	                           th:value="${t.name()}"
+	                           th:text="${t.title}">Type
+	                   </option>
+			        </select>
+	            </div> -->
+	            <div class="form-group col-md-7">
+	                <label for="inputTitle">升级对象</label>
+	                <input type="text" th:field="${appVersion.appType.title}" required="required" class="form-control" id="inputTitle"
+	                       placeholder="" disabled="disabled" style="cursor:auto;"/>
+	                <!-- <select class="form-control" id="inputType1" name="status" disabled="disabled" style="cursor:auto;">
+	                <option>Android&amp;IOS</option>
+	                <option>Android</option>
+	                <option>IOS</option>
+	                 
+	                    <option th:each="t : ${types}"
+	                           th:value="${t.name()}"
+	                           th:text="${t.title}">Type
+	                   </option>
+	                 
+			        </select> -->
+	            </div>
+	            <div class="form-group col-md-5">
+	                <label for="inputTitle">是否强制升级</label>
+			        <select class="form-control" id="inputType1" name="status" disabled="disabled" style="cursor:auto;">
+			        <option>是</option>
+			        <option>否</option>
+			        <!--  
+	                    <option th:each="t : ${types}"
+	                           th:value="${t.name()}"
+	                           th:text="${t.title}">Type
+	                   </option>
+	                -->   
+			        </select>
+	            </div>
+	            <div class="form-group col-md-12">
+	                <label for="inputTitle">升级内容</label>
+                        <textarea class="form-control" id="inputDescription" maxlength="500"
+                                  th:field="*{updateDescr}"  placeholder="" disabled="disabled" style="cursor:auto;"></textarea>
+	            </div>
+                <div class="form-group col-md-12">
+	                <label for="inputTitle">备注</label>
+                        <textarea class="form-control" id="inputDescription" maxlength="500"
+                                  th:field="*{remark}"  placeholder="" disabled="disabled" style="cursor:auto;"></textarea>
+	            </div>     
+		</div>
+ 		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>升级附件</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+				<div class="form-group col-md-7">
+	                <label for="inputTitle">Android</label><br/>
+	                <input th:if="${appVersion.appType.title} == Android" type="text" th:field="*{appFile}" required="required" class="form-control" id="inputTitle"
+	                       placeholder="" disabled="disabled" style="cursor:auto;width:90%;display:inline;"/>
+	            	<input th:if="${appVersion.appType.title} != Android" type="text"  required="required" class="form-control" id="inputTitle"
+	                       placeholder="" disabled="disabled" style="cursor:auto;width:90%;display:inline;"/><a style="padding-left:10px;">浏览</a>
+	            </div>
+	            <div class="form-group col-md-7">
+	                <label for="inputTitle">IOS</label><br/>
+	                <input th:if="${appVersion.appType.title} == ios" type="text" th:field="*{appFile}" required="required" class="form-control" id="inputTitle"
+	                       placeholder="" disabled="disabled" style="cursor:auto;width:90%;display:inline;"/>
+	           		<input th:if="${appVersion.appType.title} != ios" type="text"  required="required" class="form-control" id="inputTitle"
+	                       placeholder="" disabled="disabled" style="cursor:auto;width:90%;display:inline;"/><a style="padding-left:10px;">浏览</a>
+	            </div>
+		</div>
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>操作信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputCode"> 操作人： <span th:text="*{adminName}"></span>
+				</label>
+				<div class="form-group col-md-6">
+				<label for="inputCode"> 操作时间： <span th:text="*{#dates.format(updatedAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+				</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+           	<div class="form-group col-md-12" style="text-align:center; color:#ff0000;margin-bottom:0px">
+		    	<span th:text="${message}"></span>
+		    </div>
+</body>
+
+
+
+</html>

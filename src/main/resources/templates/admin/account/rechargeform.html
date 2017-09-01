@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <div class="row section">
+        	<div class="form-group col-md-1" style="text-align: center;line-height:30px;font-weight:700;width:60px;padding-right:0px;padding-left:0px;">时间</div>
+        	     <input type="hidden"  name="days" id="days"/>
+        	     <div class="form-group col-md-3" style="width:250px;padding-right:0px;padding-left:0px;">
+        	     <input type="hidden"    th:value="${account.id}" id="accountId"/>
+        	     <button type="submit" class="btn-query btn-primary" onclick="demo(this)" style="padding-left:8px;">一个月</button>
+        	     <button type="submit" class="btn-query btn-primary" onclick="demo(this)" style="padding-left:8px;">三个月</button>
+        	     <button type="submit" class="btn-query btn-primary" onclick="demo(this)" style="padding-left:8px;">半年</button>
+        	     <button class="btn-query btn-primary" onclick="demo(this)" style="padding-left:8px;">一年</button>
+        	     </div>
+        	     <form role="form" th:action="@{/admin/accounts/searchge/{id}(id=${account.id})}">
+	        	 <input type="hidden" name="account.id" th:value="${account.id}"  />
+	        	<!-- <div class="form-group col-md-2" style="text-align: center;line-height: 68px;">自定义时间</div> -->
+	            <div class="form-group custom-input col-md-3" style="width:230px;padding-right:0px;padding-left:0px;">
+                            <label for="inputStartAt" class="form-control-label">开始日期</label>
+                            <input type="text" class="form-control-input Datee" id="start" th:value="${rechargeRecord.formStartAt}" name="startAt" placeholder="" readonly="readonly" style="background-color:#FFFFFF;"/>
+                        </div>
+                        <div class="form-group custom-input col-md-3" style="width:230px;padding-right:0px;padding-left:0px;">
+                            <label for="inputEndAt" class="form-control-label">结束日期</label>
+                            <input type="text" class="form-control-input Datee" id="end" name="endAt" th:value="${rechargeRecord.formEndAt}" placeholder="" readonly="readonly" style="background-color:#FFFFFF;"/>
+                        </div>
+	            <div style="display:inline-block;position: absolute;right:15px">
+	                 <button type="submit" class="btn-query btn-primary query-btn-id">查询</button>
+	            </div>
+	         </form>
+        </div>
+	</div>
+	
+	<script type="text/javascript">
+	 function demo(obj){
+			var accountId=document.getElementById("accountId").value;
+			var days=document.getElementById("days");
+			var text=obj.innerHTML;
+			if(text=="一个月"){
+				days.value="30";
+			}else if(text=="三个月"){
+				days.value="90";
+			}else if(text=="半年"){
+				days.value="180";
+			}else if(text=="一年"){
+				days.value="365";
+			}
+			var value=document.getElementById("days").value;
+			window.location.href="/admin/accounts/searchCharge/"+accountId+"/"+value;
+	 }
+
+</script>	
+	<div class="col-sm-12 col-md-12">
+        <div class="row section">
+        	<div class="form-group col-md-12">
+        		<table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+		        	<thead>
+	                    <tr>
+					        <th style="width:32px;">#</th>
+					        <th>订单号</th>
+			                <th>时间</th>
+			                <th>充值方式</th>
+			                <th>充值金额(元)</th>
+			                <th>交易凭证</th>
+			                <th>状态</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                	<tr th:each="charge,chargerIter : ${page.content}" >
+	                        <td th:text="${chargerIter.count}">1</td>
+	                        <td th:text="${charge.tradeNo}">订单号</td>
+	                        <td th:text="${#dates.format(charge.updatedAt,'yyyy-MM-dd HH:mm:ss')}">时间</td>
+	                        <td><div th:each="pf:${paidFroms}" th:if="${pf.dictValue==charge.paidFrom}" th:text="${pf.descr}"></div></td>
+	                        <td th:text="${charge.money}">充值金额(元)</td>
+	                        <td th:if="${charge.uri!='' and charge.uri!=null}"><a  th:href="${charge.uri}" target="_blank">交易凭证</a></td>
+	                        <td th:if="${charge.uri}==''"></td>
+	                         <td th:if="${charge.uri}==null"></td>
+	                        <td th:text="${charge.status.title}" class="all-state">充值状态</td>
+                      </tr>
+	                </tbody>
+		        </table>
+        	</div>
+        </div>
+	</div>
+</div>
+ <div class="panel-footer" style="background:#ffffff;border:none">
+            <div th:replace="element/pagination"></div>
+        </div>
+</body>
+</html>

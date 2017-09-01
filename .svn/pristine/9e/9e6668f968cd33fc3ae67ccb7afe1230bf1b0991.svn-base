@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:th="http://www.thymeleaf.org">
+
+
+<body>
+<div class="row">
+    <div class="col-sm-12 col-md-12 box-title">
+    	<div class="row section">
+        	<div class="form-group col-md-1" style="text-align: center;line-height:30px;font-weight:700;width:60px;padding-right:0px;padding-left:0px;">时间</div>
+        	      <input type="hidden" name="days"  id="days" /> 
+        	      <input type="hidden"    th:value="${account.id}" id="accountId"/>  
+            <div class="col-md-2" style="width:140px;padding-right:0px;padding-left:0px;">
+               <button  class="btn-query btn-primary  time" style="padding-left:8px;">一个月</button>
+               <button  class="btn-query btn-primary time" style="padding-left:8px;">三个月</button> 
+            </div>
+            
+	        <form role="form" th:action="@{/admin/accounts/searchDeal/{id}(id=${account.id})}" method="get"  >
+	        	<input type="hidden"  name="account.id" th:value="${account.id}"/>
+    	        <div class="form-group custom-input col-md-3" style="width:230px;padding-right:0px;padding-left:0px;">
+                    <label for="inputStartAt"  class="form-control-label">开始日期</label>
+                    <input type="text" class="form-control-input Datee" id="start" name="startAt" th:value="${order.formstartAt}"  placeholder="" readonly="readonly" style="background-color:#FFFFFF;"/>
+                </div>
+                <div class="form-group custom-input col-md-3" style="width:230px;padding-right:0px;padding-left:0px;">
+                    <label for="inputEndAt"  class="form-control-label">结束日期</label>
+                    <input type="text" class="form-control-input Datee" id="end" name="endAt" th:value="${order.formendAt}" placeholder="" readonly="readonly" style="background-color:#FFFFFF;"/>
+                </div>
+	            <div style="display:inline-block;position: absolute;right:15px"><!--//title-->
+	                 <button type="submit" class="btn-query btn-primary query-btn-id">查询</button>
+	            </div>
+	         </form>
+        </div>
+	</div>
+ <script th:inline="javascript">
+/* <![CDATA[ */
+		var arr = document.getElementsByClassName("time");
+		var days=document.getElementById("days");
+		var accountId=document.getElementById("accountId").value;
+		 for(var i = 0;i<arr.length;i++){
+		  arr[i].onclick = function(){
+			  var text=this.innerHTML;
+			if(text=="一个月"){
+				days.value="30";
+			}else if(text=="三个月"){
+				days.value="90";
+			}
+		 	var value=document.getElementById("days").value;
+			window.location.href="/admin/accounts/searchTime/"+accountId+"/"+value;
+		  };
+		 }
+		 
+		
+		
+		/*]]>*/
+
+</script>	
+	<div class="col-sm-12 col-md-12">
+        <div class="form-group col-md-12"></div>
+        <div class="row section">
+        	<div class="form-group col-md-12">
+        		<table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+		        	<thead>
+	                    <tr>
+					        <th style="width:32px;">#</th>
+			                <th style="width:160px;">交易时间</th>
+			                <th>充电站名称</th>
+			                <th>充电桩名称</th>
+			                <th style="width:80px;">接口</th>
+			                <th style="width:80px;">支付</th>
+			                <th style="width:100px;">卡号|手机号</th>
+			                <th style="width:100px;">时长</th>
+			                <th style="width:100px;">电量/Kwh</th>
+			                <th style="width:100px;">金额/元</th>
+			                <th style="width:80px;">状态</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                	 <tr th:each="order, orderIter : ${page.content}" th:attr="data-id=${account.id}">
+	                        <td th:text="${orderIter.count}">1</td>
+	                        <td th:text="${#dates.format(order.createdAt,'yyyy-MM-dd HH:mm:ss')}">交易时间</td>
+	                        <td th:text="${order.charger.station.name}" th:attr="title=${order.charger.station.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">充电站名称</td>
+	                        <td th:text="${order.charger.name}" th:attr="title=${order.charger.station.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">充电桩名称</td>
+	                        <td th:text="${order.ifName == '10' ? 'A枪' : 'B枪'}">充电接口</td>
+	                        <td th:text="${order.paidFrom}">支付</td>
+	                        <td th:if="${order.paidFrom == 'CARD'}" th:alt-title="${order.card.cardNo}" th:text="${order.card.cardNo}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">卡号|手机号 </td>
+                        	<td th:if="${order.paidFrom != 'CARD'}" th:alt-title="${order.account.phone}"  th:text="${order.account.phone}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">卡号|手机号</td>
+	                        
+	                        <td th:text="${order.chargeTime}">时长</td>
+	                        <td th:text="${order.degree}">充电电量</td>
+	                        <td th:text="${order.money}">充电余额(元)</td>
+	                        <td th:text="${order.status.title}" class="all-state">状态</td>
+                      </tr>
+	                </tbody>
+		        </table>
+        	</div>
+        </div>
+	</div>
+	
+</div>
+ 
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="table-responsive" style="margin-top: 1px; display: none"
+		id="cards-charge-record">
+		<div class="col-md-3 form-group">
+			<button type="submit" id="week" class="btn-query btn-primary"
+				onclick="chargeRecordSearch(7);" style="padding-left:8px;margin-top:8px;">一周</button>
+			<button type="submit" class="btn-query btn-primary"
+				onclick="chargeRecordSearch(30);" style="padding-left:8px;margin-top:8px;">一个月</button>
+			<button type="submit" class="btn-query btn-primary"
+				onclick="chargeRecordSearch(90);" style="padding-left:8px;margin-top:8px;">三个月</button>
+			<button type="submit" class="btn-query btn-primary"
+				onclick="chargeRecordSearch(365);" style="padding-left:8px;margin-top:8px;">一年</button>
+		</div>
+		<div class="col-md-12" id="tableB">
+			<table class="table table-striped table-bordered table-hover" id="tb">
+				<thead>
+					<tr>
+						<th style="width:32px;">#</th>
+						<th style="width:160px;">交易时间</th>
+		                <th>充电站名称</th>
+		                <th>充电桩名称</th>
+		                <th style="width:80px;">接口</th>
+		                <th style="width:80px;">支付</th>
+		                <th style="width:100px;">时长</th>
+		                <th style="width:100px;">电量/Kwh</th>
+		                <th style="width:100px;">金额/元</th>
+		                <th style="width:80px;">状态</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="order, orderIter : ${chargeRecordPage.content}"
+						th:attr="data-id=${order.id}">
+						<td th:text="${orderIter.count}">1</td>
+						<td th:text="${#dates.format(order.startAt,'yyyy-MM-dd HH:mm:ss')}">交易时间</td>
+						<td th:if="${order.charger}==null"  style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">充电站名称</td>
+						<td th:if="${order.charger}!=null" th:text="${order.charger.station.name}" th:attr="title=${order.charger.station.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">充电站名称</td>
+						<td th:if="${order.charger}==null"  style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">充电桩名称</td>
+						<td th:if="${order.charger}!=null"  th:text="${order.charger.name}" th:attr="title=${order.charger.station.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">充电桩名称</td>
+						<td th:text="${order.ifName}">充电接口</td>
+						<td th:text="${order.paidFrom}">支付方式</td>
+						<td th:text="${order.chargeTime}">充电时长</td>
+						<td th:text="${order.degree}">充电电量</td>
+						<td th:text="${order.money}">充电金额(元)</td>
+						<td th:text="${order.status.title}" class="all-state">状态</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div th:fragment="pagination" class="data-table-pagination">
+                <ul class="pagination">
+                    <li><a
+                        th:attr="onclick='javascript:gotoPage(0, ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+                        title='首页'>首页</a></li>
+                    <li th:class="${chargeRecordPage.hasPreviousPage}"><a
+                        th:if="${not chargeRecordPage.hasPreviousPage}"
+                        th:attr="onclick='javascript:gotoPage2(0, ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+                        title='上一页'>上一页</a> <a th:if="${chargeRecordPage.hasPreviousPage}"
+                        th:href="@{${chargeRecordPage.url}(page=${chargeRecordPage.number-1},size=${chargeRecordPage.size})}"
+                        th:attr="onclick='javascript:gotoPage2(' + ${chargeRecordPage.number-1} + ', ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+                        title='上一页'>上一页</a></li>
+                    <li th:each="item : ${chargeRecordPage.items}"
+                        th:class="${item.current}? 'active' : ''"><span
+                        th:if="${item.current}" th:text="${item.number+1}">1</span> <a
+                        th:if="${not item.current}"
+                        th:attr="onclick='javascript:gotoPage2(' + ${item.number} + ', ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'">
+                            > <span th:text="${item.number+1}">1</span>
+                    </a></li>
+                    <li th:class="${chargeRecordPage.hasNextPage}"><a
+                        th:if="${not chargeRecordPage.hasNextPage}"
+                        th:attr="onclick='javascript:gotoPage2(' + ${chargeRecordPage.totalPages-1} + ', ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+                        title="下一页">下一页</a> <a th:if="${chargeRecordPage.hasNextPage}"
+                        th:attr="onclick='javascript:gotoPage2(' + ${chargeRecordPage.number+1} + ', ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+                        title="下一页">下一页</a></li>
+                    <li><a
+                        th:attr="onclick='javascript:gotoPage2(' + ${chargeRecordPage.totalPages-1} + ', ' + ${chargeRecordPage.size} + ', ' + ${timeInterval} + ')'"
+                        title='尾页'>尾页</a></li>
+
+                    <div style="display: inline; height: 35px; line-height: 35px; padding-left: 10px;">
+                                                            总计：<span th:text="${chargeRecordPage.total}"></span>
+                    </div>
+                </ul>
+	
+			</div>
+	   </div>
+	</div>
+
+	<script th:inline="javascript">
+	    function chargeRecordSearch(timeInterval) {
+	        $.ajax({
+	            url: "/admin/cards/chargeRecordSearch",
+	            data: {
+	            	cardNo:[[${card.cardNo}]],
+	                timeInterval:timeInterval,
+	            },
+	            type: 'get',//提交方式
+	            dataType:'html',//返回数据的类型
+	            success: function (data,stats) {//后台处理数据成功后的回调函数
+	                if(stats == "success") {
+	                	$("#tableB").html($(data).find("#tableB").html());
+	                }
+	            },
+	            error: function (data) {
+	                //后台处理数据失败后的回调函数
+	                alert("发送请求失败!");
+	            }
+	        });
+	    };
+	    
+	    function gotoPage2(page, pagesize, timeInterval) {
+	        $.ajax({
+	            url: "/admin/cards/chargeRecordSearch",
+	            data: {
+	                cardNo:[[${card.cardNo}]],
+	                timeInterval:timeInterval,
+	                page:page,
+	                size:pagesize
+	            },
+	            type: 'get',//提交方式
+	            dataType:'html',//返回数据的类型
+	            success: function (data,stats) {//后台处理数据成功后的回调函数
+	                if(stats == "success") {
+	                    $("#tableB").html($(data).find("#tableB").html());
+	                }
+	            },
+	            error: function (data) {
+	                //后台处理数据失败后的回调函数
+	                alert("发送请求失败!");
+	            }
+	        });
+	    }
+    </script>
+
+
+</body>
+</html>

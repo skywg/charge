@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+    <title>参数模板</title>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/paramTemplates/}">设备中心</a></li>
+        <li><a th:href="@{/admin/paramTemplates/}">充电桩设置</a></li>
+        <li class="active">参数模板</li>
+    </ol>
+    <div class="panel border">
+        <div class="panel-tabs" role="tabpanel">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="#">参数模板</a></li>
+                <li class="pull-right" style="margin-right:0">
+                   <!--  <a class="btn btn-primary" name="addPrice" href="add.html" th:href="@{/admin/paramTemplates/add}" style="margin-right:0;display: none;">添加模板</a> -->
+                </li> 
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive" style="margin-top: 1px">
+                <div class="box-title">
+                    <form role="form" action="/admin/paramTemplates/query" method="post">
+                    	<input type="hidden" id="page" name="page" value="*{page}"/>
+					    <input type="hidden" id="size" name="size" value="*{size}"/>
+                        <div class="box-title-sm">
+						<label for="inputType1" class="form-control-label">类型</label>
+			                <select class="form-control-input" id="inputType1" name="type">
+			                    <option value="" th:selected="${queryParam == null}">全部</option>
+ 			                    <option th:each="t : ${types}"
+			                            th:value="${t.dictValue}"
+			                            th:text="${t.descr}"
+			                            th:selected="${queryParam != null &amp;&amp;queryParam.type == t.dictValue}">
+			                    </option>
+			                </select>
+                        </div>
+                        <input type="hidden" name="delStatus" value="normal"/>
+                        <div class="box-title-sm">
+						<label for="inputType1" class="form-control-label">状态</label>
+			                <select class="form-control-input" id="inputType1" name="status">
+			                    <option value="" th:selected="${queryParam == null}">全部</option>
+ 			                    <option th:each="t : ${statuss}"
+			                            th:value="${t.dictValue}"
+			                            th:text="${t.descr}"
+			                            th:selected="${queryParam != null &amp;&amp;queryParam.status == t.dictValue}">
+			                    </option>
+			                </select>
+                        </div>
+                        <div class="box-title-button"><!--//title-->
+                             <button type="submit" class="btn-query btn-primary query-btn-id" id="query" name="searchPrice" style="display: none;">查询</button>
+                             <a class="btn btn-query btn-primary add-btn-id" name="addPrice" href="add.html" th:href="@{/admin/paramTemplates/add}" style="padding-top:5px;display: none;">添加</a>
+                            <!--  <input type="submit" class="btn-query btn-primary" id="query" name="searchPrice" value="查询"/> -->
+                        </div>
+                         <input type="hidden"  name="flag" value="1" />
+                    </form>
+                </div>
+                <div class="col-md-12 navbar-xian">
+                    <hr class="xian-color"/>
+                 </div>
+                <table class="table table-striped table-bordered table-hover" style="table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th style="width:32px;">#</th>
+				        <th>模板名称</th>
+		                <th>模板说明</th>
+		                <th style="width:100px;">创建人</th>
+		                <th style="width:160px;">创建时间</th>
+		                <th style="width:100px;">模板类型</th>
+		                <th style="width:80px;">状态</th>
+		                <th style="width:110px;">操作</th>
+                    </tr>
+                    </thead>
+                     <tbody>
+                    <tr th:each="paramTemplate ,paramTemplateIter : ${page.content}" th:attr="data-id=${paramTemplate.id}">
+                        <td th:text="${paramTemplateIter.count}">1</td>
+						<td th:attr="title=${paramTemplate.name}" th:text="${paramTemplate.name}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">模板名称</td>
+		                <td th:attr="title=${paramTemplate.description}" th:text="${paramTemplate.description}" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;"></td>
+		                <td th:text="${paramTemplate.creator}">创建人</td>
+		                <td th:text="${#dates.format(paramTemplate.createdAt,'yyyy-MM-dd HH:mm:ss')}">创建时间</td>
+		                <td th:if="${paramTemplate.type=='PRICE'}" th:text='电价' class="all-state">状态</td>
+		              	<td th:if="${paramTemplate.type=='PARAM'}" th:text='参数' class="all-state">状态</td>
+		              	<td th:if="${paramTemplate.type=='UPDATE'}" th:text='升级' class="all-state">状态</td>
+		                <td th:if="${paramTemplate.status=='VALID'}"  th:text='有效' class="all-state">状态</td>
+		              	<td th:if="${paramTemplate.status=='INVALID'}" th:text='无效' class="all-state">状态</td>
+		              	
+		                <td class="all-icon">
+		                <a href="check.html" class="lock" name="checkPrice" style="display: none;" th:href="@{/admin/paramTemplates/check/{id}(id=${paramTemplate.id})}" title="查看"></a>
+		                <a href="edit.html" class="edit-id" name="editPrice" style="display: none;" th:href="@{/admin/paramTemplates/edit/{id}(id=${paramTemplate.id})}" title="编辑"></a>
+		                <a data-toggle="modal" name="delPrice" style="display: none;" class="delete-id" th:attr="data-target='#myModal'+ ${paramTemplateIter.count}" title="删除"></a>
+						<div class="modal fade" th:attr="id='myModal'+ ${paramTemplateIter.count}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-dialog">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-question-circle fa-lg" style="padding-right:10px"></i>删除电价模板</h4>
+						      </div>
+						      <div class="modal-body text-center" style="padding-top:50px;padding-bottom:50px;">
+						        	<p style="font-size:16px">是否确认删除所选项？删除后不可恢复。</p>
+						      </div>
+						      <div class="modal-footer">
+						        <a type="button" class="btn btn-query btn-primary sure-btn-id" href="#" th:href="@{/admin/paramTemplates/del/{id}(id=${paramTemplate.id})}" style="padding-top:4px">确定</a>
+						        <button type="button" class="btn-query btn-primary cancel-btn-id" data-dismiss="modal">取消</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+		                </td>         
+                    </tr>
+                    </tbody> 
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+					<div class="data-table-pagination">
+					     <ul class="pagination">
+					        <li>
+					            <a th:href="'javascript:gotoPage(0,' + ${page.size} + ')'"
+					               title='首页'>首页</a>
+					        </li>
+					        <li th:class="${page.hasPreviousPage}">
+					            <a th:if="${not page.hasPreviousPage}"
+					               th:href="'javascript:gotoPage(0,' + ${page.size} + ')'"
+					               title='上一页'>上一页</a>
+					            <a th:if="${page.hasPreviousPage}"
+					               th:href="'javascript:gotoPage(' + ${page.number - 1} + ',' + ${page.size} + ')'"
+					               title='上一页'>上一页</a>
+					        </li>
+					        <li th:each="item : ${page.items}" th:class="${item.current}? 'active' : ''">
+					            <span th:if="${item.current}" th:text="${item.number+1}">1</span>
+					            <a th:if="${not item.current}"
+					               th:href="'javascript:gotoPage(' + ${item.number} + ',' + ${page.size} + ')'">
+					                <span th:text="${item.number+1}">1</span></a>
+					        </li>
+					        <li th:class="${page.hasNextPage}">
+					            <a th:if="${not page.hasNextPage}"
+					               th:href="'javascript:gotoPage(' + ${page.totalPages-1} + ',' + ${page.size} + ')'"
+					               title="下一页">下一页</a>
+					            <a th:if="${page.hasNextPage}"
+					               th:href="'javascript:gotoPage(' + ${page.number+1} + ',' + ${page.size} + ')'"
+					               title="下一页">下一页</a>
+					        </li>
+					        <li>
+					            <a th:href="'javascript:gotoPage(' + ${page.totalPages-1} + ',' + ${page.size} + ')'"
+					               title='尾页'>尾页</a>
+					        </li>
+					        <div style="display:inline; height:35px; line-height:35px; padding-left:10px;">
+					                                总计：<span th:text="${page.total}"></span>
+					        </div> 
+					    </ul> 					    
+					</div>
+				</div>
+    </div>
+    <script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+	 <script>
+	    $(document).ready(function() {
+	        $("#aa-a").addClass("active");
+			$("#aa-a1").addClass("in").attr("aria-expanded","true");
+			$("#aa-b").addClass("active");
+			$("#aa-b1").addClass("in").attr("aria-expanded","true");
+			$("#aa-c2").addClass("active");
+	    })
+	</script>  
+	
+	<div layout:fragment="javascript">
+		  <script type="text/javascript">
+		    function gotoPage(page, size) {
+		        $("#page").val(page);	
+		        $("#size").val(size);
+		        $("#query").click();
+		    }
+		  </script>
+	</div>
+
+</div>  
+</body>
+
+</html>
+

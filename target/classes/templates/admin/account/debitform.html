@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="row">
+	<div class="col-sm-12 col-md-12">
+        <div class="row section">
+			<div class="form-group col-md-12">
+				<div class="form-group col-md-6">
+	                <label for="inputTitle"><span style="color:red">*</span>会员名称</label>
+	                <input type="text"  th:field="*{realName}"  style="cursor:auto;" disabled="disabled" class="form-control"  />
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle"><span style="color:red">*</span>会员号</label>
+	                <input type="text"  th:field="*{phone}"  style="cursor:auto;" disabled="disabled" class="form-control"  />
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle"><span style="color:red">*</span>状态</label>
+	                <input type="text" th:field="*{status.title}" style="cursor:auto;" disabled="disabled" class="form-control" />
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle"><span style="color:red">*</span>余额(元)</label>
+	                <input type="text" th:field="*{money}" style="cursor:auto;" disabled="disabled" class="form-control" required="required" />
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle"><span style="color:red"></span>充值类型</label>
+	                	 <input type="radio" id="checkIdvalue" value="1"  th:field="*{payType}" style="margin-left:10px;"/>现金
+	            		<input type="radio" id="checkId" value="2" th:field="*{payType}" style="margin-left:10px;"/>线下转账
+	            </div>
+	            <div class="form-group col-md-12">
+		            <label for="inputTitle"><span style="color:red">*</span>转账金额(元)</label>
+		            <input type="text"  class="form-control money" placeholder="" required="required" th:field="*{payMoney}" id="money" pattern="^[0-9]+(.[0-9]{2})?$" onkeyup="value=value.replace(/[^\d.]/g,'')"/>
+		        </div>
+		        <div class="form-group col-md-6" id="accountIda">
+		            <label for="inputTitle"><span style="color:red">*</span>交易凭证</label>
+		            <div class="con4" style="text-align:center;">
+						<img id="cvs" width="300" height="200" style="background:url(/images/pic_tab/tab1.png)"></img>
+						<input required="required" type="hidden" id="src" th:field="*{src}"/>
+						<div>
+						<span class="btn upload" style="margin-top:25px;margin-left:90px;padding-top:0px;background-color:#2e6da4;width:120px;float:none">上传凭证图片<input type="file" class="upload_pic" id="uploada" accept="image/*"/></span>
+						</div>
+						<span id="checkValue" style="color:red;">*必须上传凭证</span>		
+					</div>
+		        </div>
+	            <div class="form-group col-md-6" id="accountId">
+	            	<label for="inputTitle">备注</label>
+			            <textarea class="form-control" th:field="*{remark}" id="inputDescription" maxlength="250"
+			         				placeholder=""></textarea>
+	            </div>
+	            <div class="form-group col-md-12" id="accountValue">
+	            	<label for="inputTitle">备注</label>
+			            <textarea class="form-control" th:field="*{remark}" id="inputDescription" maxlength="250"
+			         				placeholder=""></textarea>
+	            </div>
+	            <div class="col-md-12">
+	            <label for="inputTitle">操作人:<span th:text="${session.user.realname}"></span></label><label for="inputTitle" style="margin-left: 200px;">操作时间:<span th:text="${account.transientDate}"></span></label>
+		        </div>
+			</div>
+		</div>
+	</div>
+	<script>
+	document.getElementById("checkId").checked="checked";
+	//获取上传按钮
+	var input1 = document.getElementById("uploada"); 
+	if(typeof FileReader==='undefined'){ 
+	     //result.innerHTML = "抱歉，你的浏览器不支持 FileReader"; 
+	     input1.setAttribute('disabled','disabled'); 
+	}else{ 
+	     input1.addEventListener('change',readFile,false); 
+	     /*input1.addEventListener('change',function (e){
+	     	console.log(this.files);//上传的文件列表
+	     },false); */
+	}
+	function readFile(){ 
+		var file = this.files[0];//获取上传文件列表中第一个文件
+		if(!/image\/\w+/.test(file.type)){
+		//图片文件的type值为image/png或image/jpg
+			alert("文件必须为图片！");
+			return false; 
+		}
+		var fileSize = this.files[0].size/1000;
+		if(fileSize>4096){
+			alert("图片大小不超过4M！");
+			return false;
+		}
+	 $.ajax({
+		 type:"post",
+		 async: false,
+		 url:"/ajax/photo-storage-settings",
+		 data:{"directory":"brands"},
+		 dataType:"json",
+		 success:function(settings){
+	   	         var data = new FormData();
+	             data.append('policy', settings.policy);
+	             data.append('signature', settings.signature);
+	             data.append('file', file);
+	             var request = new XMLHttpRequest();
+	             request.open('POST', settings.endpoint,false);	
+	             request.onload = function (e) {
+	                 var data = jQuery.parseJSON(request.response);
+	                 	if (data.code == 200) {
+	                 		console.info(data);
+	                 		var avatar = "http://youetong.b0.upaiyun.com"+data.url;;
+	                 		document.getElementById("cvs").src=avatar;
+	                 		document.getElementById("src").value=avatar;
+	                 		//uploader.find('.uploader-preview').attr('src', "http://youetong.b0.upaiyun.com" + data.url);
+	                    	 //console.log(data.url);
+	                    	// imagesSrc += data.url+",";
+	                    	// document.getElementById("station-images").value=imagesSrc;
+	                	 } else {
+	                 		var mes = data.message;
+	                 		if(mes!="need file"){
+	                 			alert(data.message);
+	                 		}
+	                	 }
+	            	};
+	             request.send(data);
+	   	        }
+		 	   })
+	
+};
+</script>
+</div>
+</body>
+</html>

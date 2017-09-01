@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>会员基本信息</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+<script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>  
+<script th:inline="javascript">
+        /*<![CDATA[*/
+        var stationNames = [[${stationNames}]]
+        $(document).ready(function(){
+        	
+        	$("#checkboxinput").text(stationNames);
+        	
+        	var id_first = $('#inputAccountId').val();
+    		var phone_first = $('#inputphone').val();
+    		var nickname_first = $('#inputrname').val();
+    		var email_first = $('#inputemail').val();
+    		var realName_first = $('#inputNickname').val();
+    		//点击编辑
+        	$('#edit_info').click(function(){
+        		$('#inputNickname').removeAttr('disabled');
+        		$('#inputphone').removeAttr('disabled');
+        		$('#inputrname').removeAttr('disabled');
+        		$('#inputemail').removeAttr('disabled');
+        		$('#not_edit').attr('hidden','true');
+        		$('#for_edit').removeAttr('hidden');
+        	});
+        	//取消按钮
+        	$('#cancel_edit').click(function(){
+        		/* var id = $('#inputAccountId').val();
+        		location.href="/admin/accounts/"+id; */
+        		$('#inputNickname').val(realName_first);
+        		$('#inputphone').val(phone_first);
+        		$('#inputrname').val(nickname_first);
+        		$('#inputemail').val(email_first);
+        		$('#inputNickname').attr('disabled','disabled');
+        		$('#inputphone').attr('disabled','disabled');
+        		$('#inputrname').attr('disabled','disabled');
+        		$('#inputemail').attr('disabled','disabled');
+        		$('#for_edit').attr('hidden','true');
+        		$('#not_edit').removeAttr('hidden');
+        	})
+        	//更新数据
+        	$('#ajax_save').click(function(){
+        		var id = $('#inputAccountId').val();
+        		var phone = $('#inputphone').val();
+        		var nickname = $('#inputrname').val();
+        		var email = $('#inputemail').val();
+        		var realName = $('#inputNickname').val();
+        		if(isNaN(phone)||phone.length<11){
+        			alert('手机号必须是11位数字');
+        			return ;
+        		}
+        		$.ajax({
+        			url:'/admin/accounts/edit_ajax',
+        			data:{'id':id,'phone':phone,'nickname':nickname,'email':email,'realName':realName},
+        			dataType:'json',
+        			type:'GET',
+        			error:function(){
+        				alert('error:出错啦--请稍后重试');
+        			},
+        			success:function(data){
+        				console.info(data);
+        				if(data.errMsg!=null){
+        					alert(data.errMsg);
+        				}else{
+        					$('#inputphone').val(data.phone).attr('disabled','disabled');
+        					$('#inputrname').val(data.nickname).attr('disabled','disabled');
+        					$('#inputemail').val(data.email).attr('disabled','disabled');
+        					$('#inputNickname').val(data.realName).attr('disabled','disabled');
+        					$('#for_edit').attr('hidden','true');
+        	        		$('#not_edit').removeAttr('hidden');
+        	        		id_first = $('#inputAccountId').val();
+        	        		phone_first = $('#inputphone').val();
+        	        		nickname_first = $('#inputrname').val();
+        	        		email_first = $('#inputemail').val();
+        	        		realName_first = $('#inputNickname').val();
+        	        		alert(data.sucMsg);
+        				}
+        			}
+        		})
+        	})
+        })
+        /* function editInfo(){
+        	var edit_info = document.getElementById('edit_info');
+        	/* var inputNickname = document.getElementById('inputNickname');
+        	var inputphone = document.getElementById('inputphone');
+        	var inputrname = document.getElementById('inputrname');
+        	var inputemail = document.getElementById('inputemail'); */
+        	
+        //	console.info(edit_info);
+        //} */
+        
+        
+        
+        /*]]>*/
+    </script>
+       <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/accounts/}">会员中心</a></li>
+        <li><a th:href="@{/admin/accounts/}">会员管理</a></li>
+        <li class="active">会员基本信息</li>
+    </ol>
+
+        <div class="panel"  th:object="${account}">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a th:href="@{/admin/accounts/{id}(id=${account.id})}">会员信息</a></li>
+                     <li role="presentation"><a th:href="@{/admin/accounts/checkCard/{id}(id=${account.id})}">充电卡信息</a></li>
+                    <li role="presentation"><a th:href="@{/admin/accounts/checkCar/{id}(id=${account.id})}">车主信息</a></li>
+                    <li role="presentation"><a th:href="@{/admin/accounts/checkDeal/{id}(id=${account.id})}">交易记录</a></li>
+                    <li role="presentation"><a th:href="@{/admin/accounts/checkCharge/{id}(id=${account.id})}">充值记录</a></li>
+                </ul>
+            </div>
+	            <div class="panel-body"  th:include="admin/account/form"></div>
+	        
+               <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right" id="not_edit">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/accounts/search}" style="padding-top:4px">返回</a>                              
+                        </div>
+                        <div class="navbar-right" id="for_edit" hidden="true">
+							<button class="btn-query btn-primary keep-btn-id" id="ajax_save">保存</button>
+                            <a class="btn btn-query btn-primary back-btn-id" 
+                               href="#" style="padding-top:4px"  id="cancel_edit">取消</a>                                
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+        </div>
+    
+</div>
+</body>
+</html>

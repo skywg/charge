@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>查看客服信息</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+	    <li><a th:href="@{/admin/feedBacks/}">客服中心</a></li>
+        <li><a th:href="@{/admin/feedBacks/}">客服记录</a></li>
+        <li class="active">查看客服信息</li>
+    </ol>
+    <form role="form" action="#" method="post"
+           th:object="${feedBack}">
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">查看客服信息</a></li>
+                </ul>
+            </div>
+            <div class="panel-body" th:include="admin/feedBack/checkform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/feedBacks/?flag=true}" style="padding-top:4px">返回</a>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+
+        </div>
+    </form>
+</div>
+<div layout:fragment="javascript">
+<script src="../../static/js/contact/js/froala_editor.min.js" th:src="@{/js/contact/js/froala_editor.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/colors.min.js" th:src="@{/js/contact/js/plugins/colors.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/font_family.min.js" th:src="@{/js/contact/js/plugins/font_family.min.js}"></script>
+<script src="../../static/js/contact/js/plugins/font_size.min.js" th:src="@{/js/contact/js/plugins/font_size.min.js}"></script>
+    <script type="text/javascript">
+    /*<![CDATA[*/
+    window.onload = function(){
+    	//$('.edit2').editable({inlineMode: false,alwaysBlank: true});
+		$(".froala-box .f-basic").removeClass("f-placeholder");
+		var contentText =$(".c");
+		var editor=$(".editor");
+		for(var i=0;i<contentText.length;i++){
+			var text=contentText.eq(i).val();
+			editor.eq(i).html(text); 
+		}
+    	var status= $("#inputHiddenStatus");
+    	var type =status.val(); 
+    	if(type=='true'){
+    		$("#input1").attr("checked","checked");
+			$("#input2").attr("disabled","disabled");
+    	}else{
+    		$("#input2").attr("checked","checked");
+			$("#input1").attr("disabled","disabled");
+    	}
+    	
+    }
+    /*]]>*/
+    
+	</script>
+</div>
+</body>
+</html>
+

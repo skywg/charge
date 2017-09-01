@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+ <div class="form-group col-md-12">
+    <div class="row section">
+        <div class="col-md-6">
+            <label for="inputTitle">卡类型</label>
+            <select class="form-control" id="inputCardType" style="cursor:auto;" disabled="disabled" th:field="${card.cardType}">
+                <option th:each="t:${cardTypes}"
+                        th:value="${t.dictValue}"
+                        th:text="${t.descr}">
+
+                </option>
+            </select>
+        </div> 
+        <div class="form-group col-md-6">
+            <label for="inputTitle">卡状态</label>
+            <input type="text" disabled="disabled" th:field="${card.status.title}" required="required" class="form-control" placeholder="" style="cursor:auto;"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">支付卡号</label>
+            <input type="text" disabled="disabled" th:field="${card.payCardNo}" required="required" class="form-control" placeholder="" style="cursor:auto;"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">物理卡号</label>
+            <input type="text" disabled="disabled" th:field="${card.cardNo}" required="required" class="form-control" placeholder="" style="cursor:auto;" id="cardNumber"/>
+        </div> 
+        <div class="form-group col-md-6">
+            <label for="inputTitle">余额(元)</label>
+            <input type="text" disabled="disabled" th:field="${card.money}" required="required" class="form-control" placeholder="" style="cursor:auto;"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">持卡人</label>
+            <input type="text" disabled="disabled" th:field="${card.owner}" required="required" class="form-control" placeholder="" style="cursor:auto;"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">身份证类型</label>
+            <select class="form-control" style="cursor:auto;" disabled="disabled" required="required" th:field="${card.certificateType}">
+                <option th:each="o : ${certificateTypes}"
+                        th:value="${o.dictValue}"
+                        th:text="${o.descr}">Type
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">证件号码</label>
+            <input type="text" disabled="disabled" th:field="${card.certificateId}" required="required" class="form-control" placeholder="" style="cursor:auto;"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">联系方式</label>
+            <input type="text" disabled="disabled" th:field="${card.phoneNo}" required="required" class="form-control" placeholder="" style="cursor:auto;"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">发卡日期</label>
+            <input type="text" disabled="disabled" th:field="${card.sendDate}" required="required" class="form-control" placeholder="" style="cursor:auto;"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">有效日期</label>
+            <input type="text" disabled="disabled" th:value="${card.expiredDate}" required="required" class="form-control" placeholder="" style="cursor:auto;"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputTitle">状态变更日期</label>
+            <input type="text" disabled="disabled" th:value="${#dates.format(card.updatedAt,'yyyy-MM-dd')}" required="required" class="form-control" placeholder="" style="cursor:auto;" />
+        </div>
+    </div>
+</div>
+</body>
+
+<!-- <script th:inline="javascript">
+       /* <![CDATA[*/
+  $(function(){
+	 $("#modify").click(function(){
+		  var pwd=$("#pwd").val();
+		  var newPass=$("#newPass").val();
+		  var secondPass=$("#secondPass").val();
+		  $.get(			  
+			  "/admin/managers/modifyPwd",
+			  {'newPass':newPass,'pwd':pwd,'secondPass':secondPass},
+			  function(data){}
+			 "JSON" 
+		  		); 
+	 });
+	 function successResult(data){
+			if(data.message=="success"){
+				window.location.href="/logout";
+			}else{
+				$("#message").html(data.message);
+			}  
+		 }; 
+  })
+  function changeCard(obj){
+    	   alert("ok");
+    	  // alert(obj.cardNo);
+       }
+   /*]]>*/
+</script>	 -->
+</html>

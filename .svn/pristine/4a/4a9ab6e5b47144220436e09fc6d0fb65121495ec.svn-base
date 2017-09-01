@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle">代码标题</label>
+	                <input type="text" th:field="*{descr}" required="required" class="form-control" id="inputTitle"
+	                       placeholder="" style="cursor:auto;" disabled="disabled"/>
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle">代码类型</label>
+	                <input class="form-control" id="inputType1" required="required" th:field="*{dictCategory.descr}" style="cursor:auto;" disabled="disabled"/>
+	                
+			     
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle">代码值</label>
+	                <input type="text" th:field="*{dictValue}" required="required" class="form-control" id="inputTitle"
+	                       placeholder="" style="cursor:auto;" disabled="disabled"/>
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle">父代码值</label>
+	                <input class="form-control" id="inputType1"  th:field="*{parent.descr}" style="cursor:auto;" disabled="disabled"/>
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle">顺序号</label>
+	                <input type="text" th:field="*{sortNo}" required="required" class="form-control" id="inputTitle"
+	                       placeholder="" style="cursor:auto;" disabled="disabled"/>
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle">代码Key</label>
+			        <input type="text" th:field="*{dictKey}" required="required" class="form-control" id="inputTitle"
+	                       placeholder="" style="cursor:auto;" disabled="disabled"/>
+	            </div>
+	            <div class="form-group col-md-12">
+	                <label for="inputTitle">备注</label>
+                        <textarea class="form-control" id="inputDescription" maxlength="500"
+                                  required="required" th:field="*{remark}"  placeholder="" style="cursor:auto;" disabled="disabled"></textarea>
+	            </div>
+
+                <div class="form-group col-md-3">
+	                <label for="inputTitle">是否可编辑</label>
+			         <input type="text"  th:if="*{allowedEdit}==true" th:value="是" required="required"  class="form-control" id="inputTitle"
+	                       placeholder="" style="cursor:auto;" disabled="disabled"/>
+	                 <input type="text"  th:if="*{allowedEdit}==false" th:value="否" required="required"  class="form-control" id="inputTitle"
+	                       placeholder="" style="cursor:auto;" disabled="disabled"/>
+	                      
+	            </div> 
+	            <div class="form-group col-md-3">
+	                <label for="inputTitle">是否可删除</label>
+			         <input type="text"  th:if="*{allowedDel}==true" th:value="是" required="required"  class="form-control" id="inputTitle"
+	                       placeholder="" style="cursor:auto;" disabled="disabled"/>
+	                 <input type="text"  th:if="*{allowedDel}==false" th:value="否" required="required"  class="form-control" id="inputTitle"
+	                       placeholder="" style="cursor:auto;" disabled="disabled"/>
+	            </div>     
+		</div>
+		</div>
+</body>
+
+
+
+</html>

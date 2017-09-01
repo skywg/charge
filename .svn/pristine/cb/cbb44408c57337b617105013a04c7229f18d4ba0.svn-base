@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="row">
+    <div class="col-sm-9 col-md-9">
+        <div class="row section">
+            <div class="form-group col-md-7"><!--//title-->
+                <label for="inputTitle" style="color:#798C9C"><span style="color:red">*</span>电站名称</label>
+                <input type="text" th:field="*{name}" required="required" maxlength="20" class="form-control" id="inputTitle"
+                       placeholder=""/>
+            </div>
+            <div class="form-group col-md-5"><!--//title-->
+                <label for="inputCode" style="color:#798C9C"><span style="color:red">*</span>充电站编号</label>
+                <input type="text" th:field="*{code}" required="required" maxlength="16" class="form-control" id="inputCode"
+                       placeholder="" pattern="^[0-9]*[1-9][0-9]*$" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+            </div>
+           <!--  <input type="hidden" th:field="*{operator}" th:value="${station.operator}" class="form-control"/> -->
+             <div class="form-group col-md-7"><!--//title-->
+                <label for="inputTitle" style="color:#798C9C"><span style="color:red">*</span>经度</label>
+                <input type="text" th:field="*{longitude}" required="required" maxlength="20" th:value="${station.longitude}" class="form-control" readonly="readonly"
+                   id="longitude"/>
+             </div>
+              <div class="form-group col-md-5"><!--//title-->
+                <label for="inputCode" style="color:#798C9C"><span style="color:red">*</span>纬度</label>
+                  <input type="text" th:field="*{latitude}" required="required" maxlength="20" th:value="${station.latitude}" class="form-control" readonly="readonly"
+                   id="latitude"/>
+                </div>
+        </div>
+
+
+		<div class="row section">
+            <div class="form-group col-md-2">
+                <label style="color:#798C9C"><span style="color:red">*</span>省份</label>
+                <select th:field="*{province}" required="required" id="province" maxlength="20" class="form-control">
+           		 </select>
+                 <input type="hidden" id="provinceHidden"/>
+                 
+            </div>
+            <div class="form-group col-md-2">
+                <label style="color:#798C9C"><span style="color:red">*</span>城市</label>
+                <select th:field="*{city}" id="city" required="required" maxlength="20" onchange="change(2)" class="form-control">
+          		  </select>
+          		  <input type="hidden" id="cityHidden"/> 
+               
+            </div>
+            <div class="form-group col-md-3">
+                <label style="color:#798C9C"><span style="color:red">*</span>区域</label>
+                <select th:field="*{district}" id="district" required="required" maxlength="20" class="form-control">
+                </select>
+                 <input type="hidden" required="required" id="districtHidden"/>
+
+            </div>
+            <div class="form-group col-md-5">
+                <label style="color:#798C9C"><span style="color:red">*</span>详细地址</label>
+                <input type="text" th:field="*{address}" required="required" maxlength="30" class="form-control" placeholder="上地西路软件园南门" id="address"/>
+            </div>
+            <div class="col-md-12">
+                <div style="height: 300px; background-color: darkgrey" id="container1">Map</div>
+            </div>
+            
+
+            <div class="form-group col-md-12"><!--//description-->
+                <label for="inputDescription" style="color:#798C9C">电站描述</label>
+                        <textarea class="form-control" id="inputDescription" maxlength="500"
+                                  th:field="*{description}"
+                                  placeholder="欢迎使用充电站，竭诚为您服务"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-3 col-md-3">
+	<div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputType" style="color:#798C9C"><span style="color:red">*</span>电站充电类型</label>
+                <select class="form-control" id="inputChargerType" th:field="*{chargerType}">
+                    <option th:each="t:${chargeTypes}"
+                            th:value="${t.dictValue}"
+                            th:text="${t.descr}"
+                    >
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputType" style="color:#798C9C"><span style="color:red">*</span>充电站类型</label>
+                <select class="form-control" id="inputType" th:field="*{stationType}">
+                    <option th:each="t : ${stationTypes}"
+                            th:value="${t.dictValue}"
+                            th:text="${t.descr}">Type
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputPaymentMethod" style="color:#798C9C"><span style="color:red">*</span>计费方式</label>
+                <select class="form-control" id="inputPaymentMethod" maxlength="20" required="required" th:field="*{paymentMethod}">
+                    <option th:each="p : ${payments}"
+                            th:value="${p.dictValue}"
+                            th:text="${p.descr}">Type
+                    </option>
+                </select>
+            </div>
+        </div>
+ 		<div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputOperater" style="color:#798C9C"><span style="color:red">*</span>所属运营商</label>
+                <select class="form-control" id="inputOperater" required="required" th:field="*{operator}">
+                    <option th:each="o : ${operators}"
+                            th:value="${o.id}"
+                            th:text="${o.codeAndName}">Type
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputArea" style="color:#798C9C"><span style="color:red">*</span>功能区</label>
+                <select class="form-control" id="inputArea" required="required" th:field="*{area}">
+                    <option th:each="a : ${areas}"
+                            th:value="${a.dictValue}"
+                            th:text="${a.descr}">Type
+                    </option>
+                </select>
+            </div>
+        </div>
+		<div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputArea" style="color:#798C9C"><span style="color:red">*</span>电站状态</label>
+                <select class="form-control" id="inputStationStatus" th:field="*{operatingStatus}">
+                    <option th:each="a : ${operatingStatus}"
+                            th:value="${a.name()}"
+                            th:text="${a.title}">Type
+                    </option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputArea" style="color:#798C9C"><span style="color:red">*</span>充电单价(元/千瓦时)</label>
+                <input type="text" th:field="*{price}" maxlength="20" class="form-control" pattern="^[0-9]+(\.[0-9]+)?$" required="required" placeholder="直流，交流0.65/度"/>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputArea" style="color:#798C9C"><span style="color:red">*</span>停车费(元/小时)</label>
+                <input type="text" th:field="*{fee}" maxlength="20" class="form-control" required="required" pattern="^[0-9]+(\.[0-9]+)?$" placeholder=""/>
+            </div>
+        </div>
+        <div class="row section">
+            <div class="form-group col-md-12">
+                <label for="inputArea" style="color:#798C9C"><span style="color:red">*</span>营业时间</label>
+                <input type="text" th:field="*{openTime}" maxlength="20" required="required" class="form-control" placeholder="0-24h"/>
+            </div>
+        </div>
+    </div> 
+</div>
+<script th:inline="javascript">
+        /*<![CDATA[*/
+         var province = [[${station.province}]];
+         var city = [[${station.city}]];
+         var district = [[${station.district}]];
+         document.getElementById("provinceHidden").value = province;
+         document.getElementById("cityHidden").value = city;
+         document.getElementById("districtHidden").value = district;
+        /*]]>*/
+
+</script>
+<script type="text/javascript"
+        src="http://webapi.amap.com/maps?v=1.3&amp;key=a746dec348d188ad0b1d9d1d466b780f"></script>
+<script src="../../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>        
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload=function(){
+	$("#province").bind('input propertychange',function(){
+		$("#address").val(" ");
+		plat();	
+	});
+	$("#city").bind('input propertychange',function(){
+		$("#address").val(" ");
+		plat();	
+	});
+	$("#district").bind('input propertychange',function(){
+		$("#address").val(" ");
+		plat();
+	});
+/* 	$("#address").bind('input propertychange',function(){
+		plat();
+	}); */
+	var mapObj;
+	var result;
+	var marker = [];
+	var windowsArr = [];
+	var MGeocoder;
+	var latY= document.getElementById("latitude").value;
+    if(latY==0){
+    	latY = 31.32929918;
+    }
+    var lngX = document.getElementById("longitude").value;
+    if(lngX==0){
+    	lngX = 120.61065674;
+    }
+    mapObj = new AMap.Map('container1',{
+    	resizeEnable: true,
+        center: [lngX, latY],//地图中心点
+        zoom: 16,//地图显示的缩放级别
+        keyboardEnable: false
+    });
+    var markerOptionb = {
+	        map:mapObj,          
+	        icon:"http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png", 
+	        position:new AMap.LngLat(lngX,latY)
+	    };
+	new AMap.Marker(markerOptionb);
+	mapObj.on('click', function(e) {
+		var latY = e.lnglat.getLat();
+	    var lngX = e.lnglat.getLng();
+	    document.getElementById("latitude").value = latY;  
+        document.getElementById("longitude").value = lngX;
+        $(".amap-icon").remove();
+        var markerOptiona = {
+		        map:mapObj,          
+		        icon:"http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png", 
+		        position:new AMap.LngLat(lngX,latY)
+		    };           
+		new AMap.Marker(markerOptiona);
+		/* function addmarker(i, d) {
+		    var markerOptiona = {
+		        map:mapObj,                
+		        icon:"http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png", 
+		        position:new AMap.LngLat(lngX, latY)
+		    };           
+		    new AMap.Marker(markerOptiona);
+		} */
+    })
+	function plat(){
+		var mapObj;
+		var result;
+		var marker = [];
+		var windowsArr = [];
+		mapObj = new AMap.Map('container1');
+		var MGeocoder;
+		var a=document.getElementById("province").value;
+		var b=document.getElementById("city").value;
+		var c=document.getElementById("district").value;
+		var d=document.getElementById("address").value;
+		var place=a+b+c+d;
+	    key_2 = place;      
+	    mapObj.plugin(["AMap.Geocoder","AMap.Autocomplete"], function() {
+	        MGeocoder = new AMap.Geocoder();
+	        AMap.event.addListener(MGeocoder, "complete", geocoder_CallBack);        
+	        MGeocoder.getLocation(key_2);
+	    });
+	    var auto = new AMap.Autocomplete({
+	        input: "address",
+	        city:b
+	    });
+	    AMap.event.addListener(auto,"select", select);//注册监听，当选中某条记录时会触发
+	    function select(e) {
+	        if (e.poi && e.poi.location) {
+	        	mapObj.setZoom(16);
+	        	mapObj.setCenter(e.poi.location);
+ 	        	$(".amap-icon").remove();
+	        	var latY = e.poi.location.lat;
+			    var lngX = e.poi.location.lng;
+			    document.getElementById("latitude").value = latY;  
+	            document.getElementById("longitude").value = lngX;
+	            var markerOptiona = {
+	    		        map:mapObj,          
+	    		        icon:"http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png", 
+	    		        position:new AMap.LngLat(lngX,latY)
+	    		    };           
+	    		new AMap.Marker(markerOptiona);
+	        }
+	    }
+	  //地理编码返回结果展示  
+		function geocoder_CallBack(data){
+		    var resultStr="";
+		    //地理编码结果数组
+		    var geocode = new Array();
+		    geocode = data.geocodes; 
+		    for (var i = 0; i < geocode.length; i++) {
+		        //拼接输出html
+		        resultStr += "<span style=\"font-size: 12px;padding:0px 0 4px 2px; border-bottom:1px solid #C1FFC1;\">"+"<b>地址</b>："+geocode[i].formattedAddress+""+ "<b>    坐标</b>：" + geocode[i].location.getLng() +", "+ geocode[i].location.getLat() +""+ "<b>    匹配级别</b>：" + geocode[i].level +"</span>";
+		        addmarker(i, geocode[i]);
+		        document.getElementById("longitude").value=geocode[i].location.getLng();
+			    document.getElementById("latitude").value=geocode[i].location.getLat();
+		    }
+		    mapObj.setFitView();
+		    mapObj.setZoom(16);
+		    document.getElementById("result").innerHTML = resultStr; 
+		} 
+		function addmarker(i, d) {
+		    var lngX = d.location.getLng();
+		    var latY = d.location.getLat();
+		    var markerOption = {
+		        map:mapObj,                
+		        icon:"http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png", 
+		        position:new AMap.LngLat(lngX, latY)
+		    };           
+		    new AMap.Marker(markerOption);
+/* 		    marker.push(new AMap.LngLat(lngX, latY));   //地图相应坐标上添加标记点
+		 
+		    var infoWindow = new AMap.InfoWindow({ 
+		        content:d.formattedAddress,
+		        autoMove:true,
+		        size:new AMap.Size(150,0), 
+		        offset:{x:0,y:-30}
+		    }); 
+		    windowsArr.push(infoWindow);  //设定弹窗的信息内容及样式
+		    
+		    var aa = function(e){infoWindow.open(mapObj,mar.getPosition());};   //aa定义为在固定位置打开infoWindow
+		    AMap.event.addListener(mar,"click",aa);	 //给标记点添加listener，监听点击事件，点击后触发aa函数    */
+		}
+		mapObj.on('click', function(e) {
+			var latY = e.lnglat.getLat();
+		    var lngX = e.lnglat.getLng();
+		    document.getElementById("latitude").value = latY;  
+            document.getElementById("longitude").value = lngX;
+            $(".amap-icon").remove();
+            var markerOptiona = {
+    		        map:mapObj,          
+    		        icon:"http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png", 
+    		        position:new AMap.LngLat(lngX,latY)
+    		    };           
+    		new AMap.Marker(markerOptiona);
+			/* function addmarker(i, d) {
+			    var markerOptiona = {
+			        map:mapObj,                
+			        icon:"http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png", 
+			        position:new AMap.LngLat(lngX, latY)
+			    };           
+			    new AMap.Marker(markerOptiona);
+			} */
+        })
+	}
+}
+/*]]>*/
+</script>
+
+     
+<!-- 
+<script type="text/javascript">
+
+    var objectLat = document.getElementById("latitude").value;
+    if(objectLat==0){
+    	objectLat = 31.32929918;
+    }
+    var objectLon = document.getElementById("longitude").value;
+    if(objectLon==0){
+    	objectLon = 120.61065674;
+    }
+    /* var province = document.getElementById("province").value;
+    var city = document.getElementById('city').value;
+    var district = document.getElementById("district").value;
+    var address = document.getElementById("address").value;
+    var totallyAddress = province + city + district + address;
+   */ 
+    var MGeocoder;
+    var windowsArr = [];
+    var mapObj = new AMap.Map("map", {
+        resizeEnable: true,
+        center: [objectLon, objectLat],//地图中心点
+        zoom: 13,//地图显示的缩放级别
+        keyboardEnable: false
+    });
+	console.info(mapObj);
+    var marker = new AMap.Marker({
+        icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+        position: [objectLon, objectLat],
+        map: mapObj
+    });
+
+     AMap.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.Autocomplete', 'AMap.Geocoder'], function () {
+        var toolBar = new AMap.ToolBar();
+        var scale = new AMap.Scale();
+        mapObj.addControl(toolBar);
+        mapObj.addControl(scale);
+
+        var autoOptions = {
+            city: city, //城市，默认全国
+            input: "provinceHidden"//使用联想输入的input的id
+        };
+        var autocomplete = new AMap.Autocomplete(autoOptions);
+
+        var geocoder = new AMap.Geocoder({});
+        AMap.event.addListener(autocomplete, "select", function (e) {
+            //TODO 针对选中的poi实现自己的功能
+            geocoder.getLocation(e.poi.name, function (status, result) {
+            	if (status == 'complete') {
+                    marker.setPosition(result.geocodes[0].location);
+                    mapObj.setCenter(marker.getPosition());
+                    var locations = result.geocodes[0].location.toString().split(',');
+                    document.getElementById('longitude').value = locations[0];
+                    document.getElementById('latitude').value = locations[1];
+                }
+            })
+        });
+        
+       		 var autoOptions = {
+                city: city, //城市，默认全国
+                input: "cityHidden"//使用联想输入的input的id
+            };
+            var autocompletecity = new AMap.Autocomplete(autoOptions);
+
+            var geocoder = new AMap.Geocoder({});
+            AMap.event.addListener(autocompletecity, "select", function (e) {
+                //TODO 针对选中的poi实现自己的功能
+                geocoder.getLocation(e.poi.name, function (status, result) {
+                	if (status == 'complete') {
+                        marker.setPosition(result.geocodes[0].location);
+                        mapObj.setCenter(marker.getPosition());
+                        var locations = result.geocodes[0].location.toString().split(',');
+                        document.getElementById('longitude').value = locations[0];
+                        document.getElementById('latitude').value = locations[1];
+                    }
+                })
+            });
+            
+            var autoOptions = {
+                    city: city, //城市，默认全国
+                    input: "districtHidden"//使用联想输入的input的id
+                };
+                var autocompletecity = new AMap.Autocomplete(autoOptions);
+
+                var geocoder = new AMap.Geocoder({});
+                AMap.event.addListener(autocompletecity, "select", function (e) {
+                    //TODO 针对选中的poi实现自己的功能
+                    geocoder.getLocation(e.poi.name, function (status, result) {
+                    	if (status == 'complete') {
+                            marker.setPosition(result.geocodes[0].location);
+                            mapObj.setCenter(marker.getPosition());
+                            var locations = result.geocodes[0].location.toString().split(',');
+                            document.getElementById('longitude').value = locations[0];
+                            document.getElementById('latitude').value = locations[1];
+                        }
+                    })
+                });
+                
+                var autoOptions = {
+                        city: city, //城市，默认全国
+                        input: "address"//使用联想输入的input的id
+                    };
+                    var autocompletecity = new AMap.Autocomplete(autoOptions);
+
+                    var geocoder = new AMap.Geocoder({});
+                    AMap.event.addListener(autocompletecity, "select", function (e) {
+                        //TODO 针对选中的poi实现自己的功能
+                        geocoder.getLocation(e.poi.name, function (status, result) {
+                        	if (status == 'complete') {
+                                marker.setPosition(result.geocodes[0].location);
+                                mapObj.setCenter(marker.getPosition());
+                                var locations = result.geocodes[0].location.toString().split(',');
+                                document.getElementById('longitude').value = locations[0];
+                                document.getElementById('latitude').value = locations[1];
+                            }
+                        })
+                    });
+    }) 
+    ;
+    var clickEventListener = mapObj.on('click', function (e) {
+        objectLon = e.lnglat.getLng();
+        objectLat = e.lnglat.getLat();
+        marker.setPosition(e.lnglat);
+        document.getElementById("longitude").value = objectLon;
+        document.getElementById("latitude").value = objectLat;
+    });
+</script>
+ -->
+</body>
+</html>

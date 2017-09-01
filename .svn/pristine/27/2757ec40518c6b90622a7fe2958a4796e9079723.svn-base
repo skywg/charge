@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>消息内容</h3>
+				<hr style="margin:0px;padding:0px;"/>
+			</div>
+				<div class="form-group col-md-6">
+					 <label for="inputTitle">流水号</label>
+					 <input type="text" th:field="*{tagNumber}" required="required" maxlength="20" class="form-control" id="inputTitle"
+		                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+				</div>
+				<div class="form-group col-md-6">
+	                <label for="inputTitle"><span style="color:red"></span>发送时间</label>
+	                <input type="text" th:field="*{sendAt}" required="required" maxlength="20" class="form-control" id="inputTitle"
+	                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+	            </div>
+	            <div class="form-group col-md-12">
+	                <label for="inputTitle"><span style="color:red"></span>发送对象</label>
+	                <input type="text"  required="required"  class="form-control" id="inputTitle" th:field="*{tagets}"
+	                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+	            </div>
+	            <div class="form-group col-md-3">
+	                <label for="inputTitle"><span style="color:red"></span>发送方式</label>
+	                <input type="text"  required="required" class="form-control" id="inputTitle" th:value="${notification.sendType.title}"
+	                       style="cursor:auto;" disabled="disabled" placeholder=""/>
+	            </div>
+	            <div class="form-group col-md-12 substance">
+	                <label for="inputTitle"><span style="color:red"></span>内容</label>
+	                <input type='hidden' th:value='${notification.content}' id="show_content"/>
+	               <div style="border:1px solid #a5b6c8;background:#EEEEEE;;width: 100%; padding: 10px" id='for_show_html'></div>
+	            </div>
+		</div>
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>操作信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-4">
+				<label for="inputCode">编辑时间： <span th:text="*{#dates.format(updatedAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+				</label>
+			</div>
+			<div class="form-group col-md-4">
+				<label for="inputCode">编辑人： <span th:text="*{editor}"></span>
+				</label>
+			</div>
+		</div>
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>发送结果</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-12">
+			<table class="table table-striped table-bordered table-hover">
+				<thead>
+                    <tr>
+                        <th>发送对象</th>
+		                <th>时间</th>
+		                <th>是否成功</th>
+		                <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="sn ,snIter : ${sns}">
+                        <td th:if="${sn!=null &amp;&amp; sn.phone!=null}" th:text="${(sn!=null)?sn.phone:''}"></td>
+		                <td th:if="${sn!=null &amp;&amp; sn.phone!=null}" th:text="${(sn!=null)?sn.time:''}">时间</td>
+		                <td th:if="${sn!=null &amp;&amp; sn.phone!=null &amp;&amp; sn.sendStatus==true}">成功</td>
+		                <td th:if="${sn!=null &amp;&amp; sn.phone!=null &amp;&amp; sn.sendStatus==false}">失败</td>
+		                <td th:if="${sn!=null &amp;&amp; sn.phone!=null &amp;&amp; sn.sendStatus==false}"><a th:href="@{/admin/notify/sendOne/{id}(id=${sn.id})}">发送</a></td> 
+                    	<td th:if="${sn!=null &amp;&amp; sn.phone!=null &amp;&amp; sn.sendStatus==true}"></td> 
+                    </tr>
+                </tbody>	
+			</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

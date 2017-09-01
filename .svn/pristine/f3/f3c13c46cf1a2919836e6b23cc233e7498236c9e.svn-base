@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>内容信息</h3>
+				<hr style=" margin:0px;padding:0px;"/>
+			</div>
+			<div class="form-group custom-input col-md-3">
+				<label for="inputType1" class="form-control-label">分类</label>
+			        <select class="form-control" id="inputType1" name="classification" th:field="*{classification}">
+			           <option th:each="t : ${classifications}"
+			              th:value="${t.dictValue}"
+			              th:text="${t.descr}">Type
+			           </option>
+			        </select>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputTitle"><span style="color:red">*</span>标题</label>
+                <input type="text" th:field="*{title}"  required="required" maxlength="20" class="form-control" id="inputTitle" style="cursor:auto;"  placeholder=""/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red">*</span>短标题</label>
+                <input type="text" th:field="*{slug}" required="required" maxlength="20" class="form-control" id="inputTitle"
+                       style="cursor:auto;"  placeholder=""/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red">*</span>发布时间</label>
+                <input type="text" th:field="*{releasedAt}" class="form-control" id="start" name="releasedAt" required="required" placeholder="" readonly="readonly" style="background-color:#FFFFFF;"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red">*</span>有效时间</label>
+                <input type="text" th:field="*{validAt}" class="form-control" id="end" name="validAt" placeholder="" required="required" readonly="readonly" style="background-color:#FFFFFF;"/>
+            </div>
+           <div class="form-group col-md-12" id="content-checked">
+            	<input type="hidden" id="inputHiddenTextType" th:field="${content.textType}" disabled="disabled"/>
+                <label for="inputTitle">类型:</label>
+				<input th:field="*{textType}"  name="textType" type="radio" id="input1" value="IMAGE" style="margin-left:5px;margin-right:5px;"/>图片 
+				<input th:field="*{textType}"  name="textType" type="radio" id="input2" value="TEXT" style="margin-left:20px;margin-right:5px;"/>文本  
+				<input th:field="*{textType}"  name="textType" type="radio" id="input3" value="URL" style="margin-left:20px;margin-right:5px;"/>链接 
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputTitle"><span style="color:red">*</span>Keyword</label>
+                <input type="text" th:field="*{keyword}" required="required" maxlength="20" class="form-control" id="inputTitle"
+                       style="cursor:auto;"  placeholder=""/>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputTitle"><span style="color:red">*</span>Description</label>
+                <input type="text" th:field="*{description}" required="required" maxlength="500" class="form-control" id="inputTitle"
+                       style="cursor:auto;"  placeholder=""/>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputTitle"><span style="color:red"></span>描述</label>
+                <textarea class="form-control" th:field="*{remark}"  id="inputDescription" maxlength="500" style="cursor:auto;"
+         				placeholder=""></textarea>
+            </div>
+		</div>
+		<div class="row section">
+			<div class="form-group col-md-12" >
+				<h3>内容详情</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<!-- 图片内容 -->			
+		<div id="content-checked-a" style="text-align:left;width:400px;padding-bottom:65px">
+						<img id="cvs" width="300" height="200" style="margin-left: 50px;background:url(/images/pic_tab/tab1.png)" th:src="${content.image}"></img>
+						<input type="hidden" id="image" th:field="*{image}"/>
+						<span class="btn upload" style="margin-top:10px;margin-left:150px;padding-top:5px;background-color:#2e6da4;color:#ffffff">上传图片
+						<input type="file" class="upload_pic" id="uploada"/></span>
+	   </div>
+		<!-- 文字文本 -->
+		<div id="content-checked-b">
+				<div class="form-group col-md-12">
+					<div id="editor">
+						<textarea id='edit2' style="margin-top: 30px;" th:field="*{text}" maxlength="500"></textarea>
+					</div>	
+				</div>
+		</div>
+		<!-- 链接内容 -->
+		<div id="content-checked-c">
+			<div class="form-group col-md-12">
+				<label for="inputTitle">链接地址</label>
+				<input type="text" th:field="*{url}"  class="form-control" id="inputTitle" placeholder="" maxlength="20"/>
+			</div>
+		</div>
+		</div>
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>发布信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>	
+			<div class="form-group col-md-12">
+				 <label for="inputTitle">发布时间:<span th:text="*{#dates.format(releasedAt,'yyyy-MM-dd')}"></span></label> 
+				<label for="inputTitle" style="margin-left: 50px;">发布人:<span th:text="*{name}" ></span></label>
+			</div>
+		</div>
+	</div>
+	
+	<div>
+		
+	</div>
+</body>
+</html>

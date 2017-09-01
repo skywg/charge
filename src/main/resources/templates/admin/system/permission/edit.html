@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>修改权限</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a href="#">首页</a></li>
+        <li><a href="#">系统管理</a></li>
+        <li><a href="#">权限分配</a></li>
+    </ol>
+     <script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        /*]]>*/
+    </script>
+    
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">基本信息</a></li>
+                </ul>
+            </div>
+		<form role="form" action="#" method="post"
+          th:action="@{/admin/system/permissions/{id}(id=${permission.pkey})}" th:object="${permission}">
+            <div class="panel-body" th:include="admin/system/permission/form"></div>
+
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <button type="submit" class="btn btn-primary navbar-btn">保存</button>
+                        </div>
+                        <div class="navbar-left">
+                            <a class="btn btn-default navbar-btn" href="index.html" th:href="@{/admin/system/permissions/}">取消</a>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+            </form>
+        </div>
+    
+
+</div>
+</body>
+</html>

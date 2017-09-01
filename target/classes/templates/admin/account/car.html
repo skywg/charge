@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>会员车主信息</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+       <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/accounts/}">会员中心</a></li>
+        <li><a th:href="@{/admin/accounts/}">会员管理</a></li>
+        <li class="active">会员车主信息</li>
+    </ol>
+
+        <div class="panel"  th:object="${account}">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs" id="account-list">
+                    <li role="presentation"><a th:href="@{/admin/accounts/{id}(id=${account.id})}">会员信息</a></li>
+                    <li role="presentation"><a th:href="@{/admin/accounts/checkCard/{id}(id=${account.id})}">充电卡信息</a></li>
+                    <li role="presentation" class="active"><a th:href="@{/admin/accounts/checkCar/{id}(id=${account.id})}">车主信息</a></li>
+                    <li role="presentation"><a th:href="@{/admin/accounts/checkDeal/{id}(id=${account.id})}">交易记录</a></li>
+                    <li role="presentation"><a th:href="@{/admin/accounts/checkCharge/{id}(id=${account.id})}">充值记录</a></li>
+                </ul>
+            </div>
+
+	        <div class="panel-body"  th:include="admin/account/carform"></div>
+             <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary back-btn-id" href="index.html"
+                               th:href="@{/admin/accounts/search}" style="padding-top:4px">返回</a>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+        </div>
+    
+</div>
+</body>
+</html>

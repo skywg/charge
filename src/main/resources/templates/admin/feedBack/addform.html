@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group custom-input col-md-6">
+				<label for="inputTitle"><span style="color:red">*</span>流水号</label>
+				<input type="text"  class="form-control" th:value="${seqNo}" name ="seqNo" readOnly="readonly" />
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red">*</span>时间</label>
+                <input type="text"  class="form-control"  th:value="${update}" name="updatedAt" placeholder="" readonly="readonly" style="background-color:#FFFFFF;"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red">*</span>会员名称</label>
+                <input type="text" th:field="*{accountName}" required="required" maxlength="20" class="form-control" id="inputTitle" 
+                       style="cursor:auto;" placeholder=""/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputTitle"><span style="color:red">*</span>会员电话</label>
+                <input type="text" th:field="*{accountPhone}"  required="required" maxlength="11" pattern="^1[3-9]\d{9}$" class="form-control" id="inputTitle" style="cursor:auto;" />
+                
+            </div>
+           <!-- <div class="form-group custom-input col-md-3">
+				<label for="inputType1" class="form-control-label">来源</label>
+			        <input class="form-control" id="inputType1" name="channel" th:field="*{channel}"  style="cursor:auto;" th:each="cs , csIter : ${channels}" th:if="${feedBack.channel==cs.dictValue}" th:value="${cs.descr}" /> 
+            </div> -->
+             <div class="form-group custom-input col-md-3">
+						<label for="inputType1" class="form-control-label">来源</label>
+			                <select class="form-control-input"  name="channel" th:field="*{channel}">
+			                   <option th:each="t:${channels}"
+			                            th:value="${t.dictValue}"
+			                            th:text="${t.descr}">Type
+			                    </option>
+			                </select>
+            </div>
+            <div class="form-group custom-input col-md-3">
+				<label for="inputType1" class="form-control-label">定位</label>
+			        <select class="form-control-input"  name="category" th:field="*{category}">
+			           <option th:each="t : ${categorys}"
+			              th:value="${t.dictValue}"
+			              th:text="${t.descr}">Type
+			           </option>
+			        </select>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputTitle"><span style="color:red">*</span>内容</label>
+                <textarea class="form-control" th:field="*{content}" required="required" id="inputDescription" maxlength="500" style="cursor:auto;" 
+         				placeholder="最多不超过500字"></textarea>
+            </div>    
+		</div>	
+	</div>
+	
+</body>
+</html>

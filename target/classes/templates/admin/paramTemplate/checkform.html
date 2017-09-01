@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="col-sm-12 col-md-12">
+		<div class="row section">
+			<div class="form-group col-md-12">
+				<h3>基本信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+				<div class="form-group col-md-6">
+	                <label for="inputTitle"><span style="color:red"></span>状态</label>
+	                <input type="hidden" id="inputHiddenStatus" th:value="${paramTemplate.status}" disabled="disabled" style="cursor:auto;"/>
+	               	<input type="radio"  th:value="VALID"  id="input1" name="status"  style="margin-left:5px;margin-right:5px;cursor:auto;"/>有效
+	               	<input type="radio"  th:value="INVALID" id="input2"  name="status"   style="margin-left:20px;margin-right:5px;cursor:auto;"/>无效              
+	            </div>
+	            <div class="form-group col-md-6" id="wrap">
+               		<label for="inputTitle">类型:</label>
+               		<input type="hidden" id="inputHiddenType" th:value="${paramTemplate.type}" disabled="disabled"/>
+               	    <input th:field="*{type}"  name="type"  id="type1" type="radio" value="PARAM"  style="margin-left:5px;margin-right:5px;cursor:auto;" checked="checked"/>参数模板 
+					<input th:field="*{type}"  name="type"  id="type2" type="radio" value="PRICE" style="margin-left:20px;margin-right:5px;cursor:auto;"/>电价模板
+					<input th:field="*{type}"  name="type"  id="type3" type="radio" value="UPDATE" style="margin-left:20px;margin-right:5px;cursor:auto;"/>升级模板
+            	</div> 
+	            <div class="form-group col-md-6">
+	                <label for="inputTitle"><span style="color:red"></span>模板名称</label>
+	                <input type="text" th:field="*{name}" required="required" maxlength="20" class="form-control" id="inputTitle" disabled="disabled"
+	                       placeholder="最多可以输入20个字" style="cursor:auto;"/>
+	            </div>
+	            
+	            <div class="form-group col-md-12">
+	                <label for="inputTitle"><span style="color:red"></span>模板说明</label>
+                        <textarea class="form-control" id="inputDescription" maxlength="500"
+                                  required="required" th:field="*{description}"  placeholder="最多可以输入500个字" disabled="disabled" style="cursor:auto;"></textarea>
+	            </div>
+		</div>
+		<div class="row section" id="div1">
+			<div class="form-group col-md-12">
+				<h3>参数信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			
+			<div class="form-group col-md-24" th:each="attr : ${attrs}">
+				<div th:if="${attr.attrName=='ip'}"  class="form-group custom-input col-md-6">
+                   <label for="inputTitle">目标IP</label>
+                   <input type="text" class="form-control" th:value="${attr.attrVal}" disabled="disabled" maxlength="20" name="ip"  placeholder="最多可以输入20个字" required="required"/>
+                </div>
+                <div th:if="${attr.attrName=='port'}" class="form-group custom-input col-md-6">
+                   <label for="inputTitle">端口号</label>
+                   <input type="text" class="form-control" maxlength="20" th:value="${attr.attrVal}" disabled="disabled" name="port" placeholder="最多可以输入20个字"/>
+                </div>
+                <div th:if="${attr.attrName=='interval'}" class="form-group custom-input col-md-6">
+                    <label for="inputTitle" >上传周期</label>
+                   <input type="text" class="form-control" th:value="${attr.attrVal}" maxlength="20" disabled="disabled" name="interval" placeholder="最多可以输入20个字" required="required"/>
+                </div>
+			</div>
+		</div>
+		<div class="row section" id="div2">
+			<div class="form-group col-md-12">
+				<br/>
+				<h3>电价信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-12">
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>开始时间</th>
+							<th>结束时间</th>
+							<th>电价(元/千瓦时)</th>
+							<th>服务费(元)</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="price, priceItemIter : ${prices}">
+							<td th:text="${priceItemIter.count}">#</td>
+							 <td th:text="${price.startAt}">开始时间</td>
+							<td	th:text="${price.endAt}">结束时间</td>
+							 <td th:text="${price.price}">电价(元/千瓦时)</td>
+							<td th:text="${price.fee}">服务费(元)</td>
+							<td th:text="${price.remark}">备注</td> 
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row section" id="div3">
+			<div class="form-group col-md-12">
+				<h3>升级信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-12">
+				
+			</div>
+		</div>
+		<div class="row section" >
+			<div class="form-group col-md-12">
+				<h3>其他信息</h3>
+				<hr style="margin:0px;padding:0px"/>
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputCode"> 创建人： <span th:text="*{creator}"></span>
+				</label>
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputCode"> 创建时间： <span th:text="*{#dates.format(createdAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+				</label>
+			</div>
+		</div>
+		
+	</div>
+</body>
+</html>

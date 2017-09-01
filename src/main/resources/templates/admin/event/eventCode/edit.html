@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>编辑故障码</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/eventCodes/}">运维中心</a></li>
+        <li><a th:href="@{/admin/eventCodes/}">故障码</a></li>
+        <li class="active">编辑故障码</li>
+    </ol>
+     <script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        
+        /*]]>*/
+    </script>
+    
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">编辑故障码</a></li>
+                </ul>
+            </div>
+		<form role="form" action="#" method="post" th:action="@{/admin/eventCodes/update/{id}(id=${eventCode.code})}" th:object="${eventCode}">
+            <div class="panel-body" th:include="admin/event/eventCode/editform"></div>
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html"  th:href="@{/admin/eventCodes/?flag=true}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" onclick="bc();" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+         </form> 
+        </div>
+</div>
+<div layout:fragment="javascript">
+
+	<script th:inline="javascript">//引用  
+	$(function(){
+		var status= $("#inputHiddenStatus");
+		var type =status.val();
+		
+		if(type=='true'){
+    		$("#input1").attr("checked","checked");
+	
+    	}else{
+    		$("#input2").attr("checked","checked");
+			
+    	}
+	});
+	 </script>
+</div>
+</body>
+</html>

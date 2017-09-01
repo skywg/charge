@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>编辑APP升级</title></head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+        <li><a th:href="@{/admin/system/version/}">系统管理</a></li>
+        <li><a th:href="@{/admin/system/version/}">APP升级</a></li>
+        <li class="active">编辑APP升级</li>
+    </ol>
+     <script th:inline="javascript">
+        /*<![CDATA[*/
+        var failed = [[${failed}]];
+        if(failed){
+        	alert(failed)
+        }
+        /*]]>*/
+    </script>
+    <script>
+      var android_text = document.getElementById("input_android");
+      var ios_text = document.getElementById("input_ios");
+      
+      function sDialog(id) {
+           var file_input = document.getElementById(id);
+           file_input.click();
+  
+      }
+      //src:文件路径。
+      function getName(src){
+    	  var input = null;
+    	  var typeName = document.getElementById("inputType").value;
+    	  if(typeName=="ANDROID"){
+    		  input = document.getElementById("input_android");    		  
+    	  }
+    	  if(typeName=="IOS"){
+    		  input = document.getElementById("input_ios");    		  
+    	  }
+    	  input.value=src;   	   	  
+      }
+      //改变升级对象
+      function changedType(typeName){
+    	  if(typeName=="ANDROID"){
+    		  
+    		  setOnDisabled("input_android","input_ios");
+    	  }
+    	  if(typeName=="IOS"){
+    		  setOnDisabled("input_ios","input_android");
+    	  }
+      }
+      function setOnDisabled(use,dis){ 	  
+		  var userObject = document.getElementById(use);
+		  var disObject = document.getElementById(dis);
+		  disObject.setAttribute("disabled","disabled");
+		  disObject.value="";
+		  userObject.removeAttribute("disabled");
+      }
+      function addSubmit(actionCode){
+    	  var action= document.getElementById("actionCode");
+    	  var appType = document.getElementById("inputType").value;
+    	  var version = document.getElementById("inputVersion").value;
+    	  var check = null;
+    	 
+    	  if(appType=="ANDROID") check=document.getElementById("input_android");
+    	  if(appType=="IOS") check=document.getElementById("input_ios");
+    	  
+    	  var re = new RegExp("charger_"+version+"\.[a-zA-Z]{3,}");
+    	  if(check.value.trim() != ""){
+    		  if( !re.test(check.value)){
+        		  alert("上传命名格式：charger_{版本号}.后缀名，如charger_1.0.1.apk，请检查格式是否正确");
+        		  return false
+        	  } 
+    	  }
+    	  
+    	  action.value=actionCode;  	  
+    	  return true;
+      }
+</script>
+    <form role="form" action="#" method="post" enctype="multipart/form-data"
+          th:action="@{/admin/system/version/update/{id}(id=${appVersion.id})}" th:object="${appVersion}">
+
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">编辑APP升级</a></li>
+                </ul>
+            </div>
+		
+            <div class="panel-body" th:include="admin/system/version/form"></div>
+
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id" href="index.html" th:href="@{/admin/system/version/?flag=true}" style="padding-top:5px">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary keep-btn-id" onclick="return addSubmit('save')" id="actionCode">保存</button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

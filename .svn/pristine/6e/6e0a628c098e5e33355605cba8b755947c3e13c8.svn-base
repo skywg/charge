@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head><title>添加角色</title>
+<style>
+#jiaoshe-quan-add{
+	position: relative;
+	height: 100%;
+}
+#jiaoshe-quan-add li{
+	border: 1px solid #999999;
+	width: 100%;
+	line-height: 30px;
+	border-radius: 4px;
+	position: absolute;
+	list-style: none;
+	padding-left:10px;
+}
+#treeview1 ul li div{
+	border:1px solid #999999;
+	width:30px;
+	height:30px;
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+</style>
+</head>
+<body class="bg">
+<div layout:fragment="content" id="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/admin/}">首页</a></li>
+       	<li><a th:href="@{/admin/system/roles/}">系统管理</a></li>
+        <li><a th:href="@{/admin/system/roles/}">角色分配</a></li>
+        <li class="active">添加角色</li>
+    </ol>
+        <div class="panel">
+            <div role="tabpanel" class="panel-tabs">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">添加角色</a></li>
+                </ul>
+            </div>
+			<form role="form" method="post" th:action="@{/admin/system/roles/}">
+           
+           
+            <div class="panel-body">
+            	<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <div class="row section">
+            <div class="form-group col-md-3"><!--//title-->
+                <label for="inputCode"><span style="color:red">*</span>角色名称</label>
+                <input type="text" name="roleName" maxlength="50"  class="form-control" required="required"/>
+            </div>
+            <div class="form-group col-md-8" style="padding-left:0px;padding-right:0px"><!--//title-->
+                <label for="inputTitle">描述</label>
+                <input type="text" name="roleDescr" maxlength="50" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="tempMenu"  id="tempMenu" />
+            <input type="hidden" name="temppermission"   id="temppermission" /> 
+        	<div class="col-sm-12 col-md-12">
+        		<div class="row section">
+        			<!-- <label for="inputCode">菜单管理</label> -->
+        			<div class="form-group col-md-3" id="treeview1" >
+        				
+        			</div>
+        			<div class="form-group col-md-8" id="jiaoshe-quan-add" >
+        				
+        			</div>
+        			<!-- <label for="inputCode">按钮权限</label> -->
+          			 	<!-- <div id="treeviewpermssion" class="form-group col-md-4">
+          			  
+          			  </div> -->
+          			  <!-- <label for="inputCode">用户管理</label> -->
+          			 <!--<div id="treeviewmanger" class="form-group col-md-4">
+          			  </div> -->
+          			 <!--  <div class="col-sm-4">
+				          <div id="tree"></div>
+				      </div>
+				      <div class="col-sm-8">
+				          <div id="jiaoshe-quan">
+				          	<ul id="jiaoshe-quan-add"></ul>
+				          	
+				         </div>
+				      </div> -->
+        		</div>
+            </div>
+</div>
+            </div>
+
+            <div class="panel-footer">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-right">
+                            <a class="btn btn-query btn-primary cancel-btn-id"  th:href="@{/admin/system/roles/}" style="padding-top:4px;">取消</a>
+                        </div>
+                        <div class="navbar-right" style="margin-right:10px">
+                            <button type="submit" class="btn-query btn-primary keep-btn-id">保存</button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+            </form>
+        </div>
+    
+</div>
+<div layout:fragment="javascript">
+	<script>
+	 /*<![CDATA[*/
+/* 		var data =[{"text":"设备管理","href":null,"tags":"1","nodes":[{"text":"充电桩","href":null,"tags":"2","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}},{"text":"充电站","href":null,"tags":"3","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}},{"text":"充电桩设置","href":null,"tags":"4","nodes":[{"text":"电价模板","href":null,"tags":"5","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}},{"text":"设备参数下发","href":null,"tags":"6","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}}],"state":{"expanded":true}}],"state":{"checked":false,"disabled":false,"expanded":true,"selected":false}},{"text":"用户管理","href":null,"tags":"7","nodes":[{"text":"会员管理","href":null,"tags":"8","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}},{"text":"运营商管理","href":null,"tags":"9","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}},{"text":"充电卡管理","href":null,"tags":"10","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}},{"text":"车主认证","href":null,"tags":"11","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}}],"state":{"checked":false,"disabled":false,"expanded":true,"selected":false}},{"text":"运营管理","href":null,"tags":"12","nodes":[{"text":"订单管理","href":null,"tags":"13","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}},{"text":"评价管理","href":null,"tags":"14","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}}],"state":null},{"text":"运维管理","href":null,"tags":"15","nodes":[{"text":"告警信息","href":null,"tags":"16","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}}],"state":null},{"text":"内容中心","href":null,"tags":"18","nodes":[{"text":"内容管理","href":null,"tags":"19","nodes":[],"state":{"checked":true,"disabled":false,"expanded":false,"selected":false}}],"state":{"checked":false,"disabled":false,"expanded":true,"selected":false}}];
+		function getTree() {
+    		return data;
+		};
+		$('#tree').treeview({
+			data:getTree(),
+			selectable:false
+		}); */
+		/* $(document).ready(function(){
+			var oTop=$(".list-group").offset().top-2;
+			var oLength=$("#treeview1").find("li").length;
+			for (var k=0;k<oLength;k++){
+				var num=$("#treeview1").find("li").eq(k).find(".indent").length;
+				var wenzi=$("#treeview1").find("li").eq(k).text();
+				var oLeft=$("#treeview1").find("li").eq(k).offset().top-oTop+"px";
+				if(k==1){
+					var oLi=$('<li><span style="padding-right:10px"><input type="checkbox" name="" id="" value="" /><span style="padding-left:3px">删除0</span></span></li>');
+					oLi.css({
+						"top":oLeft,
+						"left":"0px"
+					})
+					if(num!=0&&wenzi!="充电桩设置"){
+						$("#jiaoshe-quan-add").append(oLi)
+					}
+				}else{
+					var oLi=$('<li><span style="padding-right:10px"><input type="checkbox" name="" id="" value="" /><span style="padding-left:3px">删除1</span></span></li>');
+					oLi.css({
+						"top":oLeft,
+						"left":"0px"
+					})
+					if(num!=0&&wenzi!="充电桩设置"){
+						$("#jiaoshe-quan-add").append(oLi)
+					}
+				}
+				
+			}
+		}) */
+	/*]]>*/	
+	</script>
+</div>
+</body>
+</html>
